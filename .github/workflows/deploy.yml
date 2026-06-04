@@ -36,6 +36,8 @@ jobs:
         run: pnpm build-storybook
         env:
           STORYBOOK_DISABLE_TELEMETRY: "1"
+          # Public URL of the separately-hosted imagery library (no secret).
+          VITE_IMAGERY_URL: "https://epprestodesign.github.io/presto-ds-imagery"
 
       - uses: actions/upload-pages-artifact@v3
         with:

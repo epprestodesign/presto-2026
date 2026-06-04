@@ -1,4 +1,5 @@
 /** DATA DISPLAY / Avatar → Quasar: QAvatar (native) */
+import guestPortrait from '../../assets/hotel/guest-portrait.jpg'
 export default {
   title: 'Data Display/Avatar',
   tags: ['autodocs'],
@@ -17,12 +18,12 @@ export const Basic = {
   render: () => ({ template: `<q-avatar color="primary" text-color="white">JG</q-avatar>` }),
 }
 export const Variants = {
-  render: () => ({ template: `
+  render: () => ({ setup: () => ({ guestPortrait }), template: `
     <div class="q-gutter-md row items-center">
       <q-avatar color="primary" text-color="white">JG</q-avatar>
       <q-avatar color="accent" text-color="white" icon="person" />
       <q-avatar rounded color="secondary" text-color="white" icon="star" />
-      <q-avatar size="56px"><img src="https://cdn.quasar.dev/img/avatar.png" /></q-avatar>
+      <q-avatar size="56px"><img :src="guestPortrait" /></q-avatar>
     </div>` }),
 }
 export const Sizes = {

@@ -1,12 +1,20 @@
 /** LAYOUT / Image List → custom DsImageList (QImg-based) */
 import DsImageList from '../../components/DsImageList.vue'
+// Self-hosted hotel imagery (Unsplash, see src/assets/hotel/CREDITS.md).
+import lobby from '../../assets/hotel/lobby.jpg'
+import deluxeKing from '../../assets/hotel/deluxe-king.jpg'
+import pool from '../../assets/hotel/pool.jpg'
+import oceanSuite from '../../assets/hotel/ocean-suite.jpg'
+import spa from '../../assets/hotel/spa.jpg'
+import restaurant from '../../assets/hotel/restaurant.jpg'
+
 const items = [
-  { src: 'https://cdn.quasar.dev/img/mountains.jpg', title: 'Lobby' },
-  { src: 'https://cdn.quasar.dev/img/parallax1.jpg', title: 'Deluxe King' },
-  { src: 'https://cdn.quasar.dev/img/parallax2.jpg', title: 'Pool' },
-  { src: 'https://cdn.quasar.dev/img/quasar.jpg', title: 'Ocean Suite' },
-  { src: 'https://cdn.quasar.dev/img/mountains.jpg', title: 'Spa' },
-  { src: 'https://cdn.quasar.dev/img/parallax1.jpg', title: 'Restaurant' },
+  { src: lobby, title: 'Lobby' },
+  { src: deluxeKing, title: 'Deluxe King' },
+  { src: pool, title: 'Pool' },
+  { src: oceanSuite, title: 'Ocean Suite' },
+  { src: spa, title: 'Spa' },
+  { src: restaurant, title: 'Restaurant' },
 ]
 export default {
   title: 'Layout/Image List',

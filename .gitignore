@@ -4,3 +4,8 @@ storybook-static
 *.log
 .DS_Store
 .vite
+
+# Secrets — never commit the Unsplash key
+.env
+.env.local
+.env.*.local
