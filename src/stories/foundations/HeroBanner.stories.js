@@ -1,8 +1,10 @@
 // FOUNDATIONS / Hero Banner — full-width hero using a HOSTED background asset.
-// Asset lives in the imagery repo and is served via VITE_IMAGERY_URL:
-//   https://epprestodesign.github.io/presto-ds-imagery/hero/hero-banner.jpg
-const BASE = (import.meta.env.VITE_IMAGERY_URL || '').replace(/\/$/, '')
-const HERO = BASE ? `${BASE}/hero/hero-banner.jpg` : ''
+// Asset lives in the imagery repo. Defaults to the public hosted URL so the
+// banner renders everywhere (local dev + deployed) without needing env vars;
+// VITE_IMAGERY_URL still overrides the base if set.
+const FALLBACK_BASE = 'https://epprestodesign.github.io/presto-ds-imagery'
+const BASE = (import.meta.env.VITE_IMAGERY_URL || FALLBACK_BASE).replace(/\/$/, '')
+const HERO = `${BASE}/hero/hero-banner.jpg`
 
 export default {
   title: 'Foundations/Hero Banner',
