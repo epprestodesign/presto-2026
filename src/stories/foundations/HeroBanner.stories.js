@@ -1,10 +1,12 @@
-// FOUNDATIONS / Hero Banner — full-width hero using a HOSTED background asset.
-// Asset lives in the imagery repo. Defaults to the public hosted URL so the
-// banner renders everywhere (local dev + deployed) without needing env vars;
-// VITE_IMAGERY_URL still overrides the base if set.
+// FOUNDATIONS / Hero Banner — two hosted banner assets, one per page context.
+// Assets live in the imagery repo and default to the public hosted URL so they
+// render everywhere (local dev + deployed); VITE_IMAGERY_URL overrides if set.
+//   Landing page  : hero/hero-banner.jpg                  (1592×400)
+//   Hotel listings: hero/hotel-listings-banner_1440x200.jpg (1440×200)
 const FALLBACK_BASE = 'https://epprestodesign.github.io/presto-ds-imagery'
 const BASE = (import.meta.env.VITE_IMAGERY_URL || FALLBACK_BASE).replace(/\/$/, '')
-const HERO = `${BASE}/hero/hero-banner.jpg`
+const HERO_LANDING = `${BASE}/hero/hero-banner.jpg`
+const HERO_LISTINGS = `${BASE}/hero/hotel-listings-banner_1440x200.jpg`
 
 export default {
   title: 'Foundations/Hero Banner',
@@ -13,66 +15,57 @@ export default {
     layout: 'fullscreen',
     docs: { description: { component: `
 ## Overview
-A full-width hero banner built on a **hosted** background asset (from the
-\`presto-ds-imagery\` repo), with overlaid heading, copy, and a call to action.
+Two **hosted** hero banners, each sized for a specific page context:
 
-**Asset:** \`${HERO || 'set VITE_IMAGERY_URL'}\` — hosted alongside the rest of the
-imagery, so updating it needs no design-system rebuild.
+| Story | Asset | Dimensions | Used on |
+| --- | --- | --- | --- |
+| **Landing Page** | \`hero/hero-banner.jpg\` | 1592×400 | Marketing / landing |
+| **Hotel Listings** | \`hero/hotel-listings-banner_1440x200.jpg\` | 1440×200 | Search / listings results |
 
-## Usage
-\`\`\`html
-<section class="hero" :style="{ backgroundImage: scrim + ', url(' + heroUrl + ')' }">
-  <div class="hero__content"> …heading, copy, CTA… </div>
-</section>
-\`\`\`
-Keep text in the left ~50% over a dark scrim for legibility.
+Assets are hosted in the \`presto-ds-imagery\` repo, so swapping artwork needs no
+design-system rebuild. The Hotel Listings banner is a **background image** behind
+an overlaid logo, headline, and subheadline.
 ` } } },
 }
 
-const scrim = 'linear-gradient(90deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.5) 45%, rgba(0,0,0,0) 80%)'
-const bg = (h) => ({
+const scrim = 'linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5))'
+const bg = (url, extra = {}) => ({
   position: 'relative', backgroundColor: '#000', color: '#fff', overflow: 'hidden',
-  backgroundImage: h ? `${scrim}, url(${h})` : scrim,
+  backgroundImage: `${scrim}, url(${url})`,
   backgroundSize: 'cover', backgroundPosition: 'center',
+  display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', ...extra,
 })
 
-/** Hero with overlaid content (heading + copy + CTA). */
-export const Default = {
+/** Landing page hero (1592×400) — eyebrow, heading, and copy (centered, no CTAs). */
+export const LandingPage = {
+  name: 'Landing Page',
   render: () => ({
-    setup: () => ({ style: { ...bg(HERO), minHeight: '360px', display: 'flex', alignItems: 'center' }, hosted: !!HERO }),
+    setup: () => ({ style: { ...bg(HERO_LANDING), minHeight: '400px' } }),
     template: `
       <section :style="style">
-        <div style="padding:0 56px; max-width:560px">
+        <div style="padding:0 24px; max-width:620px">
           <div class="text-overline" style="color:#5EEAD4; letter-spacing:.16em">Birdie Stays</div>
           <div class="text-h3" style="font-weight:700; line-height:1.1; margin:8px 0 12px">Find your next stay</div>
-          <div class="text-body1" style="color:#D4D4D8; max-width:420px">Book hand-picked hotels with free cancellation and member rates.</div>
-          <div class="q-mt-lg q-gutter-sm">
-            <q-btn unelevated color="white" text-color="dark" label="Search hotels" icon="search" />
-            <q-btn flat color="white" label="Explore destinations" />
-          </div>
-          <div v-if="!hosted" class="text-caption q-mt-lg" style="color:#A1A1AA">Set VITE_IMAGERY_URL and host the asset to load the banner.</div>
+          <div class="text-body1" style="color:#D4D4D8; max-width:460px; margin:0 auto">Book hand-picked hotels with free cancellation and member rates.</div>
         </div>
       </section>`,
   }),
 }
 
-/** The raw asset, full-bleed (no overlay). */
-export const Asset = {
+/** Hotel listings banner (1440×200) — background image with centered logo + headline + subheadline. */
+export const HotelListings = {
+  name: 'Hotel Listings',
   render: () => ({
-    setup: () => ({ style: { ...bg(HERO), height: '300px' } }),
-    template: `<div :style="style"></div>`,
-  }),
-}
-
-/** Compact variant (shorter height, e.g. interior pages). */
-export const Compact = {
-  render: () => ({
-    setup: () => ({ style: { ...bg(HERO), minHeight: '200px', display: 'flex', alignItems: 'center' } }),
+    setup: () => ({ style: { ...bg(HERO_LISTINGS), width: '100%', aspectRatio: '1440 / 200' } }),
     template: `
       <section :style="style">
-        <div style="padding:0 40px; max-width:520px">
-          <div class="text-h5" style="font-weight:700">Member deals this week</div>
-          <div class="text-body2" style="color:#D4D4D8">Up to 25% off select properties.</div>
+        <div style="padding:0 24px; max-width:760px">
+          <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px">
+            <q-icon name="golf_course" size="22px" style="color:#5EEAD4" />
+            <span style="font-weight:700; letter-spacing:.02em; font-size:1.0625rem">Birdie Stays</span>
+          </div>
+          <div class="text-h5" style="font-weight:700; line-height:1.15; margin-bottom:4px">Hotels for your tournament weekend</div>
+          <div class="text-body2" style="color:#D4D4D8">Team rates, free cancellation, and stays near the fields.</div>
         </div>
       </section>`,
   }),
