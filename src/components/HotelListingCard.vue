@@ -6,6 +6,7 @@
 // dynamically from the local imagery library (imagery.js) by category.
 import { ref, computed, onMounted } from 'vue'
 import { loadImagery } from '../lib/imagery'
+import QuantityStepper from './QuantityStepper.vue'
 
 const props = defineProps({
   name: { type: String, default: 'Hotel Name' },
@@ -88,8 +89,6 @@ const fmt2 = (n) => Number(n ?? 0).toLocaleString('en-US', { minimumFractionDigi
 
 // Per-night room quantities for the 'hold' stepper. Clamped to [0, roomsLeft].
 const qty = ref(props.nights.map(() => 0))
-const inc = (i) => { if (qty.value[i] < props.nights[i].roomsLeft) qty.value[i]++ }
-const dec = (i) => { if (qty.value[i] > 0) qty.value[i]-- }
 const totalSelected = computed(() => qty.value.reduce((a, b) => a + b, 0))
 const startingPrice = computed(() => props.nights.length ? Math.min(...props.nights.map((n) => n.price)) : props.price)
 </script>
@@ -162,12 +161,8 @@ const startingPrice = computed(() => props.nights.length ? Math.min(...props.nig
                 <span class="hlc__rr-date">{{ n.date }}</span>
                 <span class="hlc__rr-nrate">{{ currency }}{{ fmt2(n.price) }} / night</span>
               </div>
-              <span class="hlc__rr-avail hlc__rr-avail--sm">{{ n.roomsLeft }} left</span>
-              <div class="hlc__step" role="group" aria-label="Rooms for this night">
-                <button class="hlc__step-btn" :disabled="qty[i] === 0" aria-label="Decrease rooms" @click="dec(i)">−</button>
-                <span class="hlc__step-val">{{ qty[i] }}</span>
-                <button class="hlc__step-btn" :disabled="qty[i] >= n.roomsLeft" aria-label="Increase rooms" @click="inc(i)">+</button>
-              </div>
+              <span class="hlc__rr-avail hlc__rr-avail--sm">{{ n.roomsLeft - qty[i] }} left</span>
+              <quantity-stepper v-model="qty[i]" :min="0" :max="n.roomsLeft" size="sm" />
             </div>
           </template>
         </div>
@@ -318,15 +313,10 @@ const startingPrice = computed(() => props.nights.length ? Math.min(...props.nig
 .hlc__rr-ndate { display: flex; flex-direction: column; flex: 1; min-width: 0; }
 .hlc__rr-date { color: var(--ds-color-text); font-size: 0.9375rem; }
 .hlc__rr-nrate { color: var(--ds-color-text-subtlest); font-size: 0.8125rem; }
-.hlc__rr-avail { color: var(--ds-color-text-success); font-weight: 700; font-size: 0.9375rem; }
+.hlc__rr-avail { color: var(--ds-palette-orange-600); font-weight: 700; font-size: 0.9375rem; }
 .hlc__rr-avail--sm { font-size: 0.8125rem; font-weight: 600; white-space: nowrap; }
 
 /* Stepper — single rounded container, muted +/−, dark value (per reference). */
-.hlc__step { display: inline-flex; align-items: center; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); }
-.hlc__step-btn { width: 32px; height: 32px; border: 0; background: transparent; color: var(--ds-color-text-subtlest); font-size: 1.125rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: var(--ds-radius-md); transition: color var(--ds-duration-fast) var(--ds-ease-standard), background var(--ds-duration-fast) var(--ds-ease-standard); }
-.hlc__step-btn:hover:not(:disabled) { color: var(--ds-color-text); background: var(--ds-palette-zinc-100); }
-.hlc__step-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.hlc__step-val { min-width: 28px; text-align: center; font-weight: 600; font-size: 0.9375rem; color: var(--ds-color-text); }
 
 .hlc__rr-foot { display: flex; flex-direction: column; }
 .hlc__rr-rate { color: var(--ds-color-text-subtle); font-size: 0.9375rem; }

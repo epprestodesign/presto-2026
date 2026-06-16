@@ -64,7 +64,7 @@ const preview = {
             'Button', 'Button Group', 'Checkbox', 'Radio Group', 'Switch',
             'Text Field', 'Text Area', 'Select', 'Autocomplete',
             'Date Picker', 'Time Picker', 'Slider',
-            'Rating', 'Transfer List',
+            'Rating', 'Quantity Stepper', 'Transfer List',
           ],
           'Data Display', [
             'Avatar', 'Badge', 'Chip', 'Divider', 'Icon',
