@@ -6,6 +6,7 @@
 // the selected nights / rooms and add-ons.
 import { ref, computed, onMounted } from 'vue'
 import { loadImagery } from '../lib/imagery'
+import QuantityStepper from './QuantityStepper.vue'
 
 const props = defineProps({
   name: { type: String, default: '' },
@@ -69,8 +70,6 @@ const extrasTotal = computed(() => props.extras.filter((e) => picked.value[e.id]
 
 // --- Per-night quantities (hold mode). Clamped to [0, roomsLeft]. ---
 const qty = ref(props.nights.map(() => 0))
-const inc = (i) => { if (qty.value[i] < props.nights[i].roomsLeft) qty.value[i]++ }
-const dec = (i) => { if (qty.value[i] > 0) qty.value[i]-- }
 const roomsSelected = computed(() => qty.value.reduce((a, b) => a + b, 0))
 const nightsTotal = computed(() => props.nights.reduce((s, n, i) => s + n.price * qty.value[i], 0))
 
@@ -156,12 +155,8 @@ const ctaText = computed(() => {
           <template v-else>
             <div v-for="(n, i) in nights" :key="i" class="rbd__night rbd__night--hold">
               <div class="rbd__ndate"><span>{{ n.date }}</span><span class="rbd__nrate">{{ money2(n.price) }} / night</span></div>
-              <span class="rbd__avail rbd__avail--sm">{{ n.roomsLeft }} left</span>
-              <div class="rbd__step" role="group" aria-label="Rooms for this night">
-                <button class="rbd__step-btn" :disabled="qty[i] === 0" aria-label="Decrease rooms" @click="dec(i)">−</button>
-                <span class="rbd__step-val">{{ qty[i] }}</span>
-                <button class="rbd__step-btn" :disabled="qty[i] >= n.roomsLeft" aria-label="Increase rooms" @click="inc(i)">+</button>
-              </div>
+              <span class="rbd__avail rbd__avail--sm">{{ n.roomsLeft - qty[i] }} left</span>
+              <quantity-stepper v-model="qty[i]" :min="0" :max="n.roomsLeft" size="sm" />
             </div>
           </template>
         </div>
@@ -243,17 +238,12 @@ const ctaText = computed(() => {
 
 .rbd__night { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--ds-color-border); }
 .rbd__night:last-child { border-bottom: 0; }
-.rbd__avail { color: var(--ds-color-text-success); font-weight: 700; font-size: 0.9375rem; }
+.rbd__avail { color: var(--ds-palette-orange-600); font-weight: 700; font-size: 0.9375rem; }
 .rbd__avail--sm { font-size: 0.8125rem; font-weight: 600; white-space: nowrap; }
 .rbd__night--hold { gap: 14px; }
 .rbd__ndate { display: flex; flex-direction: column; flex: 1; min-width: 0; }
 .rbd__nrate { color: var(--ds-color-text-subtlest); font-size: 0.8125rem; }
 
-.rbd__step { display: inline-flex; align-items: center; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); }
-.rbd__step-btn { width: 34px; height: 34px; border: 0; background: transparent; color: var(--ds-color-text-subtlest); font-size: 1.125rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: var(--ds-radius-md); transition: color var(--ds-duration-fast) var(--ds-ease-standard), background var(--ds-duration-fast) var(--ds-ease-standard); }
-.rbd__step-btn:hover:not(:disabled) { color: var(--ds-color-text); background: var(--ds-palette-zinc-100); }
-.rbd__step-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.rbd__step-val { min-width: 30px; text-align: center; font-weight: 600; color: var(--ds-color-text); }
 
 .rbd__extra { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--ds-color-border); }
 .rbd__extra:last-child { border-bottom: 0; }

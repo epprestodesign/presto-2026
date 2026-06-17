@@ -64,7 +64,7 @@ const preview = {
             'Button', 'Button Group', 'Checkbox', 'Radio Group', 'Switch',
             'Text Field', 'Text Area', 'Select', 'Autocomplete',
             'Date Picker', 'Time Picker', 'Slider',
-            'Rating', 'Transfer List',
+            'Rating', 'Quantity Stepper', 'Transfer List',
           ],
           'Data Display', [
             'Avatar', 'Badge', 'Chip', 'Divider', 'Icon',
@@ -83,6 +83,11 @@ const preview = {
           'Patterns', [
             'Booking Widget', 'Hotel Listing Card', 'Room Booking Dialog', 'Hotel Map', 'Forms', 'Search & Filters', 'Empty States', 'Loading States',
             'Data Tables', 'Dashboards', 'App Shell', 'Side Panels', 'Confirmation Flows',
+          ],
+          'Checkout Experience', [
+            'Checkout Page',
+            'Steps', ['Review Order', 'Contact Info', 'Payment', 'Review Reservation'],
+            'Payment Dialogs',
           ],
           '*',
         ],

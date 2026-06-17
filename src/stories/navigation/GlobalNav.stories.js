@@ -5,43 +5,73 @@
 // counts down live and the cart badge tracks the live selection.
 import GlobalNav from '../../components/GlobalNav.vue'
 
-// "Hold Rooms for Group or Team" cart — multiple room types, live steppers.
+// "Hold Rooms for Group or Team" cart — collapsible hotels → rooms → day steppers.
 const holdCart = {
-  hotel: { name: 'Embassy Suites Chicago Downtown', stars: 4 },
   heldSeconds: 372, // 06:12
-  heldUntil: 'June 26, 2026 at 11:59 PM PST',
-  imageCategories: ['suites', 'rooms'],
-  seed: 0,
-  rooms: [
-    { type: 'Two-Room Suite King', nights: [
-      { date: 'Tue, Jun 23', qty: 4, roomsLeft: 4, price: 269 },
-      { date: 'Wed, Jun 24', qty: 1, roomsLeft: 5, price: 269 },
-    ] },
-    { type: 'Two-Room Suite Double', nights: [
-      { date: 'Tue, Jun 23', qty: 1, roomsLeft: 5, price: 289 },
-      { date: 'Wed, Jun 24', qty: 1, roomsLeft: 4, price: 289 },
-    ] },
+  taxRate: 0.12,
+  feePerNight: 30, // property fee per room-night
+  hotels: [
+    {
+      name: 'Embassy Suites Chicago Downtown',
+      imageCategories: ['suites', 'rooms'],
+      seed: 0,
+      rooms: [
+        { type: 'Two-Room Suite King', summary: '1 King Bed · Sleeps 4', price: 269, nights: [
+          { date: 'Tue, Jun 23', qty: 4, roomsLeft: 6 },
+          { date: 'Wed, Jun 24', qty: 1, roomsLeft: 5 },
+        ] },
+        { type: 'Two-Room Suite Double', summary: '2 Queen Beds · Sleeps 4', price: 289, nights: [
+          { date: 'Tue, Jun 23', qty: 1, roomsLeft: 5 },
+          { date: 'Wed, Jun 24', qty: 1, roomsLeft: 4 },
+        ] },
+      ],
+    },
+    {
+      name: 'The Concord Hotel',
+      imageCategories: ['lobby', 'rooms'],
+      seed: 2,
+      rooms: [
+        { type: 'King Studio', summary: '1 King Bed · Sleeps 2', price: 165, nights: [
+          { date: 'Tue, Jun 23', qty: 1, roomsLeft: 6 },
+        ] },
+        { type: 'Double Queen', summary: '2 Queen Beds · Sleeps 4', price: 185, nights: [
+          { date: 'Tue, Jun 23', qty: 1, roomsLeft: 3 },
+        ] },
+      ],
+    },
   ],
 }
 
-// "Hotel Reservation" cart — held countdown, nightly breakdown, totals.
+// "Hotel Reservation" cart — held countdown, rich reservation summary.
 const reserveCart = {
-  hotel: { name: 'Embassy Suites Chicago Downtown', stars: 4, address: '600 N State St, Chicago, IL 60654' },
+  hotel: { name: 'The Concord Hotel', address: '750 Tremont St, Boston, MA 02118' },
   heldSeconds: 895, // 14:55
-  imageCategories: ['suites', 'rooms', 'lobby'],
-  seed: 3,
-  checkIn: '2026-06-23',
-  checkOut: '2026-06-26',
-  reserveRoom: 'Two-Room Suite King',
-  reserveNights: [
-    { date: 'Tue, 6/23/2026', price: 269 },
-    { date: 'Wed, 6/24/2026', price: 269 },
-    { date: 'Thu, 6/25/2026', price: 269 },
+  imageCategories: ['suites', 'rooms', 'lobby', 'pool', 'dining'],
+  seed: 1,
+  checkIn: { date: '06/23/2026', time: '4:00pm' },
+  checkOut: { date: '06/24/2026', time: '11:00am' },
+  nights: 1,
+  highlights: [
+    { icon: 'kitchen', label: 'Kitchen' },
+    { icon: 'ac_unit', label: 'Air conditioning' },
+    { icon: 'microwave', label: 'Microwave' },
   ],
-  taxes: 113,
-  total: 920,
-  dueToday: 269,
-  balanceDue: 651,
+  roomType: 'Aparthotel',
+  bedConfig: '1 King Bed and 1 Queen Sofa Bed',
+  sleeps: 2,
+  amenities: [{ icon: 'wifi', label: 'Free WiFi' }],
+  priceDetails: {
+    nights: 1,
+    rooms: 1,
+    rate: 164.78,
+    subtotal: 164.78,
+    program: 'OneKeyCash applied',
+    discount: '$26.55 off',
+    taxes: 47.53,
+    propertyFee: 110.0,
+    total: 322.31,
+  },
+  roomsLeft: 1,
 }
 
 export default {
