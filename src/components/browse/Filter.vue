@@ -11,7 +11,7 @@
 //   budget         → dual-handle range slider + min/max readout (+ optional histogram)
 //   propertySearch → text input, with optional autocomplete suggestions
 // v-model holds the appropriate value shape per type. Selected states use the
-// DS primary (Zinc). Stack several to build a full filter sidebar.
+// DS primary (Navy). Stack several to build a full filter sidebar.
 import { computed, reactive, ref } from 'vue'
 import { AMENITIES, filterAmenities } from '../../lib/amenities.js'
 
@@ -263,7 +263,7 @@ const visibleTiles = computed(() => (searching.value ? filteredTiles.value : col
       </div>
       <div class="flt__list">
         <button v-for="a in visibleOpts" :key="a" type="button" class="flt__check" :class="{ 'is-on': (val || []).includes(a) }" role="checkbox" :aria-checked="(val || []).includes(a)" @click="toggleVal(a)">
-          <span class="flt__box"><q-icon v-if="(val || []).includes(a)" name="check" size="16px" /></span>
+          <span class="flt__box"><q-icon v-if="(val || []).includes(a)" name="check" size="14px" /></span>
           <span class="flt__label">{{ a }}</span>
         </button>
       </div>
@@ -283,7 +283,7 @@ const visibleTiles = computed(() => (searching.value ? filteredTiles.value : col
       </div>
       <div class="flt__grid">
         <button v-for="t in visibleTiles" :key="t.label" type="button" class="flt__tile" :class="{ 'is-on': (val || []).includes(t.label) }" :aria-pressed="(val || []).includes(t.label)" @click="toggleVal(t.label)">
-          <q-icon :name="t.icon" size="24px" />
+          <q-icon :name="t.icon" size="20px" />
           <span>{{ t.label }}</span>
         </button>
       </div>
@@ -297,7 +297,7 @@ const visibleTiles = computed(() => (searching.value ? filteredTiles.value : col
     <!-- room type: icon chip toggles -->
     <div v-else-if="type === 'roomType'" class="flt__chips">
       <button v-for="o in roomTypeOpts" :key="o.label" type="button" class="flt__chip" :class="{ 'is-on': (val || []).includes(o.label) }" :aria-pressed="(val || []).includes(o.label)" @click="toggleVal(o.label)">
-        <q-icon :name="o.icon" size="20px" />
+        <q-icon :name="o.icon" size="18px" />
         <span>{{ o.label }}</span>
       </button>
     </div>
@@ -313,7 +313,7 @@ const visibleTiles = computed(() => (searching.value ? filteredTiles.value : col
     <!-- star rating: chip toggles -->
     <div v-else-if="type === 'starRating'" class="flt__stars">
       <button v-for="s in opts" :key="s" type="button" class="flt__star" :class="{ 'is-on': (val || []).includes(s) }" :aria-pressed="(val || []).includes(s)" @click="toggleVal(s)">
-        {{ s }} <q-icon name="star" size="15px" />
+        {{ s }} <q-icon name="star" size="14px" />
       </button>
     </div>
 
@@ -336,7 +336,7 @@ const visibleTiles = computed(() => (searching.value ? filteredTiles.value : col
         <div class="flt__brandhead">
           <button type="button" class="flt__check" :class="{ 'is-on': brandState(b) === 'all' }" @click="toggleBrand(b)">
             <span class="flt__box" :class="{ 'is-indet': brandState(b) === 'some' }">
-              <q-icon v-if="brandState(b) === 'all'" name="check" size="16px" />
+              <q-icon v-if="brandState(b) === 'all'" name="check" size="14px" />
               <span v-else-if="brandState(b) === 'some'" class="flt__dash" />
             </span>
             <span class="flt__label">{{ b.name }}</span>
@@ -347,7 +347,7 @@ const visibleTiles = computed(() => (searching.value ? filteredTiles.value : col
         </div>
         <div v-show="expanded[b.name] || searching" class="flt__children">
           <button v-for="c in b.children" :key="c" type="button" class="flt__check flt__check--child" :class="{ 'is-on': (val || []).includes(c) }" role="checkbox" :aria-checked="(val || []).includes(c)" @click="toggleVal(c)">
-            <span class="flt__box"><q-icon v-if="(val || []).includes(c)" name="check" size="16px" /></span>
+            <span class="flt__box"><q-icon v-if="(val || []).includes(c)" name="check" size="14px" /></span>
             <span class="flt__label">{{ c }}</span>
           </button>
         </div>
@@ -401,115 +401,115 @@ const visibleTiles = computed(() => (searching.value ? filteredTiles.value : col
 
 <style scoped>
 .flt { padding: 4px 0; }
-.flt__title { margin: 0 0 16px; font-size: 1.25rem; font-weight: 800; color: var(--ds-color-text); }
+.flt__title { margin: 0 0 12px; font-size: 1rem; font-weight: 700; color: var(--ds-color-text); }
 .flt__titlerow { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 0; background: none; border: 0; cursor: pointer; text-align: left; }
 .flt__titlerow .flt__title { margin: 0; }
 .flt__titlechev { color: var(--ds-color-text-subtle); flex: none; }
-.flt--collapsible .flt__body { padding-top: 16px; }
+.flt--collapsible .flt__body { padding-top: 12px; }
 
 /* "View more / Fewer amenity options" toggle */
-.flt__more { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 4px 0; background: none; border: 0; color: var(--ds-color-text); font-family: inherit; font-weight: 700; font-size: 1.0625rem; cursor: pointer; }
+.flt__more { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 4px 0; background: none; border: 0; color: var(--ds-color-text-brand); font-family: inherit; font-weight: 600; font-size: 0.875rem; cursor: pointer; }
 .flt__more:hover { text-decoration: underline; }
 
 /* checkbox + radio rows */
-.flt__list { display: flex; flex-direction: column; gap: 6px; }
-.flt__check, .flt__radio { display: flex; align-items: center; gap: 14px; width: 100%; padding: 6px 0; background: none; border: 0; text-align: left; cursor: pointer; }
-.flt__box { width: 26px; height: 26px; flex: none; border: 2px solid var(--ds-color-border-bold); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #fff; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.flt__list { display: flex; flex-direction: column; gap: 2px; }
+.flt__check, .flt__radio { display: flex; align-items: center; gap: 10px; width: 100%; padding: 4px 0; background: none; border: 0; text-align: left; cursor: pointer; }
+.flt__box { width: 20px; height: 20px; flex: none; border: 2px solid var(--ds-color-border-bold); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #fff; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
 .flt__check.is-on .flt__box, .flt__box.is-indet { background: var(--ds-color-background-brand-bold); border-color: var(--ds-color-background-brand-bold); }
-.flt__dash { width: 12px; height: 2px; border-radius: 1px; background: #fff; }
-.flt__dot { width: 26px; height: 26px; flex: none; border: 2px solid var(--ds-color-border-bold); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.flt__dash { width: 10px; height: 2px; border-radius: 1px; background: #fff; }
+.flt__dot { width: 20px; height: 20px; flex: none; border: 2px solid var(--ds-color-border-bold); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 .flt__radio.is-on .flt__dot { border-color: var(--ds-color-background-brand-bold); }
-.flt__dot span { width: 14px; height: 14px; border-radius: 50%; background: var(--ds-color-background-brand-bold); }
-.flt__label { font-size: 1.0625rem; font-weight: 600; color: var(--ds-color-text); }
+.flt__dot span { width: 10px; height: 10px; border-radius: 50%; background: var(--ds-color-background-brand-bold); }
+.flt__label { font-size: 0.875rem; font-weight: 400; color: var(--ds-color-text); }
 .flt__check:hover .flt__box, .flt__radio:hover .flt__dot { border-color: var(--ds-color-text); }
 
 /* amenities icon grid */
-.flt__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.flt__tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 92px; padding: 14px 10px; text-align: center; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); color: var(--ds-color-text); font-size: 0.9375rem; font-weight: 600; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.flt__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.flt__tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 68px; padding: 10px 8px; text-align: center; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); color: var(--ds-color-text); font-size: 0.8125rem; font-weight: 500; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
 .flt__tile .q-icon { color: var(--ds-color-text-subtle); }
 .flt__tile:hover { border-color: var(--ds-color-text); }
-.flt__tile.is-on { border-color: var(--ds-color-background-brand-bold); background: var(--ds-palette-zinc-100); box-shadow: inset 0 0 0 1px var(--ds-color-background-brand-bold); }
+.flt__tile.is-on { border-color: var(--ds-color-background-brand-bold); background: var(--ds-palette-navy-50); box-shadow: inset 0 0 0 1px var(--ds-color-background-brand-bold); }
 .flt__tile.is-on .q-icon { color: var(--ds-color-background-brand-bold); }
 
 /* star chips */
-.flt__stars { display: flex; flex-wrap: wrap; gap: 12px; }
-.flt__star { display: inline-flex; align-items: center; gap: 6px; height: 52px; min-width: 60px; padding: 0 16px; justify-content: center; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); color: var(--ds-color-text); font-weight: 700; font-size: 1.0625rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.flt__stars { display: flex; flex-wrap: wrap; gap: 8px; }
+.flt__star { display: inline-flex; align-items: center; gap: 5px; height: 38px; min-width: 50px; padding: 0 12px; justify-content: center; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); color: var(--ds-color-text); font-weight: 600; font-size: 0.875rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
 .flt__star .q-icon { color: var(--ds-color-text); }
 .flt__star:hover { border-color: var(--ds-color-text); }
 .flt__star.is-on { background: var(--ds-color-background-brand-bold); border-color: var(--ds-color-background-brand-bold); color: #fff; }
 .flt__star.is-on .q-icon { color: #fff; }
 
 /* hotel class cards */
-.flt__classes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.flt__class { display: flex; flex-direction: column; gap: 4px; align-items: center; padding: 18px 12px; text-align: center; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
-.flt__class strong { font-size: 1.0625rem; font-weight: 700; color: var(--ds-color-text); }
-.flt__class span { font-size: 0.875rem; color: var(--ds-color-text-subtle); }
+.flt__classes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.flt__class { display: flex; flex-direction: column; gap: 2px; align-items: center; padding: 12px 10px; text-align: center; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.flt__class strong { font-size: 0.9375rem; font-weight: 700; color: var(--ds-color-text); }
+.flt__class span { font-size: 0.8125rem; color: var(--ds-color-text-subtle); }
 .flt__class:hover { border-color: var(--ds-color-text); }
-.flt__class.is-on { border-color: var(--ds-color-background-brand-bold); background: var(--ds-palette-zinc-100); box-shadow: inset 0 0 0 1px var(--ds-color-background-brand-bold); }
+.flt__class.is-on { border-color: var(--ds-color-background-brand-bold); background: var(--ds-palette-navy-50); box-shadow: inset 0 0 0 1px var(--ds-color-background-brand-bold); }
 
 /* brands tree */
 .flt__brands { display: flex; flex-direction: column; }
 .flt__brandhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .flt__chev { background: none; border: 0; padding: 6px; color: var(--ds-color-text-subtle); cursor: pointer; display: flex; }
-.flt__children { display: flex; flex-direction: column; padding-left: 38px; }
-.flt__check--child .flt__label { font-weight: 500; }
+.flt__children { display: flex; flex-direction: column; padding-left: 30px; }
+.flt__check--child .flt__label { font-weight: 400; }
 
 /* budget */
 .flt__budget { display: flex; flex-direction: column; padding-top: 4px; }
 /* per-night / total-cost basis toggle */
-.flt__basis { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 8px; }
-.flt__radio--inline { width: auto; gap: 10px; }
-.flt__basisnote { font-size: 0.8125rem; color: var(--ds-color-text-subtle); margin: 0 0 14px; }
+.flt__basis { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-bottom: 8px; }
+.flt__radio--inline { width: auto; gap: 8px; }
+.flt__basisnote { font-size: 0.8125rem; color: var(--ds-color-text-subtle); margin: 0 0 12px; }
 .flt__range { padding: 0 6px; }
 .flt__budget .flt__range { order: 1; }
-.flt__budget .flt__mmrow { order: 2; margin-top: 18px; }
-.flt__budget--histo .flt__mmrow { order: 1; margin-top: 0; margin-bottom: 22px; }
+.flt__budget .flt__mmrow { order: 2; margin-top: 14px; }
+.flt__budget--histo .flt__mmrow { order: 1; margin-top: 0; margin-bottom: 18px; }
 .flt__budget--histo .flt__histo { order: 2; }
 .flt__budget--histo .flt__range { order: 3; }
 
-.flt__mmrow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.flt__mm { display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); padding: 10px 16px; cursor: text; transition: border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.flt__mmrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.flt__mm { display: flex; flex-direction: column; gap: 2px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); padding: 8px 12px; cursor: text; transition: border-color var(--ds-duration-fast) var(--ds-ease-standard); }
 .flt__mm:focus-within { border-color: var(--ds-color-border-focused); }
-.flt__mm > span:first-child { font-size: 0.9375rem; color: var(--ds-color-text-subtle); }
+.flt__mm > span:first-child { font-size: 0.8125rem; color: var(--ds-color-text-subtle); }
 .flt__mmfield { display: flex; align-items: center; gap: 4px; }
-.flt__mmcur { font-size: 1.25rem; font-weight: 700; color: var(--ds-color-text); flex: none; }
-.flt__mminput { width: 100%; min-width: 0; border: 0; outline: none; background: none; padding: 0; font-family: inherit; font-size: 1.25rem; font-weight: 700; color: var(--ds-color-text); }
+.flt__mmcur { font-size: 1rem; font-weight: 700; color: var(--ds-color-text); flex: none; }
+.flt__mminput { width: 100%; min-width: 0; border: 0; outline: none; background: none; padding: 0; font-family: inherit; font-size: 1rem; font-weight: 700; color: var(--ds-color-text); }
 .flt__mminput::placeholder { color: var(--ds-color-text-subtlest); font-weight: 700; }
 /* Hide number-input spinners for a cleaner look. */
 .flt__mminput::-webkit-outer-spin-button, .flt__mminput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .flt__mminput { -moz-appearance: textfield; }
 
 /* room type chips */
-.flt__chips { display: flex; flex-wrap: wrap; gap: 12px; }
-.flt__chip { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 20px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-pill); background: var(--ds-color-surface); color: var(--ds-color-text); font-weight: 600; font-size: 1.0625rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.flt__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.flt__chip { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-pill); background: var(--ds-color-surface); color: var(--ds-color-text); font-weight: 500; font-size: 0.875rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
 .flt__chip .q-icon { color: var(--ds-color-text); }
 .flt__chip:hover { border-color: var(--ds-color-text); }
-.flt__chip.is-on { border-color: var(--ds-color-background-brand-bold); background: var(--ds-palette-zinc-100); box-shadow: inset 0 0 0 1px var(--ds-color-background-brand-bold); }
+.flt__chip.is-on { border-color: var(--ds-color-background-brand-bold); background: var(--ds-palette-navy-50); box-shadow: inset 0 0 0 1px var(--ds-color-background-brand-bold); }
 
 /* price-distribution histogram */
-.flt__histo { display: flex; align-items: flex-end; gap: 3px; height: 96px; padding: 0 6px; }
-.flt__bar { flex: 1; min-width: 0; border-radius: 4px 4px 0 0; background: var(--ds-palette-zinc-200); transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
+.flt__histo { display: flex; align-items: flex-end; gap: 3px; height: 72px; padding: 0 6px; }
+.flt__bar { flex: 1; min-width: 0; border-radius: 4px 4px 0 0; background: var(--ds-palette-slate-200); transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
 .flt__bar.is-active { background: var(--ds-color-background-brand-bold); }
 
 /* property search + autocomplete */
 /* Inline list search (amenities / brands) — leading icon + clearable input. */
-.flt__find { position: relative; display: flex; align-items: center; margin-bottom: 14px; }
+.flt__find { position: relative; display: flex; align-items: center; margin-bottom: 12px; }
 .flt__find-icon { position: absolute; left: 12px; color: var(--ds-color-text-subtle); pointer-events: none; }
-.flt__find-input { width: 100%; height: 44px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); padding: 0 38px; font-family: inherit; font-size: 0.9375rem; color: var(--ds-color-text); outline: none; background: var(--ds-color-surface); transition: border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.flt__find-input { width: 100%; height: 38px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); padding: 0 36px; font-family: inherit; font-size: 0.875rem; color: var(--ds-color-text); outline: none; background: var(--ds-color-surface); transition: border-color var(--ds-duration-fast) var(--ds-ease-standard); }
 .flt__find-input:focus { border-color: var(--ds-color-border-focused); }
 .flt__find-input::placeholder { color: var(--ds-color-text-subtlest); }
-.flt__find-clear { position: absolute; right: 8px; width: 28px; height: 28px; border: 0; border-radius: 50%; background: none; color: var(--ds-color-text-subtle); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.flt__find-clear:hover { background: var(--ds-palette-zinc-100); color: var(--ds-color-text); }
-.flt__noresults { color: var(--ds-color-text-subtle); font-size: 0.9375rem; margin: 2px 2px 0; }
+.flt__find-clear { position: absolute; right: 8px; width: 26px; height: 26px; border: 0; border-radius: 50%; background: none; color: var(--ds-color-text-subtle); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.flt__find-clear:hover { background: var(--ds-palette-slate-100); color: var(--ds-color-text); }
+.flt__noresults { color: var(--ds-color-text-subtle); font-size: 0.875rem; margin: 2px 2px 0; }
 
 .flt__searchwrap { position: relative; }
-.flt__search { width: 100%; height: 54px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); padding: 0 18px; font-family: inherit; font-size: 1.0625rem; color: var(--ds-color-text); outline: none; transition: border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.flt__search { width: 100%; height: 42px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); padding: 0 14px; font-family: inherit; font-size: 0.9375rem; color: var(--ds-color-text); outline: none; transition: border-color var(--ds-duration-fast) var(--ds-ease-standard); }
 .flt__search:focus { border-color: var(--ds-color-border-focused); }
 .flt__search::placeholder { color: var(--ds-color-text-subtlest); }
 .flt__ac { list-style: none; margin: 6px 0 0; padding: 6px; position: absolute; z-index: 20; left: 0; right: 0; background: var(--ds-color-surface); border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); box-shadow: var(--ds-shadow-md, 0 8px 24px rgba(0, 0, 0, 0.12)); }
-.flt__acopt { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: 0; border-radius: var(--ds-radius-sm); background: none; text-align: left; cursor: pointer; }
-.flt__acopt:hover { background: var(--ds-palette-zinc-100); }
+.flt__acopt { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 12px; border: 0; border-radius: var(--ds-radius-sm); background: none; text-align: left; cursor: pointer; }
+.flt__acopt:hover { background: var(--ds-palette-slate-100); }
 .flt__acopt .q-icon { color: var(--ds-color-text-subtle); flex: none; }
-.flt__acname { font-size: 0.9375rem; font-weight: 600; color: var(--ds-color-text); }
+.flt__acname { font-size: 0.875rem; font-weight: 600; color: var(--ds-color-text); }
 .flt__acloc { font-size: 0.8125rem; color: var(--ds-color-text-subtle); margin-left: auto; }
 </style>
