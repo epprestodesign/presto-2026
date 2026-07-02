@@ -35,8 +35,8 @@ const money = (n) => props.prefix + Number(n).toLocaleString('en-US') + (n >= pr
 <style scoped>
 .dsr { display: flex; flex-direction: column; }
 .dsr__range { padding: 0 6px; }
-.dsr__mm { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
-.dsr__box { display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); padding: 12px 16px; }
-.dsr__box span { font-size: 0.9375rem; color: var(--ds-color-text-subtle); }
-.dsr__box strong { font-size: 1.25rem; font-weight: 700; color: var(--ds-color-text); }
+.dsr__mm { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.dsr__box { display: flex; flex-direction: column; gap: 2px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); padding: 8px 12px; }
+.dsr__box span { font-size: 0.8125rem; color: var(--ds-color-text-subtle); }
+.dsr__box strong { font-size: 1rem; font-weight: 700; color: var(--ds-color-text); }
 </style>

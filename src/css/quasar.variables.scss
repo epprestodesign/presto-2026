@@ -33,5 +33,5 @@ $typography-font-family: 'PT Sans', -apple-system, BlinkMacSystemFont,
 
 // --- Shape / spacing tokens ----------------------------------
 $generic-border-radius: 8px;    // global radius used by many components
-$button-border-radius:  8px;
+$button-border-radius:  4px;    // crisp button corners, matches Presto reference
 $button-font-weight:    700;

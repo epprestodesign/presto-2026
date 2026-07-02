@@ -64,7 +64,7 @@ const isOn = (name) => (props.modelValue || []).includes(name)
 .dst { display: flex; flex-direction: column; }
 .dst__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .dst__check { display: flex; align-items: center; gap: 14px; width: 100%; padding: 6px 0; background: none; border: 0; text-align: left; cursor: pointer; }
-.dst__box { width: 24px; height: 24px; flex: none; border: 2px solid var(--ds-color-border-bold); border-radius: 7px; display: flex; align-items: center; justify-content: center; color: #fff; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.dst__box { width: 22px; height: 22px; flex: none; border: 2px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-sm); display: flex; align-items: center; justify-content: center; color: #fff; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
 .dst__check.is-on .dst__box, .dst__box.is-indet { background: var(--ds-color-background-brand-bold); border-color: var(--ds-color-background-brand-bold); }
 .dst__dash { width: 11px; height: 2px; border-radius: 1px; background: #fff; }
 .dst__label { font-size: 1rem; font-weight: 600; color: var(--ds-color-text); }

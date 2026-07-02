@@ -13,11 +13,13 @@
   --ds-space-5: 24px;
   --ds-space-6: 32px;
 
-  // Radius scale — tightened to 8px to match the Presto reference corners.
+  // Radius scale — tightened to match the Presto reference corners.
+  // Reference runs Quasar stock radii: cards/inputs 4px, buttons ~3–4px.
   --ds-radius-sm: 6px;
   --ds-radius-md: 8px;
   --ds-radius-lg: 16px;
   --ds-radius-pill: 999px;
+  --ds-radius-button: 4px;   // crisp control corners, matches reference buttons
 
   // Typography scale. PT Sans ships only 400 & 700, so "medium" resolves to
   // 400 (regular) — deterministic body/label weight matching production.
