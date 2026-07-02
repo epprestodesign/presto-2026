@@ -131,11 +131,11 @@ function popupNode (h) {
   const url = h.url || '#'
   const tgt = props.linkTarget
   el.innerHTML =
-    (h.image ? `<a href="${url}" target="${tgt}" class="hm-link" style="display:block;margin-bottom:8px"><img src="${h.image}" alt="${h.name}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;display:block"></a>` : '') +
+    (h.image ? `<a href="${url}" target="${tgt}" class="hm-link" style="display:block;margin-bottom:8px"><img src="${h.image}" alt="${h.name}" style="width:100%;height:120px;object-fit:cover;border-radius:4px;display:block"></a>` : '') +
     `<a href="${url}" target="${tgt}" class="hm-link hm-link--name" style="font-weight:700;font-size:14px;color:#18181B;line-height:1.2;display:inline-block">${h.name}</a>` +
     (h.location ? `<div style="color:#71717A;font-size:12px;margin-top:2px">${h.location}</div>` : '') +
     '<div style="display:flex;align-items:center;gap:6px;margin-top:6px">' +
-      (h.rating != null ? `<span style="background:#18181B;color:#fff;font-weight:700;font-size:12px;padding:2px 7px;border-radius:5px">${h.rating.toFixed(1)}</span>` : '') +
+      (h.rating != null ? `<span style="background:#18181B;color:#fff;font-weight:700;font-size:12px;padding:2px 7px;border-radius:4px">${h.rating.toFixed(1)}</span>` : '') +
       (h.reviews ? `<span style="color:#71717A;font-size:12px">${Number(h.reviews).toLocaleString()} reviews</span>` : '') +
     '</div>' +
     `<div style="margin-top:8px;font-size:18px;font-weight:700;color:#18181B">${money(h.price)} <span style="font-size:12px;font-weight:500;color:#71717A">/ night</span></div>`

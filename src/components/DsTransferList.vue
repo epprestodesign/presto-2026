@@ -23,7 +23,7 @@ const toggle = (sel, item) => {
 </script>
 <template>
   <div class="row items-center q-gutter-md">
-    <q-list bordered separator style="width:200px;border-radius:10px;overflow:hidden">
+    <q-list bordered separator style="width:200px;border-radius:4px;overflow:hidden">
       <q-item v-for="it in leftItems" :key="it" clickable :active="leftSel.includes(it)"
         active-class="bg-primary text-white" @click="toggle(leftSel, it)">
         <q-item-section>{{ it }}</q-item-section>
@@ -35,7 +35,7 @@ const toggle = (sel, item) => {
       <q-btn dense outline color="primary" icon="chevron_left"
         :disable="!rightSel.length" @click="move(rightItems, leftItems, rightSel)" />
     </div>
-    <q-list bordered separator style="width:200px;border-radius:10px;overflow:hidden">
+    <q-list bordered separator style="width:200px;border-radius:4px;overflow:hidden">
       <q-item v-for="it in rightItems" :key="it" clickable :active="rightSel.includes(it)"
         active-class="bg-primary text-white" @click="toggle(rightSel, it)">
         <q-item-section>{{ it }}</q-item-section>

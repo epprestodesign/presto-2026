@@ -414,7 +414,7 @@ const visibleTiles = computed(() => (searching.value ? filteredTiles.value : col
 /* checkbox + radio rows */
 .flt__list { display: flex; flex-direction: column; gap: 6px; }
 .flt__check, .flt__radio { display: flex; align-items: center; gap: 14px; width: 100%; padding: 6px 0; background: none; border: 0; text-align: left; cursor: pointer; }
-.flt__box { width: 26px; height: 26px; flex: none; border: 2px solid var(--ds-color-border-bold); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.flt__box { width: 26px; height: 26px; flex: none; border: 2px solid var(--ds-color-border-bold); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #fff; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
 .flt__check.is-on .flt__box, .flt__box.is-indet { background: var(--ds-color-background-brand-bold); border-color: var(--ds-color-background-brand-bold); }
 .flt__dash { width: 12px; height: 2px; border-radius: 1px; background: #fff; }
 .flt__dot { width: 26px; height: 26px; flex: none; border: 2px solid var(--ds-color-border-bold); border-radius: 50%; display: flex; align-items: center; justify-content: center; }

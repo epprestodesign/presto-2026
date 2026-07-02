@@ -102,6 +102,12 @@ body {
   font-size: 20px;
 }
 
+// Checkbox: 4px inner square so QCheckbox matches the DsCheckboxTree boxes
+// (both 4px radius, navy checked fill, white check) — one unified checkbox look.
+.q-checkbox__bg {
+  border-radius: var(--ds-radius-sm);
+}
+
 // Rating: no drop shadow on the icons, and default to the brand color
 // (Quasar ships a text-shadow + amber grade color).
 .q-rating__icon {
@@ -231,7 +237,7 @@ body {
   width: 92vw;
   max-width: 460px;
   padding: 32px;
-  border-radius: 24px;
+  border-radius: var(--ds-radius-md);
   box-shadow: var(--ds-shadow-4, 0 24px 60px rgba(0, 0, 0, 0.25));
 }
 .ds-dialog__title { margin: 0 0 12px; font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: var(--ds-color-text); }

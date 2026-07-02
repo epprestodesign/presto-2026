@@ -54,5 +54,5 @@ const onConfirm = (m) => { if (m) emit('update:modelValue', m.id) }
 .pw__tilesub { color: var(--ds-color-text-subtle); font-size: 0.875rem; margin-top: 2px; }
 .pw__addicon { width: 34px; height: 34px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-sm); display: flex; align-items: center; justify-content: center; color: var(--ds-color-text); }
 .pw__strip { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
-.pw__striplogo { width: 30px; height: 20px; object-fit: contain; border-radius: 3px; }
+.pw__striplogo { width: 30px; height: 20px; object-fit: contain; border-radius: 4px; }
 </style>

@@ -36,7 +36,7 @@ watchEffect(async () => {
     :src="photo.urls[size]"
     :ratio="Number(ratio)"
     :alt="photo.alt"
-    style="border-radius: 12px"
+    style="border-radius: 4px"
   >
     <div
       v-if="showCredit"

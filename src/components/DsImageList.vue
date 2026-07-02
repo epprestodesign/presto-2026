@@ -8,7 +8,7 @@ defineProps({
 </script>
 <template>
   <div class="ds-image-list" :style="{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap }">
-    <q-img v-for="(it, i) in items" :key="i" :src="it.src" :ratio="1" style="border-radius:10px">
+    <q-img v-for="(it, i) in items" :key="i" :src="it.src" :ratio="1" style="border-radius:4px">
       <div v-if="it.title" class="absolute-bottom text-caption">{{ it.title }}</div>
     </q-img>
   </div>
