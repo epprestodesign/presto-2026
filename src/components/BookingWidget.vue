@@ -162,7 +162,7 @@ const travelersLabel = computed(() => `${travelersTotal.value} traveler${travele
             <date-range-calendar v-model="range" />
             <q-separator class="q-mt-md" />
             <div class="row q-gutter-sm q-mt-md justify-start">
-              <q-btn v-for="f in flexOptions" :key="f" :outline="flex !== f" :color="flex === f ? 'primary' : 'grey-8'" rounded dense no-caps :label="f" @click="flex = f" />
+              <q-btn v-for="f in flexOptions" :key="f" :outline="flex !== f" :color="flex === f ? 'primary' : 'grey-8'" rounded dense no-caps padding="6px 18px" :label="f" @click="flex = f" />
             </div>
           </div>
         </q-menu>
