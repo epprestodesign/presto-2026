@@ -141,7 +141,7 @@ const onSave = () => { emit('save', { section: props.section, values: clone(form
 
 .pe__footrow { display: flex; justify-content: flex-end; gap: 12px; }
 .pe__cancel { height: 48px; padding: 0 22px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-pill); background: var(--ds-color-surface); color: var(--ds-color-text); font-weight: 700; font-size: 0.9375rem; cursor: pointer; }
-.pe__cancel:hover { background: var(--ds-palette-zinc-100); }
+.pe__cancel:hover { background: var(--ds-palette-slate-100); }
 .pe__save { height: 48px; padding: 0 28px; border: 0; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem; cursor: pointer; }
 .pe__save:hover { opacity: 0.92; }
 

@@ -1,7 +1,7 @@
 <script setup>
 // DateRangeCalendar — custom two-month range picker (Expedia-style).
 // Global edge arrows move BOTH months together (no per-calendar nav, no slide).
-// Past dates disabled. DS Zinc selection. v-model = { from, to } ('YYYY/MM/DD').
+// Past dates disabled. DS Navy selection. v-model = { from, to } ('YYYY/MM/DD').
 import { ref, computed } from 'vue'
 
 const props = defineProps({ modelValue: { type: Object, default: null } })
@@ -94,10 +94,10 @@ function pick (c) {
 .drc__grid { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: 2px; }
 .drc__cell { height: 40px; border: 0; background: transparent; font: inherit; cursor: pointer; color: var(--ds-color-text); display: flex; align-items: center; justify-content: center; border-radius: 999px; }
 .drc__cell--empty { background: transparent; cursor: default; }
-.drc__cell:hover:not(:disabled):not(.is-start):not(.is-end):not(.is-between) { background: var(--ds-palette-zinc-100); }
+.drc__cell:hover:not(:disabled):not(.is-start):not(.is-end):not(.is-between) { background: var(--ds-palette-slate-100); }
 .drc__cell.is-past { color: var(--ds-color-text-disabled); cursor: default; }
 .drc__cell.is-today { box-shadow: inset 0 0 0 1px var(--ds-color-border-bold); }
-.drc__cell.is-between { background: var(--ds-palette-zinc-100); border-radius: 0; }
+.drc__cell.is-between { background: var(--ds-palette-slate-100); border-radius: 0; }
 .drc__cell.is-start, .drc__cell.is-end { background: var(--ds-color-background-brand-bold); color: #fff; }
 .drc__cell.is-start { border-top-left-radius: 999px; border-bottom-left-radius: 999px; }
 .drc__cell.is-end { border-top-right-radius: 999px; border-bottom-right-radius: 999px; }

@@ -83,7 +83,7 @@ const photo = computed(() => {
 
 /* Summary */
 .avd__summary { display: flex; gap: 18px; }
-.avd__photo { flex: 0 0 200px; height: 140px; border-radius: var(--ds-radius-md); overflow: hidden; background: var(--ds-palette-zinc-100); }
+.avd__photo { flex: 0 0 200px; height: 140px; border-radius: var(--ds-radius-md); overflow: hidden; background: var(--ds-palette-slate-100); }
 .avd__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .avd__photo--empty { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--ds-color-text-disabled); }
 .avd__info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }

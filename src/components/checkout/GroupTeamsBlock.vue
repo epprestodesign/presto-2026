@@ -252,11 +252,11 @@ watch([added, expected, contact, notHolding, groupBlockName], () => emit('update
 .gtb__spin { display: flex; flex-direction: column; border-left: 1px solid var(--ds-color-border); }
 .gtb__spin button { flex: 1; width: 24px; border: 0; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ds-color-text-subtle); }
 .gtb__spin button:first-child { border-bottom: 1px solid var(--ds-color-border); }
-.gtb__spin button:hover:not(:disabled) { background: var(--ds-palette-zinc-100); color: var(--ds-color-text); }
+.gtb__spin button:hover:not(:disabled) { background: var(--ds-palette-slate-100); color: var(--ds-color-text); }
 .gtb__spin button:disabled { opacity: 0.4; cursor: not-allowed; }
 .gtb__countlabel { font-weight: 600; color: var(--ds-color-text); }
 .gtb__nextbtn { width: 100%; height: 52px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem; margin-top: 24px; }
-.gtb__nextbtn.is-disabled { background: var(--ds-palette-zinc-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
+.gtb__nextbtn.is-disabled { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
 .gtb__notholding { display: block; width: 100%; text-align: center; background: none; border: 0; padding: 16px 0 0; color: var(--ds-color-text-subtle); font-weight: 600; font-size: 0.9375rem; cursor: pointer; }
 .gtb__notholding:hover { color: var(--ds-color-text); }
 
@@ -264,8 +264,8 @@ watch([added, expected, contact, notHolding, groupBlockName], () => emit('update
 .gtb__added { margin-bottom: 14px; }
 .gtb__added-h { font-size: 0.8125rem; font-weight: 700; color: var(--ds-color-text-subtle); }
 .gtb__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.gtb__chip { display: inline-flex; align-items: center; gap: 6px; background: var(--ds-palette-zinc-100); border-radius: var(--ds-radius-pill); padding: 6px 6px 6px 12px; font-size: 0.875rem; font-weight: 500; color: var(--ds-color-text); }
-.gtb__chip button { width: 20px; height: 20px; border: 0; border-radius: 50%; background: var(--ds-palette-zinc-200); color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.gtb__chip { display: inline-flex; align-items: center; gap: 6px; background: var(--ds-palette-slate-100); border-radius: var(--ds-radius-pill); padding: 6px 6px 6px 12px; font-size: 0.875rem; font-weight: 500; color: var(--ds-color-text); }
+.gtb__chip button { width: 20px; height: 20px; border: 0; border-radius: 50%; background: var(--ds-palette-slate-200); color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .gtb__search { display: flex; align-items: center; gap: 10px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-pill); padding: 0 14px; height: 46px; color: var(--ds-color-text-subtle); }
 .gtb__search input { flex: 1; border: 0; outline: none; background: none; font-family: inherit; font-size: 0.9375rem; color: var(--ds-color-text); height: auto; }
 .gtb__search button { border: 0; background: none; color: var(--ds-color-text-subtle); cursor: pointer; display: flex; }
@@ -284,14 +284,14 @@ watch([added, expected, contact, notHolding, groupBlockName], () => emit('update
 .gtb__cardfoot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
 .gtb__status { display: inline-flex; align-items: center; gap: 6px; color: var(--ds-color-text-success); font-weight: 600; font-size: 0.875rem; }
 .gtb__confirm { height: 44px; padding: 0 22px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 600; }
-.gtb__confirm.is-disabled { background: var(--ds-palette-zinc-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
+.gtb__confirm.is-disabled { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
 
 /* Add unlisted */
 .gtb__back { display: inline-flex; align-items: center; gap: 8px; background: none; border: 0; padding: 0 0 14px; color: var(--ds-color-text); font-weight: 700; font-size: 1.0625rem; cursor: pointer; }
 .gtb__skipnote { background: var(--ds-color-background-info); color: var(--ds-palette-blue-700); border-radius: var(--ds-radius-md); padding: 12px 14px; font-size: 0.875rem; line-height: 1.45; margin-bottom: 16px; }
 .gtb__reqby { text-align: center; color: var(--ds-color-text-subtle); font-size: 0.8125rem; margin: 14px 0 0; }
 .gtb__addblock { width: 100%; height: 52px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 1rem; margin-top: 16px; }
-.gtb__addblock.is-disabled { background: var(--ds-palette-zinc-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
+.gtb__addblock.is-disabled { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
 
 /* Not-holding after-state */
 .gtb__nothold { display: flex; align-items: flex-start; gap: 12px; color: var(--ds-color-text); }

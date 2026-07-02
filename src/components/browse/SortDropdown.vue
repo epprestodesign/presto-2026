@@ -56,7 +56,7 @@ const choose = (o) => { emit('update:modelValue', o.value); open.value = false }
 <style>
 .srt__menu .srt__list { min-width: 240px; padding: 6px; display: flex; flex-direction: column; }
 .srt__menu .srt__opt { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 11px 12px; border: 0; border-radius: var(--ds-radius-md); background: none; text-align: left; font-family: inherit; font-size: 0.9375rem; color: var(--ds-color-text); cursor: pointer; }
-.srt__menu .srt__opt:hover { background: var(--ds-palette-zinc-100); }
+.srt__menu .srt__opt:hover { background: var(--ds-palette-slate-100); }
 .srt__menu .srt__opt.is-on { font-weight: 700; }
 .srt__menu .srt__opt .q-icon { color: var(--ds-color-background-brand-bold); }
 </style>

@@ -8,7 +8,7 @@
 // Below the booking summary both modes share a stack of post-booking modules:
 // who's going, cancellation + manage, add-to-calendar, location, area tips,
 // FAQ, help/contact, and an experience rating. Controls are presentational
-// (visual states only). Accents use the DS primary (Zinc).
+// (visual states only). Accents use the DS primary (Navy).
 import { computed, reactive, ref } from 'vue'
 import HotelMap from '../HotelMap.vue'
 import heroImg from '../../assets/confirmation/soccer-luggage.png'
@@ -348,34 +348,34 @@ const scores = Array.from({ length: 10 }, (_, i) => i + 1)
 .conf__secttitle { margin: 0; font-size: 1.1875rem; font-weight: 800; color: var(--ds-color-text); }
 .conf__sectsub { margin: 6px 0 0; color: var(--ds-color-text-subtle); font-size: 0.875rem; line-height: 1.45; }
 .conf__iconbtn { width: 40px; height: 40px; flex: none; border: 1px solid var(--ds-color-border); border-radius: 50%; background: var(--ds-color-surface); color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.conf__iconbtn:hover { background: var(--ds-palette-zinc-100); }
+.conf__iconbtn:hover { background: var(--ds-palette-slate-100); }
 .conf__textlink { background: none; border: 0; padding: 0; color: var(--ds-color-text); font-weight: 700; font-size: 0.875rem; cursor: pointer; }
 .conf__textlink:hover { text-decoration: underline; }
 
 /* who's going */
 .conf__party { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 18px; }
 .conf__person { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 64px; text-align: center; background: none; border: 0; padding: 0; cursor: default; }
-.conf__avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--ds-palette-zinc-200); color: var(--ds-color-text); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.0625rem; }
-.conf__avatar--unknown { background: var(--ds-palette-zinc-100); color: var(--ds-color-text-subtle); border: 1px dashed var(--ds-color-border-bold); }
+.conf__avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--ds-palette-slate-200); color: var(--ds-color-text); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.0625rem; }
+.conf__avatar--unknown { background: var(--ds-palette-slate-100); color: var(--ds-color-text-subtle); border: 1px dashed var(--ds-color-border-bold); }
 .conf__avatar--add { background: var(--ds-color-surface); border: 1px dashed var(--ds-color-border-bold); color: var(--ds-color-text); }
 .conf__pname { font-size: 0.8125rem; font-weight: 600; color: var(--ds-color-text); line-height: 1.2; }
 .conf__prole { font-size: 0.75rem; color: var(--ds-color-text-subtle); }
 .conf__invite { cursor: pointer; }
-.conf__invite:hover .conf__avatar--add { background: var(--ds-palette-zinc-100); }
+.conf__invite:hover .conf__avatar--add { background: var(--ds-palette-slate-100); }
 
 /* cancellation + manage */
 .conf__refund { display: inline-flex; align-items: center; gap: 6px; margin: 12px 0 0; color: var(--ds-color-text-success); font-weight: 600; font-size: 0.875rem; }
 .conf__policytext { margin: 10px 0 0; color: var(--ds-color-text-subtle); font-size: 0.875rem; line-height: 1.5; }
 .conf__managebtns { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
 .conf__manage { height: 46px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); color: var(--ds-color-text); font-weight: 700; font-size: 0.9375rem; cursor: pointer; }
-.conf__manage:hover { background: var(--ds-palette-zinc-100); }
+.conf__manage:hover { background: var(--ds-palette-slate-100); }
 .conf__manage--danger { border-color: var(--ds-color-text-danger); color: var(--ds-color-text-danger); }
 .conf__manage--danger:hover { background: var(--ds-color-background-danger, rgba(220,38,38,0.06)); }
 
 /* calendar */
 .conf__calbtns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .conf__calbtn { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-pill); background: var(--ds-color-surface); color: var(--ds-color-text); font-weight: 600; font-size: 0.875rem; cursor: pointer; }
-.conf__calbtn:hover { background: var(--ds-palette-zinc-100); }
+.conf__calbtn:hover { background: var(--ds-palette-slate-100); }
 .conf__calbtn .q-icon { color: var(--ds-color-text-subtle); }
 
 /* location */
@@ -400,16 +400,16 @@ const scores = Array.from({ length: 10 }, (_, i) => i + 1)
 /* help / contact */
 .conf__contact { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
 .conf__contactrow { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); text-decoration: none; }
-.conf__contactrow:hover { background: var(--ds-palette-zinc-100); }
-.conf__contacticon { width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--ds-palette-zinc-100); color: var(--ds-color-background-brand-bold); display: flex; align-items: center; justify-content: center; }
+.conf__contactrow:hover { background: var(--ds-palette-slate-100); }
+.conf__contacticon { width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--ds-palette-slate-100); color: var(--ds-color-background-brand-bold); display: flex; align-items: center; justify-content: center; }
 .conf__contacttext { display: flex; flex-direction: column; }
 .conf__contacttext strong { font-size: 0.9375rem; color: var(--ds-color-text); }
 .conf__contacttext span { font-size: 0.875rem; color: var(--ds-color-text-subtle); }
 
 /* rating */
 .conf__scores { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
-.conf__score { width: 44px; height: 44px; flex: none; border: 0; border-radius: 50%; background: var(--ds-palette-zinc-100); color: var(--ds-color-text); font-weight: 700; font-size: 0.9375rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard), color var(--ds-duration-fast) var(--ds-ease-standard); }
-.conf__score:hover { background: var(--ds-palette-zinc-200); }
+.conf__score { width: 44px; height: 44px; flex: none; border: 0; border-radius: 50%; background: var(--ds-palette-slate-100); color: var(--ds-color-text); font-weight: 700; font-size: 0.9375rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard), color var(--ds-duration-fast) var(--ds-ease-standard); }
+.conf__score:hover { background: var(--ds-palette-slate-200); }
 .conf__score.is-on { background: var(--ds-color-background-brand-bold); color: #fff; }
 .conf__feedback { margin-top: 20px; }
 .conf__fblabel { display: block; font-size: 0.875rem; font-weight: 600; color: var(--ds-color-text); margin-bottom: 8px; }

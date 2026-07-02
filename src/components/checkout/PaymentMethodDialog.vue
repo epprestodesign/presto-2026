@@ -78,14 +78,14 @@ const confirm = () => { emit('confirm', saved.value.find((m) => m.id === sel.val
 .pmd { width: 480px; max-width: 92vw; max-height: 88vh; background: var(--ds-color-surface); border-radius: var(--ds-radius-lg); overflow: hidden; display: flex; flex-direction: column; }
 .pmd__head { display: flex; align-items: center; padding: 14px 16px; flex: none; }
 .pmd__close { width: 36px; height: 36px; border: 0; border-radius: 50%; background: none; color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.pmd__close:hover { background: var(--ds-palette-zinc-100); }
+.pmd__close:hover { background: var(--ds-palette-slate-100); }
 .pmd__title { flex: 1; text-align: center; font-size: 1.1875rem; font-weight: 700; margin: 0; color: var(--ds-color-text); }
 .pmd__spacer { width: 36px; }
 .pmd__body { flex: 1; overflow-y: auto; padding: 4px 20px 16px; }
 .pmd__group { font-size: 1rem; font-weight: 700; color: var(--ds-color-text); margin: 16px 0 8px; }
 .pmd__row { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 0; background: none; border: 0; border-bottom: 1px solid var(--ds-color-border); cursor: pointer; text-align: left; }
 .pmd__logo { width: 42px; height: 28px; object-fit: contain; flex: none; border-radius: var(--ds-radius-sm); }
-.pmd__logo--blank { background: var(--ds-palette-zinc-100); }
+.pmd__logo--blank { background: var(--ds-palette-slate-100); }
 .pmd__logo--add { display: flex; align-items: center; justify-content: center; border: 1px solid var(--ds-color-border-bold); color: var(--ds-color-text); }
 .pmd__meta { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .pmd__label { font-weight: 600; color: var(--ds-color-text); }

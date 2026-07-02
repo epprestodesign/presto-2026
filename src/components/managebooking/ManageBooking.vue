@@ -2,7 +2,7 @@
 // ManageBooking — the full "Manage Booking" account page (Expedia-style): a left
 // column with a greeting, a rewards card, and a selectable menu list; a right
 // column showing the active section's content. Opened from the Global Nav's
-// "Manage Booking" button. Accents use the DS primary (Zinc).
+// "Manage Booking" button. Accents use the DS primary (Navy).
 import { ref, reactive, computed } from 'vue'
 import { paymentLogo } from '../../lib/paymentLogos'
 import ProfileEditModal from './ProfileEditModal.vue'
@@ -237,13 +237,13 @@ const helpRows = [
 .mb__name { font-size: 1.25rem; font-weight: 800; color: var(--ds-color-text); line-height: 1.2; }
 .mb__email { font-size: 0.875rem; color: var(--ds-color-text-subtle); max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .mb__edit { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 18px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-pill); background: var(--ds-color-surface); color: var(--ds-color-text); font-weight: 600; font-size: 0.875rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
-.mb__edit:hover { background: var(--ds-palette-zinc-100); }
+.mb__edit:hover { background: var(--ds-palette-slate-100); }
 
 .mb__menu { display: flex; flex-direction: column; gap: 10px; }
 .mb__item { display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px 16px; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); background: var(--ds-color-surface); text-align: left; cursor: pointer; transition: border-color var(--ds-duration-fast) var(--ds-ease-standard), box-shadow var(--ds-duration-fast) var(--ds-ease-standard); }
 .mb__item:hover { border-color: var(--ds-color-border-bold); }
 .mb__item.is-active { border-color: var(--ds-color-background-brand-bold); box-shadow: inset 0 0 0 1px var(--ds-color-background-brand-bold); }
-.mb__item-ico { width: 36px; height: 36px; flex: none; border-radius: 50%; background: var(--ds-palette-zinc-100); color: var(--ds-color-text); display: flex; align-items: center; justify-content: center; }
+.mb__item-ico { width: 36px; height: 36px; flex: none; border-radius: 50%; background: var(--ds-palette-slate-100); color: var(--ds-color-text); display: flex; align-items: center; justify-content: center; }
 .mb__item.is-active .mb__item-ico { background: var(--ds-color-background-brand-bold); color: #fff; }
 .mb__item-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .mb__item-text strong { font-size: 0.9375rem; font-weight: 700; color: var(--ds-color-text); }
@@ -263,7 +263,7 @@ const helpRows = [
 .mb__stack--plain { list-style: none; margin: 0; padding: 0; }
 .mb__rowbox { display: flex; align-items: center; gap: 12px; width: 100%; padding: 16px 18px; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); text-align: left; }
 .mb__rowbox--btn { cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
-.mb__rowbox--btn:hover { background: var(--ds-palette-zinc-100); }
+.mb__rowbox--btn:hover { background: var(--ds-palette-slate-100); }
 .mb__rowbox--comm { justify-content: space-between; cursor: pointer; }
 .mb__rowico { color: var(--ds-color-text); flex: none; }
 .mb__rowlabel { flex: 1; font-weight: 700; font-size: 0.9375rem; color: var(--ds-color-text); }
@@ -298,12 +298,12 @@ const helpRows = [
 .mb__card-text span { font-size: 0.8125rem; color: var(--ds-color-text-subtle); }
 
 /* security */
-.mb__secico { width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--ds-palette-zinc-100); color: var(--ds-color-text); display: flex; align-items: center; justify-content: center; }
+.mb__secico { width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--ds-palette-slate-100); color: var(--ds-color-text); display: flex; align-items: center; justify-content: center; }
 .mb__sectext { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .mb__sectext strong { font-size: 0.9375rem; color: var(--ds-color-text); }
 .mb__sectext span { font-size: 0.8125rem; color: var(--ds-color-text-subtle); }
 .mb__editicon { width: 38px; height: 38px; flex: none; border: 0; border-radius: 50%; background: none; color: var(--ds-color-text-subtle); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background var(--ds-duration-fast) var(--ds-ease-standard), color var(--ds-duration-fast) var(--ds-ease-standard); }
-.mb__editicon:hover { background: var(--ds-palette-zinc-100); color: var(--ds-color-text); }
+.mb__editicon:hover { background: var(--ds-palette-slate-100); color: var(--ds-color-text); }
 .mb__editicon--danger { color: var(--ds-color-text-danger); }
 .mb__editicon--danger:hover { background: var(--ds-color-background-danger, rgba(220, 38, 38, 0.08)); color: var(--ds-color-text-danger); }
 .mb__card-actions { display: flex; align-items: center; gap: 2px; flex: none; }

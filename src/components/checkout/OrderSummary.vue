@@ -45,7 +45,7 @@ const money = (n, c = '$') => c + Number(n ?? 0).toLocaleString('en-US', { minim
 <style scoped>
 .os { border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); padding: 22px; box-shadow: var(--ds-shadow-1); background: var(--ds-color-surface); position: sticky; top: 20px; }
 .os__top { display: flex; gap: 14px; }
-.os__img { width: 64px; height: 64px; border-radius: var(--ds-radius-md); object-fit: cover; flex: none; background: var(--ds-palette-zinc-100); }
+.os__img { width: 64px; height: 64px; border-radius: var(--ds-radius-md); object-fit: cover; flex: none; background: var(--ds-palette-slate-100); }
 .os__img--empty { display: flex; align-items: center; justify-content: center; color: var(--ds-color-text-disabled); }
 .os__titlewrap { min-width: 0; }
 .os__title { font-weight: 700; color: var(--ds-color-text); line-height: 1.3; }
@@ -57,7 +57,7 @@ const money = (n, c = '$') => c + Number(n ?? 0).toLocaleString('en-US', { minim
 .os__rowlabel { font-weight: 700; color: var(--ds-color-text); font-size: 0.9375rem; }
 .os__rowval { color: var(--ds-color-text-subtle); font-size: 0.875rem; margin-top: 2px; }
 .os__change { background: none; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-sm); padding: 5px 12px; font-weight: 600; font-size: 0.8125rem; color: var(--ds-color-text); cursor: pointer; }
-.os__change:hover { background: var(--ds-palette-zinc-100); }
+.os__change:hover { background: var(--ds-palette-slate-100); }
 .os__rule { height: 1px; background: var(--ds-color-border); margin: 18px 0; }
 .os__priceh { font-weight: 700; color: var(--ds-color-text); margin-bottom: 8px; }
 .os__price { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; color: var(--ds-color-text); font-size: 0.9375rem; }

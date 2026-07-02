@@ -43,5 +43,5 @@ const select = (name) => { emit('update:modelValue', name); emit('select', name)
 .dtabs { display: flex; gap: 6px; border-bottom: 1px solid var(--ds-color-border); overflow-x: auto; }
 .dtabs__tab { padding: 12px 16px; cursor: pointer; font-family: inherit; font-size: 0.9375rem; font-weight: 500; color: var(--ds-color-text-subtle); background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: color var(--ds-duration-fast) var(--ds-ease-standard); }
 .dtabs__tab:hover { color: var(--ds-color-text); }
-.dtabs__tab.is-active { color: var(--ds-color-text); border-color: var(--ds-palette-zinc-900); font-weight: 600; }
+.dtabs__tab.is-active { color: var(--ds-color-text); border-color: var(--ds-palette-slate-900); font-weight: 600; }
 </style>

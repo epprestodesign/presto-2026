@@ -87,7 +87,7 @@ const save = () => {
 .apd { width: 560px; max-width: 92vw; background: var(--ds-color-surface); border-radius: var(--ds-radius-lg); overflow: hidden; display: flex; flex-direction: column; }
 .apd__head { display: flex; align-items: center; padding: 16px 18px; }
 .apd__icon { width: 36px; height: 36px; border: 0; border-radius: 50%; background: none; color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.apd__icon:hover { background: var(--ds-palette-zinc-100); }
+.apd__icon:hover { background: var(--ds-palette-slate-100); }
 .apd__title { flex: 1; text-align: center; font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--ds-color-text); }
 .apd__spacer { width: 36px; }
 .apd__body { padding: 4px 24px 24px; display: flex; flex-direction: column; gap: 16px; }
@@ -108,5 +108,5 @@ const save = () => {
 .apd__recaptcha { display: flex; flex-direction: column; align-items: center; color: var(--ds-color-text-subtle); }
 .apd__foot { border-top: 1px solid var(--ds-color-border); padding: 16px 24px; }
 .apd__save { width: 100%; height: 56px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 1.0625rem; }
-.apd__save.is-disabled { background: var(--ds-palette-zinc-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
+.apd__save.is-disabled { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
 </style>

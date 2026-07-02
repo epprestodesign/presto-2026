@@ -63,7 +63,7 @@ const metaLine = computed(() => [props.address, props.distance].filter(Boolean).
 .dhead { display: flex; justify-content: space-between; gap: 32px; align-items: flex-start; }
 .dhead__info { flex: 1; min-width: 0; }
 .dhead__name { font-size: 1.75rem; font-weight: 700; line-height: 1.2; color: var(--ds-color-text); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.dhead__stars { display: inline-flex; color: var(--ds-palette-zinc-900); }
+.dhead__stars { display: inline-flex; color: var(--ds-palette-slate-900); }
 .dhead__addr { color: var(--ds-color-text-subtle); margin-top: 6px; }
 .dhead__rating { margin-top: 14px; }
 .dhead__poplabel { font-weight: 600; color: var(--ds-color-text); margin-top: 20px; }

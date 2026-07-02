@@ -318,13 +318,13 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.hm { position: relative; width: 100%; border-radius: var(--ds-radius-lg); overflow: hidden; border: 1px solid var(--ds-color-border); background: var(--ds-palette-zinc-100); }
+.hm { position: relative; width: 100%; border-radius: var(--ds-radius-lg); overflow: hidden; border: 1px solid var(--ds-color-border); background: var(--ds-palette-slate-100); }
 .hm__map { position: absolute; inset: 0; }
 .hm__overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--ds-color-text-subtle); }
 .hm__fallback { flex-direction: column; gap: 8px; text-align: center; padding: 24px; }
 .hm__fallback-title { font-weight: 700; font-size: 1.0625rem; color: var(--ds-color-text); }
 .hm__fallback-text { max-width: 380px; color: var(--ds-color-text-subtle); font-size: 0.875rem; line-height: 1.45; }
-.hm__fallback code { background: var(--ds-palette-zinc-200); padding: 1px 5px; border-radius: 4px; font-size: 0.8125em; }
+.hm__fallback code { background: var(--ds-palette-slate-200); padding: 1px 5px; border-radius: 4px; font-size: 0.8125em; }
 .hm__keyform { display: flex; gap: 8px; margin-top: 14px; width: 100%; max-width: 420px; }
 .hm__keyinput { flex: 1; height: 40px; padding: 0 12px; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); font: inherit; font-size: 0.875rem; background: var(--ds-color-surface); color: var(--ds-color-text); }
 .hm__keyinput:focus { outline: none; border-color: var(--ds-color-border-bold); box-shadow: 0 0 0 1px var(--ds-color-border-bold); }

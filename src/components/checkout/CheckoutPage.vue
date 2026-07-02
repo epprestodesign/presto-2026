@@ -133,7 +133,7 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 .ck { background: var(--ds-palette-neutral-100); min-height: 100vh; padding: 24px; }
 .ck__inner { max-width: 1040px; margin: 0 auto; }
 .ck__header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-.ck__back { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--ds-palette-zinc-100); color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.ck__back { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--ds-palette-slate-100); color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .ck__h1 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--ds-color-text); }
 .ck__grid { display: grid; grid-template-columns: 1fr 400px; gap: 32px; align-items: start; }
 .ck__rail { position: sticky; top: 20px; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); overflow: hidden; box-shadow: var(--ds-shadow-1); background: var(--ds-color-surface); }
@@ -144,7 +144,7 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 .ck__stephead { display: flex; align-items: center; gap: 12px; }
 .ck__step.is-done .ck__stephead { cursor: pointer; }
 .ck__num { width: 26px; height: 26px; border-radius: 50%; background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.875rem; display: flex; align-items: center; justify-content: center; flex: none; }
-.ck__step.is-upcoming .ck__num { background: var(--ds-palette-zinc-300); }
+.ck__step.is-upcoming .ck__num { background: var(--ds-palette-slate-300); }
 .ck__steptitle { flex: 1; font-weight: 700; color: var(--ds-color-text); }
 .ck__edit { background: none; border: 0; padding: 0; color: var(--ds-color-text); font-weight: 600; text-decoration: underline; cursor: pointer; }
 .ck__summary { color: var(--ds-color-text-subtle); font-size: 0.9375rem; margin: 8px 0 0 38px; }

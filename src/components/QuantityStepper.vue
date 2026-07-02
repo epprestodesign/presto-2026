@@ -54,7 +54,7 @@ const inc = () => {
 .qstep { display: inline-flex; align-items: center; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); }
 .qstep--disabled { opacity: 0.6; }
 .qstep__btn { border: 0; background: transparent; color: var(--ds-color-text-subtlest); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: var(--ds-radius-md); transition: color var(--ds-duration-fast) var(--ds-ease-standard), background var(--ds-duration-fast) var(--ds-ease-standard); }
-.qstep__btn:hover:not(:disabled) { color: var(--ds-color-text); background: var(--ds-palette-zinc-100); }
+.qstep__btn:hover:not(:disabled) { color: var(--ds-color-text); background: var(--ds-palette-slate-100); }
 .qstep__btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .qstep__btn--trash:hover:not(:disabled) { color: var(--ds-color-text-danger); background: var(--ds-palette-red-50); }
 .qstep__val { text-align: center; font-weight: 700; color: var(--ds-color-text); font-variant-numeric: tabular-nums; }

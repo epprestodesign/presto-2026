@@ -38,7 +38,7 @@ const country = ref(countries[0])
 .pf { display: flex; width: 100%; align-items: stretch; height: 46px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); overflow: hidden; }
 .pf.is-error { border-color: var(--ds-color-text-danger); }
 .pf__cc { display: flex; align-items: center; gap: 4px; padding: 0 14px; border: 0; border-right: 1px solid var(--ds-color-border); background: none; cursor: pointer; font-weight: 600; font-size: 0.9375rem; color: var(--ds-color-text); white-space: nowrap; }
-.pf__cc:hover { background: var(--ds-palette-zinc-50); }
+.pf__cc:hover { background: var(--ds-palette-slate-50); }
 .pf__input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font-family: inherit; font-size: 0.9375rem; color: var(--ds-color-text); padding: 0 14px; }
 .pf__input::placeholder { color: var(--ds-color-text-subtlest); }
 .pf__flag { font-size: 1.25rem; min-width: 32px; }

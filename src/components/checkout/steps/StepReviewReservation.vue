@@ -98,7 +98,7 @@ const canConfirm = computed(() => protection.value !== null)
 
 .srr__terms { color: var(--ds-color-text-subtle); font-size: 0.8125rem; line-height: 1.5; margin: 24px 0 16px; }
 .srr__confirm { width: 100%; height: 54px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 1.0625rem; }
-.srr__confirm.is-disabled { background: var(--ds-palette-zinc-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
+.srr__confirm.is-disabled { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
 
 @media (max-width: 560px) { .srr__plans { grid-template-columns: 1fr; } }
 </style>

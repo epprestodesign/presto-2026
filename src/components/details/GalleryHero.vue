@@ -61,7 +61,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
 
 <style scoped>
 .gh__grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; border-radius: var(--ds-radius-lg); overflow: hidden; }
-.gh__cell { position: relative; min-height: 0; background: var(--ds-palette-zinc-100); }
+.gh__cell { position: relative; min-height: 0; background: var(--ds-palette-slate-100); }
 .gh__cell--lead { grid-row: 1 / 3; }
 .gh__img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .gh__pill { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.6); color: #fff; border: 0; border-radius: var(--ds-radius-pill); padding: 6px 14px; font-family: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
@@ -72,8 +72,8 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
 .gh__dialog { background: var(--ds-color-surface); width: 920px; max-width: 94vw; max-height: 90vh; border-radius: var(--ds-radius-lg); box-shadow: var(--ds-shadow-4); display: flex; flex-direction: column; overflow: hidden; }
 .gh__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px; border-bottom: 1px solid var(--ds-color-border); }
 .gh__title { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--ds-color-text); }
-.gh__close { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--ds-palette-zinc-100); color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.gh__close:hover { background: var(--ds-palette-zinc-200); }
+.gh__close { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--ds-palette-slate-100); color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.gh__close:hover { background: var(--ds-palette-slate-200); }
 .gh__body { padding: 20px; overflow-y: auto; }
 
 @media (max-width: 860px) {
