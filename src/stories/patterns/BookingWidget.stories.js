@@ -29,15 +29,16 @@ travelers steppers. Flat elevation, DS tokens (Navy/PT Sans), Quasar core.
 ` } } },
 }
 
-/** Default — tabs-less layout (listings / results page): team + dates + travelers. */
+/** Book Reservations — the default tabs-less layout (single-reservation flow on
+ *  the listings / results page): team + dates + travelers. */
 export const Default = {
-  name: 'Default (No Tabs)',
+  name: 'Book Reservations (No Tabs)',
   render: () => ({ components: { BookingWidget }, template: `<div style="max-width:1000px"><booking-widget mode="reservations" :tabs="false" /></div>` }),
 }
 
-/** Dropdown selector — the flow moves into a far-left dropdown inside the field
- *  row, replacing the tabs. */
+/** Group Block Booking — the dropdown-selector layout: the flow moves into a
+ *  far-left dropdown inside the field row (starts in group-block mode). */
 export const DropdownSelector = {
-  name: 'Dropdown Selector (No Tabs)',
-  render: () => ({ components: { BookingWidget }, template: `<div style="max-width:1040px"><booking-widget mode="reservations" :tabs="false" :mode-dropdown="true" /></div>` }),
+  name: 'Group Block Booking (Dropdown)',
+  render: () => ({ components: { BookingWidget }, template: `<div style="max-width:1040px"><booking-widget mode="group" :tabs="false" :mode-dropdown="true" /></div>` }),
 }
