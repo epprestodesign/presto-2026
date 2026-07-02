@@ -8,6 +8,7 @@ export default {
   argTypes: {
     mode: { control: 'inline-radio', options: ['reservations', 'group'] },
     tabs: { control: 'boolean' },
+    modeDropdown: { control: 'boolean' },
   },
   parameters: { docs: { description: { component: `
 ## Overview
@@ -18,7 +19,7 @@ or Team** (multiple teams + travelers).
 **Interactive:** working tabs · team search popover with **live filter** ·
 **add-a-team modal** with duplicate-name error · **dual-month** date range
 (consecutive months) + flexible-date pills · travelers steppers. Flat elevation,
-DS tokens (Zinc/PT Sans), Quasar core.
+DS tokens (Navy/PT Sans), Quasar core.
 ` } } },
 }
 
@@ -37,4 +38,11 @@ export const HoldRoomsForGroup = {
 export const NoTabsListings = {
   name: 'No Tabs (Listings)',
   render: () => ({ components: { BookingWidget }, template: `<div style="max-width:1000px"><booking-widget mode="reservations" :tabs="false" /></div>` }),
+}
+
+/** Dropdown selector — the flow (Book Reservations / Hold Rooms) moves into a
+ *  far-left dropdown inside the field row, replacing the tabs. */
+export const DropdownSelector = {
+  name: 'Dropdown Selector (No Tabs)',
+  render: () => ({ components: { BookingWidget }, template: `<div style="max-width:1040px"><booking-widget mode="reservations" :tabs="false" :mode-dropdown="true" /></div>` }),
 }

@@ -10,8 +10,15 @@ import DateRangeCalendar from './DateRangeCalendar.vue'
 const props = defineProps({
   mode: { type: String, default: 'reservations' },
   tabs: { type: Boolean, default: true },
+  // When true, hide the tabs and offer the flow selector as a far-left dropdown
+  // inside the field row instead (tabs-less variant).
+  modeDropdown: { type: Boolean, default: false },
 })
 const mode = ref(props.mode)
+const modeOptions = [
+  { label: 'Book Reservations', value: 'reservations' },
+  { label: 'Hold Rooms for Group or Team', value: 'group' },
+]
 
 // --- Teams ---
 const clubs = [
@@ -87,13 +94,22 @@ const travelersLabel = computed(() => `${travelersTotal.value} traveler${travele
 
 <template>
   <div class="bw">
-    <div v-if="tabs" class="bw__tabs">
+    <div v-if="tabs && !modeDropdown" class="bw__tabs">
       <span :class="['bw__tab', { 'bw__tab--active': mode === 'reservations' }]" @click="mode = 'reservations'">Book Reservations</span>
       <span :class="['bw__tab', { 'bw__tab--active': mode === 'group' }]" @click="mode = 'group'">Hold Rooms for Group or Team</span>
     </div>
-    <div v-if="tabs" class="bw__divider" />
+    <div v-if="tabs && !modeDropdown" class="bw__divider" />
 
     <div class="bw__fields">
+      <!-- MODE DROPDOWN (tabs-less variant) — farthest-left flow selector -->
+      <div v-if="modeDropdown" class="bw__field bw__field--mode col">
+        <q-select outlined stack-label class="bw__input" label="Booking type" emit-value map-options
+          :model-value="mode" :options="modeOptions" popup-content-class="bw-menu"
+          @update:model-value="mode = $event">
+          <template #prepend><q-icon name="tune" /></template>
+        </q-select>
+      </div>
+
       <!-- TEAM -->
       <div class="bw__field col">
         <q-input outlined stack-label readonly class="bw__input cursor-pointer"
@@ -221,7 +237,9 @@ const travelersLabel = computed(() => `${travelersTotal.value} traveler${travele
 .bw__divider { height: 1px; background: var(--ds-color-border); margin: 0 -28px 20px; }
 .bw__field { position: relative; }
 .bw__fields { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; }
-.bw__search { height: 56px; padding: 0 28px; border-radius: var(--ds-radius-pill); }
+.bw__search { height: 56px; padding: 0 28px; border-radius: var(--ds-radius-button); }
+/* Dropdown variant: the mode selector grows equally with the other fields. */
+.bw__field--mode { min-width: 0; }
 .bw__add { display: flex; align-items: center; gap: 8px; margin-top: 20px; font-size: 0.875rem; font-weight: 500; cursor: pointer; width: fit-content; }
 .bw__link { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; }
 .bw__step { width: 40px; min-width: 40px; height: 40px; min-height: 40px; font-size: 13px; border-radius: 50%; }

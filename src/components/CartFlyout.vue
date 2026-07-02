@@ -146,7 +146,7 @@ onBeforeUnmount(() => clearInterval(timer))
 .cf__timer-track { height: 4px; background: rgba(37, 99, 235, 0.15); }
 .cf__timer-fill { height: 100%; background: var(--ds-palette-blue-600); transition: width 1s linear; }
 .cf__actions { padding: 16px 24px; }
-.cf__cta { width: 100%; height: 54px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 1rem; }
+.cf__cta { width: 100%; height: 54px; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 1rem; }
 .cf__cta.is-disabled { background: var(--ds-palette-zinc-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
 .cf__cta :deep(.q-btn__content) { width: 100%; justify-content: space-between; flex-wrap: nowrap; padding: 0 10px; }
 
@@ -163,7 +163,7 @@ onBeforeUnmount(() => clearInterval(timer))
 .cf__sub-textarea::placeholder { color: var(--ds-color-text-subtlest); }
 .cf__sub-count { text-align: right; color: var(--ds-color-text-subtle); font-size: 0.8125rem; margin-top: 6px; }
 .cf__sub-foot { flex: none; padding: 16px 24px 24px; }
-.cf__sub-save { width: 100%; height: 52px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 1rem; }
+.cf__sub-save { width: 100%; height: 52px; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 1rem; }
 
 @media (max-width: 520px) { .cf__panel, .cf__sub { width: 100vw; } }
 </style>
