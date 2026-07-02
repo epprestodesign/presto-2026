@@ -13,6 +13,9 @@ const props = defineProps({
   // When true, hide the tabs and offer the flow selector as a far-left dropdown
   // inside the field row instead (tabs-less variant).
   modeDropdown: { type: Boolean, default: false },
+  // When true, hide the tabs and offer the flow selector as a radio-button pair
+  // above the fields (alternate-layout exploration).
+  modeRadio: { type: Boolean, default: false },
 })
 const mode = ref(props.mode)
 const modeOptions = [
@@ -94,11 +97,18 @@ const travelersLabel = computed(() => `${travelersTotal.value} traveler${travele
 
 <template>
   <div class="bw">
-    <div v-if="tabs && !modeDropdown" class="bw__tabs">
+    <div v-if="tabs && !modeDropdown && !modeRadio" class="bw__tabs">
       <span :class="['bw__tab', { 'bw__tab--active': mode === 'reservations' }]" @click="mode = 'reservations'">Book Reservations</span>
       <span :class="['bw__tab', { 'bw__tab--active': mode === 'group' }]" @click="mode = 'group'">Hold Rooms for Group or Team</span>
     </div>
-    <div v-if="tabs && !modeDropdown" class="bw__divider" />
+
+    <!-- RADIO SELECTOR (alternate-layout exploration) -->
+    <div v-if="modeRadio" class="bw__radios">
+      <q-radio v-model="mode" val="reservations" label="Book Reservations" color="primary" />
+      <q-radio v-model="mode" val="group" label="Hold Rooms for Group or Team" color="primary" />
+    </div>
+
+    <div v-if="(tabs && !modeDropdown && !modeRadio) || modeRadio" class="bw__divider" />
 
     <div class="bw__fields">
       <!-- MODE DROPDOWN (tabs-less variant) — farthest-left flow selector -->
@@ -235,13 +245,14 @@ const travelersLabel = computed(() => `${travelersTotal.value} traveler${travele
 .bw__tab { font-weight: 500; color: var(--ds-color-text-subtle); padding-bottom: 12px; cursor: pointer; }
 .bw__tab--active { color: var(--ds-color-text); border-bottom: 2px solid var(--ds-color-text); }
 .bw__divider { height: 1px; background: var(--ds-color-border); margin: 0 -28px 20px; }
+.bw__radios { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; padding-bottom: 16px; }
 .bw__field { position: relative; }
 .bw__fields { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; }
 .bw__search { height: 56px; padding: 0 28px; border-radius: var(--ds-radius-button); }
 /* Dropdown variant: the mode selector grows equally with the other fields. */
 .bw__field--mode { min-width: 0; }
-.bw__add { display: flex; align-items: center; gap: 8px; margin-top: 20px; font-size: 0.875rem; font-weight: 500; cursor: pointer; width: fit-content; }
-.bw__link { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; }
+.bw__add { display: flex; align-items: center; gap: 8px; margin-top: 20px; font-size: 0.875rem; font-weight: 500; cursor: pointer; width: fit-content; color: var(--ds-color-text-brand); }
+.bw__link { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; color: var(--ds-color-text-brand); }
 .bw__step { width: 40px; min-width: 40px; height: 40px; min-height: 40px; font-size: 13px; border-radius: 50%; }
 .bw__step :deep(.q-icon) { font-size: 22px; }
 </style>
