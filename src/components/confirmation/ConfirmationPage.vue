@@ -11,7 +11,7 @@
 // (visual states only). Accents use the DS primary (Navy).
 import { computed, reactive, ref } from 'vue'
 import HotelMap from '../HotelMap.vue'
-import heroImg from '../../assets/confirmation/soccer-luggage.png'
+import heroImg from '../../assets/confirmation/soccer-luggage-blue.png'
 
 const props = defineProps({
   mode: { type: String, default: 'reserve' }, // reserve | hold | reservations
