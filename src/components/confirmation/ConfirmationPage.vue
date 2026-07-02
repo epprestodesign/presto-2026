@@ -291,7 +291,7 @@ const scores = Array.from({ length: 10 }, (_, i) => i + 1)
 /* hero */
 .conf__hero { display: block; width: 132px; height: 132px; margin: 0 auto 24px; object-fit: contain; }
 
-.conf__h1 { font-size: 2.125rem; font-weight: 800; line-height: 1.1; color: var(--ds-color-text); margin: 0 0 18px; text-align: center; }
+.conf__h1 { font-size: 2.125rem; font-weight: 800; line-height: 1.1; color: var(--ds-color-text-brand); margin: 0 0 18px; text-align: center; }
 
 /* itinerary meta */
 .conf__meta { margin: 0 0 22px; }
@@ -299,12 +299,12 @@ const scores = Array.from({ length: 10 }, (_, i) => i + 1)
 .conf__metarow dt { color: var(--ds-color-text-subtle); font-size: 0.9375rem; }
 .conf__metarow dd { margin: 0; font-weight: 700; color: var(--ds-color-text); text-align: right; }
 
-.conf__cta { display: flex; width: fit-content; margin: 0 auto 28px; height: 46px; padding: 0 26px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem; }
+.conf__cta { display: flex; width: fit-content; margin: 0 auto 28px; height: 46px; padding: 0 26px; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem; }
 
 /* cards */
 .conf__card { background: var(--ds-color-surface); border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); padding: 24px; margin-bottom: 16px; }
 .conf__cardhead h2 { margin: 0; }
-.conf__hotel { font-size: 1.4375rem; font-weight: 800; color: var(--ds-color-text); }
+.conf__hotel { font-size: 1.4375rem; font-weight: 800; color: var(--ds-color-text-brand); }
 .conf__loc { margin: 4px 0 0; color: var(--ds-color-text-subtle); font-size: 0.875rem; }
 .conf__rating { margin: 4px 0 0; font-size: 0.875rem; color: var(--ds-color-text); }
 .conf__rule { border: 0; border-top: 1px solid var(--ds-color-border); margin: 18px 0; }
@@ -314,8 +314,8 @@ const scores = Array.from({ length: 10 }, (_, i) => i + 1)
 
 /* group block + teams */
 .conf__blocklabel { display: block; color: var(--ds-color-text-subtle); font-size: 0.875rem; }
-.conf__blockname { margin: 4px 0 0; font-size: 1.4375rem; font-weight: 800; color: var(--ds-color-text); }
-.conf__teamsh { margin: 0 0 12px; font-size: 0.9375rem; font-weight: 700; color: var(--ds-color-text); }
+.conf__blockname { margin: 4px 0 0; font-size: 1.4375rem; font-weight: 800; color: var(--ds-color-text-brand); }
+.conf__teamsh { margin: 0 0 12px; font-size: 0.9375rem; font-weight: 700; color: var(--ds-color-text-brand); }
 .conf__teams { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .conf__teams li { display: flex; align-items: center; gap: 10px; font-size: 0.9375rem; color: var(--ds-color-text); }
 .conf__teams .q-icon { color: var(--ds-color-text-subtle); flex: none; }
@@ -327,7 +327,7 @@ const scores = Array.from({ length: 10 }, (_, i) => i + 1)
 .conf__when { display: flex; flex-direction: column; gap: 4px; }
 .conf__lbl { color: var(--ds-color-text-subtle); font-size: 0.875rem; }
 .conf__when strong { font-size: 0.9375rem; color: var(--ds-color-text); }
-.conf__roomtitle { margin: 0 0 14px; font-weight: 700; color: var(--ds-color-text); font-size: 0.9375rem; }
+.conf__roomtitle { margin: 0 0 14px; font-weight: 700; color: var(--ds-color-text-brand); font-size: 0.9375rem; }
 .conf__features { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; }
 .conf__features li { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; color: var(--ds-color-text); }
 .conf__features .q-icon { color: var(--ds-color-text-subtle); }
@@ -336,7 +336,7 @@ const scores = Array.from({ length: 10 }, (_, i) => i + 1)
 .conf__room { padding: 4px 0 14px; }
 .conf__room + .conf__room { border-top: 1px solid var(--ds-color-border); padding-top: 14px; }
 .conf__roomhead { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
-.conf__roomtype { font-weight: 700; color: var(--ds-color-text); font-size: 0.9375rem; }
+.conf__roomtype { font-weight: 700; color: var(--ds-color-text-brand); font-size: 0.9375rem; }
 .conf__roomsum { color: var(--ds-color-text-subtle); font-size: 0.8125rem; }
 .conf__nights { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .conf__nights li { display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; color: var(--ds-color-text); }
@@ -345,7 +345,7 @@ const scores = Array.from({ length: 10 }, (_, i) => i + 1)
 
 /* shared section header */
 .conf__secthead { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-.conf__secttitle { margin: 0; font-size: 1.1875rem; font-weight: 800; color: var(--ds-color-text); }
+.conf__secttitle { margin: 0; font-size: 1.1875rem; font-weight: 800; color: var(--ds-color-text-brand); }
 .conf__sectsub { margin: 6px 0 0; color: var(--ds-color-text-subtle); font-size: 0.875rem; line-height: 1.45; }
 .conf__iconbtn { width: 40px; height: 40px; flex: none; border: 1px solid var(--ds-color-border); border-radius: 50%; background: var(--ds-color-surface); color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .conf__iconbtn:hover { background: var(--ds-palette-slate-100); }

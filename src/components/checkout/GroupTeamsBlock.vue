@@ -255,7 +255,7 @@ watch([added, expected, contact, notHolding, groupBlockName], () => emit('update
 .gtb__spin button:hover:not(:disabled) { background: var(--ds-palette-slate-100); color: var(--ds-color-text); }
 .gtb__spin button:disabled { opacity: 0.4; cursor: not-allowed; }
 .gtb__countlabel { font-weight: 600; color: var(--ds-color-text); }
-.gtb__nextbtn { width: 100%; height: 52px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem; margin-top: 24px; }
+.gtb__nextbtn { width: 100%; height: 52px; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem; margin-top: 24px; }
 .gtb__nextbtn.is-disabled { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
 .gtb__notholding { display: block; width: 100%; text-align: center; background: none; border: 0; padding: 16px 0 0; color: var(--ds-color-text-subtle); font-weight: 600; font-size: 0.9375rem; cursor: pointer; }
 .gtb__notholding:hover { color: var(--ds-color-text); }
@@ -283,7 +283,7 @@ watch([added, expected, contact, notHolding, groupBlockName], () => emit('update
 .gtb__addlink:hover { text-decoration: underline; }
 .gtb__cardfoot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
 .gtb__status { display: inline-flex; align-items: center; gap: 6px; color: var(--ds-color-text-success); font-weight: 600; font-size: 0.875rem; }
-.gtb__confirm { height: 44px; padding: 0 22px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 600; }
+.gtb__confirm { height: 44px; padding: 0 22px; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 600; }
 .gtb__confirm.is-disabled { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
 
 /* Add unlisted */
