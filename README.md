@@ -3,10 +3,11 @@
 A **Quasar + Vue 3 design system**, documented and QA'd in **Storybook**, themed
 for a consumer **hotel booking & reservation** experience ("Presto Design System").
 
-- **Stack:** Vue 3 · Quasar 2 · Storybook 8 · Vite 6 · pnpm
-- **Font:** PT Sans
-- **Color system:** Tailwind-based 3-tier tokens (primitives → semantic → Quasar
-  bridge), brand = **Navy** (#01113E), neutrals = **Slate**.
+- **Stack:** Vue 3 · Quasar 2 · Storybook 10 · Vite 6 · pnpm
+- **Font:** PT Sans (400 / 700)
+- **Brand:** primary **Navy `#01113E`** · neutrals **Slate** · page canvas `#F9F9FA`
+- **Shape:** uniform **4px** radius system (pills reserved for chips / rounded buttons)
+- **Color system:** Tailwind-based 3-tier tokens (primitives → semantic → Quasar bridge)
 
 ## Live docs
 Storybook is published to GitHub Pages on every push to `main`:
@@ -20,21 +21,45 @@ pnpm storybook          # dev gallery at http://localhost:6006
 pnpm build-storybook    # static build → storybook-static/
 ```
 
-## Architecture
+## Design tokens & theming
+A 3-tier token pipeline — change the brand in one place and every component reskins:
+
 | Layer | File(s) | Purpose |
 | --- | --- | --- |
-| Primitives | `src/css/ds-palette.scss` | Raw Tailwind hue ramps (`--ds-palette-*`) |
-| Semantic | `src/css/ds-color-tokens.scss` | Roles (`--ds-color-*`) referencing primitives |
-| Utilities | `src/css/ds-utilities.scss` | `bg-ds-*` / `text-ds-*` / `border-ds-*` |
-| Quasar bridge | `src/css/quasar.variables.scss` | `$primary…` so components reskin |
+| Primitives | `src/css/ds-palette.scss` | Raw Tailwind hue ramps + the **Navy** brand ramp (`--ds-palette-*`) |
+| Semantic | `src/css/ds-color-tokens.scss` | Roles (`--ds-color-*`) → primitives (brand = Navy, neutrals = Slate) |
+| Utilities | `src/css/ds-utilities.scss` | `bg-ds-*` / `text-ds-*` / `border-ds-*` helpers |
+| Quasar bridge | `src/css/quasar.variables.scss` | `$primary…`, font, radius — so Quasar components reskin |
 | Tokens | `src/css/tokens.scss` | Spacing, radius, elevation, motion |
-| Type | `src/css/typography.scss` | Type scale + weights |
+| Type | `src/css/typography.scss` | PT Sans type scale + weights |
 | Overrides | `src/css/app.scss` | Global + per-component tweaks |
 
-Stories live in `src/stories/` organized as **Foundations · Inputs · Data
-Display · Feedback · Layout · Navigation · Patterns**. Token files and the
-foundation pages are generated from the palette; see the chat history / the
-generator for regeneration.
+The Foundations **Palette** and **Colors** doc pages render from
+`src/stories/_tokens-data.js`. After editing the SCSS tokens, regenerate it:
+
+```bash
+node scripts/gen-tokens-data.mjs
+```
+
+## Storybook structure
+The sidebar mirrors how product & design think — **primitives** plus **experience flows**:
+
+- **Primitives:** Foundations · Inputs · Data Display · Feedback · Layout · Navigation
+- **Experience flows:** Browse Hotels · Hotel Details · Checkout Experience · Confirmation · Manage Booking
+
+Flow surfaces that differ by booking type are split into **Book Reservation** and
+**Group Block** sub-folders (Hotel Details, Checkout Experience, Global Nav,
+Confirmation). Highlights:
+
+- **Browse Hotels** — Booking Widget (tabs / dropdown / radio flow selectors),
+  Hotel Listing Card (Horizontal + Vertical × Book Reservation + Group Block, each
+  with availability edge cases and a room-availability carousel), Search & Filters,
+  Hotel Map.
+- **Hotel Details** — a wireframe Hotel Detail Page plus its sections; the Room
+  Cards and "Select Your Room" Rooms carousel, split Book Reservation / Group Block.
+- **Checkout Experience** — the stepped Checkout Page, per-step stories, Payment
+  Dialogs, and the **Policies** agreement (single-hotel card / multi-hotel accordion
+  with per-hotel agreement checkboxes).
 
 ## Imagery — using it in Claude prototypes
 
@@ -101,7 +126,6 @@ and prototypes / Storybook pick up the new manifest on next load.
 required by the Unsplash API Guidelines.
 
 ## Deployment
-Handled by [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml):
-builds Storybook and publishes `storybook-static/` to GitHub Pages.
-**One-time:** enable Pages in repo **Settings → Pages → Build and deployment →
-Source: GitHub Actions**.
+Handled by [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): builds
+Storybook and publishes `storybook-static/` to GitHub Pages on every push to
+`main`. Pages is already enabled (**Settings → Pages → Source: GitHub Actions**).
