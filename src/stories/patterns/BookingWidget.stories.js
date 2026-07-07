@@ -29,8 +29,9 @@ travelers steppers. Flat elevation, DS tokens (Navy/PT Sans), Quasar core.
 ` } } },
 }
 
-/** Book Reservations — the default tabs-less layout (single-reservation flow on
- *  the listings / results page): team + dates + travelers. */
+/** Book Reservations — the default tabs-less layout (listings / results page).
+ *  The flow selector is surfaced as the far-left **Booking type** dropdown:
+ *  Booking type + team + dates + travelers. */
 export const Default = {
   name: 'Book Reservations (No Tabs)',
   render: () => ({ components: { BookingWidget }, template: `<div style="max-width:1000px"><booking-widget mode="reservations" :tabs="false" /></div>` }),
