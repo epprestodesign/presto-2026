@@ -24,7 +24,7 @@ const choose = (o) => { emit('update:modelValue', o.value); open.value = false }
 
 <template>
   <div class="srt">
-    <button type="button" class="srt__btn" :class="{ 'is-open': open }" @click="open = !open">
+    <button type="button" class="srt__btn" :class="{ 'is-open': open }">
       <q-icon name="swap_vert" size="18px" />
       <span class="srt__label">{{ label }}:</span>
       <span class="srt__current">{{ current.label }}</span>

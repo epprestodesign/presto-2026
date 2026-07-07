@@ -10,8 +10,9 @@ import DateRangeCalendar from './DateRangeCalendar.vue'
 const props = defineProps({
   mode: { type: String, default: 'reservations' },
   tabs: { type: Boolean, default: true },
-  // When true, hide the tabs and offer the flow selector as a far-left dropdown
-  // inside the field row instead (tabs-less variant).
+  // Force the far-left "Booking type" dropdown selector. NOTE: the dropdown is
+  // now the DEFAULT for the tabs-less layout (shown whenever `tabs` is false and
+  // `modeRadio` is off), so this prop is only needed to force it on explicitly.
   modeDropdown: { type: Boolean, default: false },
   // When true, hide the tabs and offer the flow selector as a radio-button pair
   // above the fields (alternate-layout exploration).
@@ -22,6 +23,10 @@ const modeOptions = [
   { label: 'Book Reservations', value: 'reservations' },
   { label: 'Hold Rooms for Group or Team', value: 'group' },
 ]
+// The tabs-less layout surfaces the flow selector as a "Booking type" dropdown
+// by default; `modeDropdown` keeps working as an explicit opt-in, and `modeRadio`
+// (or tabs) takes precedence when chosen.
+const showModeSelect = computed(() => props.modeDropdown || (!props.tabs && !props.modeRadio))
 
 // --- Teams ---
 const clubs = [
@@ -111,8 +116,8 @@ const travelersLabel = computed(() => `${travelersTotal.value} traveler${travele
     <div v-if="(tabs && !modeDropdown && !modeRadio) || modeRadio" class="bw__divider" />
 
     <div class="bw__fields">
-      <!-- MODE DROPDOWN (tabs-less variant) — farthest-left flow selector -->
-      <div v-if="modeDropdown" class="bw__field bw__field--mode col">
+      <!-- MODE DROPDOWN — farthest-left flow selector; default for tabs-less layout -->
+      <div v-if="showModeSelect" class="bw__field bw__field--mode col">
         <q-select outlined stack-label class="bw__input" label="Booking type" emit-value map-options
           :model-value="mode" :options="modeOptions" popup-content-class="bw-menu"
           @update:model-value="mode = $event">
