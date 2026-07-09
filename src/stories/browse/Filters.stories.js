@@ -108,12 +108,13 @@ export const PropertySearchAutocomplete = {
   render: () => box(`<browse-filter type="propertySearch" :suggestions="suggestions" v-model="v" />`, { v: ref('Hil'), suggestions: propertySuggestions }),
 }
 
-/** The results "Sort by" dropdown. */
+/** The results "Sort By" control — the standard boxed dropdown used on the
+ *  Book Reservation / Group Block hotel-list pages (via the Results Toolbar). */
 export const Sort = {
   render: () => ({
     components: { SortDropdown },
-    setup: () => ({ v: ref('recommended') }),
-    template: `<div style="padding:24px"><sort-dropdown v-model="v" /><div style="margin-top:14px;font-size:13px;color:var(--ds-color-text-subtle)">Sorting by: <strong>{{ v }}</strong></div></div>`,
+    setup: () => ({ v: ref('distance') }),
+    template: `<div style="padding:24px"><sort-dropdown v-model="v" variant="box" label="Sort By" /><div style="margin-top:14px;font-size:13px;color:var(--ds-color-text-subtle)">Sorting by: <strong>{{ v }}</strong></div></div>`,
   }),
 }
 

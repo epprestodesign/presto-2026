@@ -96,7 +96,11 @@ const preview = {
               // Grouped by page region — top bar, left rail, results, right rail, footer.
               'Top Bar', ['Breadcrumbs', 'Results Toolbar'],
               'Left Rail', ['Filter Rail', 'Search & Filters', 'Hotel Map'],
-              'Results', ['Hotel Listing Card', 'Availability Dialog', 'Empty States', 'Loading States', 'Forms'],
+              'Results', [
+                'Hotel Listing Card',
+                'Result States', ['Book Reservation', 'Group Block', ['Full Results', 'Partial Results', 'No Results', 'Error', 'Loading']],
+                'Availability Dialog', 'Empty States', 'Loading States', 'Forms',
+              ],
               'Right Rail', ['Display Ads', ['160×600', '160×320', '120×600']],
               'Footer', ['Pagination'],
             ],
