@@ -22,9 +22,19 @@ const props = defineProps({
   // Optional right-rail skyscraper Display Ad, e.g. [160, 600] / [160, 320] /
   // [120, 600]. When null (default) the page renders with no ad rail.
   adSize: { type: Array, default: null },
+  // Results state — drives what the results column shows:
+  //   'full'    — all availability blocks (default)
+  //   'partial' — a few matches + the fallback blocks
+  //   'empty'   — no properties (empty state)
+  //   'error'   — results failed to load
+  //   'loading' — skeleton placeholders
+  state: { type: String, default: 'full' },
 })
 
 const isGroup = computed(() => props.flow === 'group')
+const isLoading = computed(() => props.state === 'loading')
+const isError = computed(() => props.state === 'error')
+const isEmpty = computed(() => props.state === 'empty')
 
 // "Exact Matches Only" (from the filter rail). When ON, it demonstrates the
 // filtered edge case: nothing matches the strict filter, so the matching set
@@ -133,9 +143,20 @@ const displaySections = computed(() =>
     })),
   }))
 )
-const resultCount = computed(() =>
-  exactOnly.value ? 0 : sections.value.reduce((n, s) => n + s.hotels.length, 0)
-)
+// The matching (first) block; 'partial' state keeps only a couple of matches so
+// the fallback blocks dominate.
+const mainHotels = computed(() => {
+  const hotels = displaySections.value[0]?.hotels || []
+  if (isEmpty.value || exactOnly.value) return []
+  return props.state === 'partial' ? hotels.slice(0, 1) : hotels
+})
+// Fallback (non-matching) blocks — hidden only in the empty state.
+const fallbackSections = computed(() => (isEmpty.value ? [] : displaySections.value.slice(1)))
+
+const resultCount = computed(() => {
+  if (isEmpty.value || exactOnly.value) return 0
+  return mainHotels.value.length + fallbackSections.value.reduce((n, s) => n + s.hotels.length, 0)
+})
 
 // Group Block searches for a set number of rooms — surfaced in the results
 // toolbar as "N properties available — searching for R rooms".
@@ -146,17 +167,11 @@ const roomsRequested = 2
 // "no availability" sections show once, on the last page.
 const PER_PAGE = 4
 const page = ref(1)
-const mainSection = computed(() => displaySections.value[0] || { hotels: [] })
-const tailSections = computed(() => displaySections.value.slice(1))
-// Exact Matches ON → no hotels match the strict filter, so the matching set is
-// empty and only the fallback (tail) sections show.
-const matchingHotels = computed(() => (exactOnly.value ? [] : mainSection.value.hotels))
-const pageCount = computed(() => Math.max(1, Math.ceil(matchingHotels.value.length / PER_PAGE)))
+const pageCount = computed(() => Math.max(1, Math.ceil(mainHotels.value.length / PER_PAGE)))
 const pagedMain = computed(() => {
   const start = (page.value - 1) * PER_PAGE
-  return matchingHotels.value.slice(start, start + PER_PAGE)
+  return mainHotels.value.slice(start, start + PER_PAGE)
 })
-const isLastPage = computed(() => page.value >= pageCount.value)
 
 // Filter sidebar v-models.
 const fBudget = ref({ min: 20, max: 522 })
@@ -195,10 +210,11 @@ const sort = ref('recommended')
           <filter-rail v-model:exact-only="exactOnly" />
         </aside>
 
-        <!-- MIDDLE: results toolbar + paginated list -->
+        <!-- MIDDLE: results toolbar + state-driven results -->
         <div class="hlp__results">
-          <!-- toolbar lives in the results column, aligned to the cards -->
+          <!-- toolbar (hidden while loading / on error) -->
           <results-toolbar
+            v-if="!isLoading && !isError"
             v-model="sort"
             :count="resultCount"
             :filters-applied="filtersApplied"
@@ -207,17 +223,52 @@ const sort = ref('recommended')
             @clear-filters="exactOnly = false"
           />
 
-          <!-- primary (matching) results — paginated -->
-          <hotel-card-group
-            v-for="(hotel, hi) in pagedMain"
-            :key="'main-' + hi"
-            v-bind="hotel"
-            class="hlp__card"
-          />
+          <!-- LOADING — skeleton placeholders -->
+          <template v-if="isLoading">
+            <div v-for="n in 4" :key="'skel-' + n" class="hlp__skel">
+              <q-skeleton class="hlp__skel-media" animation="wave" />
+              <div class="hlp__skel-body">
+                <q-skeleton type="text" width="55%" height="26px" animation="wave" />
+                <q-skeleton type="text" width="110px" animation="wave" />
+                <q-skeleton type="text" width="48%" animation="wave" />
+                <q-skeleton type="text" width="36%" animation="wave" />
+              </div>
+              <div class="hlp__skel-price">
+                <q-skeleton type="text" width="90px" animation="wave" />
+                <q-skeleton type="text" width="120px" height="24px" animation="wave" />
+                <q-skeleton width="150px" height="52px" style="border-radius:8px" animation="wave" />
+              </div>
+            </div>
+          </template>
 
-          <!-- trailing availability sections — shown on the last page -->
-          <template v-if="isLastPage">
-            <template v-for="(section, si) in tailSections" :key="'tail-' + si">
+          <!-- ERROR -->
+          <div v-else-if="isError" class="hlp__state hlp__state--error">
+            <q-icon name="error_outline" size="52px" />
+            <h3 class="hlp__state-title">We couldn't load results</h3>
+            <p class="hlp__state-text">Something went wrong fetching hotels for your selected dates. Check your connection and try again.</p>
+            <button type="button" class="hlp__state-btn"><q-icon name="refresh" size="18px" /> Try again</button>
+          </div>
+
+          <!-- EMPTY -->
+          <div v-else-if="isEmpty" class="hlp__state hlp__state--empty">
+            <q-icon name="search_off" size="52px" />
+            <h3 class="hlp__state-title">No properties match your search</h3>
+            <p class="hlp__state-text">Try adjusting your filters, widening your search radius, or changing your dates to see more hotels.</p>
+            <button type="button" class="hlp__state-btn" @click="exactOnly = false">Clear all filters</button>
+          </div>
+
+          <!-- FULL / PARTIAL — matching block (paginated) + fallback blocks -->
+          <template v-else>
+            <hotel-card-group
+              v-for="(hotel, hi) in pagedMain"
+              :key="'main-' + hi"
+              v-bind="hotel"
+              class="hlp__card"
+            />
+
+            <!-- fallback availability sections — every status block (and its firm
+                 line break) is visible (DES-51). -->
+            <template v-for="(section, si) in fallbackSections" :key="'tail-' + si">
               <div v-if="section.heading" class="hlp__section">
                 <hr class="hlp__section-rule" />
                 <h3 class="hlp__section-heading">{{ section.heading }}</h3>
@@ -229,19 +280,19 @@ const sort = ref('recommended')
                 class="hlp__card"
               />
             </template>
-          </template>
 
-          <!-- pagination -->
-          <div v-if="pageCount > 1" class="hlp__pagination">
-            <q-pagination
-              v-model="page"
-              :max="pageCount"
-              :max-pages="6"
-              boundary-numbers
-              direction-links
-              color="primary"
-            />
-          </div>
+            <!-- pagination -->
+            <div v-if="pageCount > 1" class="hlp__pagination">
+              <q-pagination
+                v-model="page"
+                :max="pageCount"
+                :max-pages="6"
+                boundary-numbers
+                direction-links
+                color="primary"
+              />
+            </div>
+          </template>
         </div>
 
         <!-- RIGHT: optional sticky skyscraper Display Ad -->
@@ -327,6 +378,21 @@ const sort = ref('recommended')
   line-height: 1.35;
 }
 .hlp__card { width: 100%; }
+
+/* loading skeleton — mirrors the hotel card layout */
+.hlp__skel { display: flex; border: 1px solid rgba(0,0,0,0.04); border-radius: 12px; overflow: hidden; background: var(--ds-color-surface); box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 20px rgba(0,0,0,0.06); }
+.hlp__skel-media { width: 230px; height: 212px; flex: none; border-radius: 0; }
+.hlp__skel-body { flex: 1; min-width: 0; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+.hlp__skel-price { width: 250px; flex: none; padding: 20px 24px; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+
+/* empty / error state panels */
+.hlp__state { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 56px 24px; background: var(--ds-color-surface); border: 1px solid var(--ds-color-border); border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 20px rgba(0,0,0,0.06); }
+.hlp__state .q-icon { color: var(--ds-color-text-subtle); margin-bottom: 6px; }
+.hlp__state--error .q-icon { color: var(--ds-palette-orange-600); }
+.hlp__state-title { margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--ds-color-text); }
+.hlp__state-text { margin: 0; max-width: 420px; color: var(--ds-color-text-subtle); font-size: 0.9375rem; line-height: 1.5; }
+.hlp__state-btn { margin-top: 14px; display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 22px; border: 0; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-family: inherit; font-size: 0.9375rem; font-weight: 700; cursor: pointer; }
+.hlp__state-btn:hover { background: var(--ds-palette-navy-800); }
 
 /* right rail — sticky ads */
 .hlp__rail--right { position: sticky; top: 24px; }
