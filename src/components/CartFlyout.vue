@@ -2,7 +2,7 @@
 // CartFlyout — the right-side slide-over chrome (scrim, top bar / kebab, footer
 // countdown + CTA, special-requests sub-flyout) wrapped around the recyclable
 // <CartReview> body, which is shared with the Checkout "Review order" step.
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useQuasar } from 'quasar'
 import CartReview from './CartReview.vue'
 
@@ -12,18 +12,34 @@ const props = defineProps({
   cart: { type: Object, default: () => ({}) },
   currency: { type: String, default: '$' },
 })
-const emit = defineEmits(['update:modelValue', 'update:count'])
+const emit = defineEmits(['update:modelValue', 'update:count', 'browse'])
 const $q = useQuasar()
 
 const close = () => emit('update:modelValue', false)
+// Empty state "Browse hotels": tell the host to navigate (browse) and close.
+const onBrowse = () => { emit('browse'); close() }
 const money = (n) => props.currency + Number(n ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const isReserve = computed(() => props.mode === 'reserve')
+// Empty cart → show the empty state (illustration + "Browse hotels") instead of
+// the review body + footer. True when the cart prop has nothing OR the live
+// CartReview count (what's actually shown) hits zero as rooms are removed one by
+// one — so the empty state always follows the visible list.
+const anyRooms = (c) => (!c ? false : c.hotels ? c.hotels.some((h) => (h.rooms || []).length) : !!c.hotel)
+const isEmpty = computed(() => {
+  const propEmpty = isReserve.value ? !(props.cart && props.cart.hotel) : !anyRooms(props.cart)
+  return propEmpty || (!isReserve.value && count.value === 0)
+})
 
 // --- Live values surfaced from the shared CartReview body ---
 const reviewRef = ref(null)
-const count = ref(0)
+// Seed from the cart so isEmpty isn't momentarily true before CartReview emits.
+const count = ref(anyRooms(props.cart) ? 1 : 0)
 const total = ref(0)
 const onCount = (v) => { count.value = v; emit('update:count', v) }
+// Re-seed the count each time the flyout opens so a stale zero (left over from a
+// prior empty) doesn't wrongly show the empty state for a cart that's since been
+// repopulated. Fires only on open, so it never fights per-delete count updates.
+watch(() => props.modelValue, (open) => { if (open) count.value = anyRooms(props.cart) ? 1 : 0 })
 const clearCart = () => reviewRef.value?.clear()
 
 // --- Special requests sub-flyout ---
@@ -61,7 +77,7 @@ onBeforeUnmount(() => clearInterval(timer))
             <q-icon name="more_horiz" size="22px" />
             <q-menu auto-close anchor="bottom right" self="top right">
               <q-list style="min-width: 184px">
-                <q-item clickable @click="clearCart">
+                <q-item clickable class="cf__clear" @click="clearCart">
                   <q-item-section avatar><q-icon name="delete" color="negative" /></q-item-section>
                   <q-item-section class="text-negative">Clear Cart</q-item-section>
                 </q-item>
@@ -72,9 +88,23 @@ onBeforeUnmount(() => clearInterval(timer))
         <!-- Reserve: close overlaid on the hero carousel -->
         <button v-else class="cf__close" aria-label="Close" @click="close"><q-icon name="close" size="22px" /></button>
 
+        <!-- Empty state — no rooms held yet. -->
+        <div v-if="isEmpty" class="cf__empty">
+          <div class="cf__empty-art">
+            <span class="cf__empty-shape cf__empty-shape--diamond" />
+            <span class="cf__empty-shape cf__empty-shape--circle" />
+            <span class="cf__empty-icon"><q-icon name="shopping_cart" size="46px" /></span>
+          </div>
+          <h3 class="cf__empty-title">Add rooms to start a cart</h3>
+          <p class="cf__empty-desc">Once you add rooms from a hotel, they'll appear here.</p>
+          <button type="button" class="cf__empty-cta" @click="onBrowse">Browse hotels</button>
+        </div>
+
+        <template v-else>
         <div class="cf__body" @scroll="onScroll">
           <cart-review
             ref="reviewRef" :mode="mode" :cart="cart" :currency="currency" :show-requests="isReserve"
+            :room-delete="mode === 'hold'"
             @update:count="onCount" @update:total="total = $event" @requests="requestsOpen = true"
           />
         </div>
@@ -96,6 +126,7 @@ onBeforeUnmount(() => clearInterval(timer))
             </q-btn>
           </div>
         </div>
+        </template>
       </aside>
 
       <!-- Special requests — sub-flyout over the cart -->
@@ -137,6 +168,18 @@ onBeforeUnmount(() => clearInterval(timer))
 .cf__top-kebab { color: var(--ds-color-text); flex: none; }
 
 .cf__body { flex: 1; overflow-y: auto; }
+
+/* Empty state */
+.cf__empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px 40px 64px; }
+.cf__empty-art { position: relative; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
+.cf__empty-icon { width: 120px; height: 120px; border-radius: 50%; background: var(--ds-palette-slate-100); color: var(--ds-color-text-brand); display: flex; align-items: center; justify-content: center; }
+.cf__empty-shape { position: absolute; }
+.cf__empty-shape--diamond { top: 6px; right: 30px; width: 26px; height: 26px; background: var(--ds-palette-amber-400); border-radius: 6px; transform: rotate(45deg); }
+.cf__empty-shape--circle { top: 22px; right: 12px; width: 18px; height: 18px; background: var(--ds-palette-green-400); border-radius: 50%; }
+.cf__empty-title { margin: 0 0 10px; font-size: 1.375rem; font-weight: 800; color: var(--ds-color-text); }
+.cf__empty-desc { margin: 0 0 28px; color: var(--ds-color-text-subtle); font-size: 1rem; line-height: 1.5; max-width: 300px; }
+.cf__empty-cta { height: 52px; padding: 0 32px; border: 0; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-brand-bold); color: #fff; font-family: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
+.cf__empty-cta:hover { background: var(--ds-palette-navy-800); }
 
 /* Footer — countdown progress bar (Instacart-style layout) above a rounded CTA */
 .cf__foot { flex: none; border-top: 1px solid var(--ds-color-border); padding: 0; display: flex; flex-direction: column; background: var(--ds-color-surface); }
