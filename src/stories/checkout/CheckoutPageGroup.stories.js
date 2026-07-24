@@ -57,7 +57,7 @@ const build = (showTeams) => () => ({
     }))
     return { cart, summary, showTeams }
   },
-  template: `<page-frame cart-mode="hold" brand="Secure Checkout" minimal-nav><checkout-page mode="group" :cart="cart" :summary="summary" :show-teams="showTeams" /></page-frame>`,
+  template: `<page-frame cart-mode="hold" brand="Secure Checkout" minimal-nav><checkout-page mode="group" :cart="cart" :summary="summary" :show-teams="showTeams" timer-top /></page-frame>`,
 })
 
 /** Group / team hold checkout — includes the teams block widget in the

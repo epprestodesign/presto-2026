@@ -9,14 +9,20 @@ defineProps({
   cart: { type: Object, default: () => ({}) },
   currency: { type: String, default: '$' },
   bind: { type: Boolean, default: false },
+  // Expanded layout (Checkout Experience Expanded): hide the per-step "Next"
+  // button — the whole flow uses a single submit at the bottom.
+  flat: { type: Boolean, default: false },
+  // Show per-night quantities read-only with a single "delete room" action
+  // instead of the +/- steppers (group checkout review order).
+  roomDelete: { type: Boolean, default: false },
 })
 const emit = defineEmits(['next'])
 </script>
 
 <template>
   <div class="step">
-    <div class="step__review"><cart-review :mode="mode" :cart="cart" :currency="currency" :bind="bind" :show-requests="false" :show-price="mode !== 'hold'" :show-add-hotel="false" /></div>
-    <q-btn unelevated no-caps class="step__next" label="Next" @click="emit('next')" />
+    <div class="step__review"><cart-review :mode="mode" :cart="cart" :currency="currency" :bind="bind" :room-delete="roomDelete" :show-requests="false" :show-price="mode !== 'hold'" :show-add-hotel="false" /></div>
+    <q-btn v-if="!flat" unelevated no-caps class="step__next" label="Next" @click="emit('next')" />
   </div>
 </template>
 

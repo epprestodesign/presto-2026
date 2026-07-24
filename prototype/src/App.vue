@@ -6,17 +6,17 @@
 // scope also catches TELEPORTED nodes (the cart fly-out, menus) that render
 // outside the active screen's DOM subtree.
 import { onMounted, onBeforeUnmount, watch, nextTick, computed } from 'vue'
-import { journey, holdTimer, nav, startFlow, openHotel, addActiveToCart, addRoomToHold, cartRoomCount, backToBrowse, goToCheckout, resetJourney } from './store.js'
+import { journey, holdTimer, nav, startFlow, openHotel, addActiveToCart, addRoomToHold, cartRoomCount, backToBrowse, goToCheckout, resetJourney, setRoomsNeeded } from './store.js'
 import { getHotelByName, getHotel } from './hotels.js'
 import HoldTimerPill from '@lib/components/HoldTimerPill.vue'
 // EventPipe wordmark (same asset the footer uses) — shown in the app bar in place
 // of the "Presto" text, recolored via CSS mask. Exposed as a CSS var on the root.
 import epLogo from '@lib/assets/eventpipe logos/eventpipe-logo.svg'
 
-// DES-84: the group-block hold timer floats across the whole workflow. On the
-// checkout screen the rail already shows the same countdown, so hide the pill
-// there to avoid two clocks; everywhere else (browse/details) it floats.
-const showHoldPill = computed(() => holdTimer.active && journey.screen !== 'checkout')
+// DES-84: the group-block hold timer follows the workflow. Browse and Checkout
+// now render their own HoldTimerBanner (top strip + scroll pill), so this
+// standalone floating pill only covers the Details screen.
+const showHoldPill = computed(() => holdTimer.active && journey.screen === 'details')
 
 // Open the nav cart fly-out by triggering the library's cart button (the flyout
 // is controlled inside GlobalNav; this is the no-library-change way to open it).
@@ -98,12 +98,28 @@ function onClickCapture(e) {
     if (t.closest('.bw__search')) {
       const modeEl = document.querySelector('.bw__field--mode') || document.querySelector('.bw__tab--active')
       const isGroup = /hold/i.test(modeEl?.textContent || '')
-      startFlow(isGroup ? 'group' : 'reservations')
+      // Group flow: capture the "Rooms Needed" value (the only number input in the
+      // widget) so it carries into the Browse widget.
+      let roomsNeeded = null
+      if (isGroup) {
+        const v = parseInt(document.querySelector('.bw input[type="number"]')?.value || '', 10)
+        if (!Number.isNaN(v) && v > 0) roomsNeeded = v
+      }
+      startFlow(isGroup ? 'group' : 'reservations', { roomsNeeded })
     }
     return
   }
 
   if (screen === 'browse') {
+    // Group flow: re-running the search re-reads "Rooms Needed" → the result
+    // tiers (matches / partial / unavailable) reflect the requested count.
+    if (t.closest('.bw__search')) {
+      if (journey.flow === 'group') {
+        const v = parseInt(document.querySelector('.bwrap .bw input[type="number"]')?.value || '', 10)
+        setRoomsNeeded(Number.isNaN(v) ? null : v)
+      }
+      return
+    }
     // Hotel NAME → its Details page. (The card CTA is handled by the card's own
     // @choose/@select event in BrowseScreen — not intercepted here, to avoid
     // double navigation.) Resolve to the full hotel record for a coherent Details.
@@ -243,6 +259,21 @@ body { background: var(--ds-palette-slate-100, #f1f2f4); }
    BOTH flows (it duplicated the Policies section), so the prototype no longer
    needs to hide it for group — and hiding `.srr__sec--first` would now wrongly
    hide the group's first visible section (Policies). */
+
+/* Prototype: the checkout Policies box spans the full width of its column
+   (the shared PoliciesAgreement caps itself at 640px and centers). */
+.proto-ck .pol { max-width: none; }
+
+/* Expanded checkout timer strip: the prototype caps .ck__inner to --col (a
+   92%-of-column value), but the full-bleed strip resolves --col against the
+   wider bled bar — so its content drifts right of "Confirm and pay". Match the
+   strip's content column to .ck__inner (same min(1440px, 92% of the checkout
+   content box) width, no side padding) so the label + note line up. */
+.proto-ck .ck__topbar-inner {
+  max-width: min(1440px, calc((100vw - 48px) * 0.92)) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
 
 /* DES-74: remove the date-flexibility chips (Exact dates / ±1 / ±2 / ±3 / ±7 days)
    and their separator from the Check-in–Check-out date picker. */

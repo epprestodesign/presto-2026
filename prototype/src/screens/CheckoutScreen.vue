@@ -8,7 +8,9 @@ import { computed } from 'vue'
 import { journey, holdTimer, cartMode, checkoutMode } from '../store.js'
 import { cartFor, summaryFor } from '../fixtures.js'
 import PageFrame from '@lib/components/PageFrame.vue'
-import CheckoutPage from '@lib/components/checkout/CheckoutPage.vue'
+// Expanded checkout: every step open at once with one submit (instead of the
+// stepped accordion). Same props; the timer strip + pill are built in.
+import CheckoutPageExpanded from '@lib/components/checkout/CheckoutPageExpanded.vue'
 
 // DES-84: for a group block, the rail's "Time left to book" continues the same
 // hold that started when the first room was added — seed it from the shared
@@ -27,8 +29,8 @@ const summary = computed(() => summaryFor(journey.cart, checkoutMode.value))
   <page-frame brand="Presto" :cart-mode="cartMode">
     <!-- proto-ck--group scopes group-only checkout tweaks (DES-79) without
          touching the individual flow. -->
-    <div :class="{ 'proto-ck--group': checkoutMode === 'group' }">
-      <checkout-page :mode="checkoutMode" :cart="cart" :summary="summary" :show-teams="false" />
+    <div class="proto-ck" :class="{ 'proto-ck--group': checkoutMode === 'group' }">
+      <checkout-page-expanded :mode="checkoutMode" :cart="cart" :summary="summary" :show-teams="false" />
     </div>
   </page-frame>
 </template>

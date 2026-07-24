@@ -83,7 +83,7 @@ export const Page = {
       }))
       return { cart, summary }
     },
-    template: `<page-frame cart-mode="reserve" brand="Secure Checkout" minimal-nav><checkout-page mode="reservation" :cart="cart" :summary="summary" /></page-frame>`,
+    template: `<page-frame cart-mode="reserve" brand="Secure Checkout" minimal-nav><checkout-page mode="reservation" :cart="cart" :summary="summary" timer-top /></page-frame>`,
   }),
 }
 
@@ -129,6 +129,6 @@ export const MultipleRoomReservations = {
       }))
       return { cart, summary }
     },
-    template: `<page-frame cart-mode="reserve" brand="Secure Checkout" minimal-nav><checkout-page mode="reservations" :cart="cart" :summary="summary" /></page-frame>`,
+    template: `<page-frame cart-mode="reserve" brand="Secure Checkout" minimal-nav><checkout-page mode="reservations" :cart="cart" :summary="summary" timer-top /></page-frame>`,
   }),
 }

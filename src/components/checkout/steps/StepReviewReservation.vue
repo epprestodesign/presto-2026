@@ -13,6 +13,10 @@ const props = defineProps({
   // Policies agreement (final gate + CTA). flow: 'reserve' | 'group'.
   flow: { type: String, default: 'reserve' },
   hotels: { type: Array, default: () => [{}] },
+  // Expanded layout: hide the Policies CTA (the page uses one submit at the end).
+  flat: { type: Boolean, default: false },
+  // Expanded layout: render only "Protect your stay" (Policies moves to its own step).
+  hidePolicies: { type: Boolean, default: false },
   protectionPlans: { type: Array, default: () => ([
     { id: 'plan', title: 'Trip Protection Plan', price: 10.51, recommended: true, benefits: [
       'Cancellation or early check-out, up to 100% of trip cost',
@@ -57,10 +61,10 @@ const canConfirm = computed(() => protection.value !== null)
          first section and drops its top border via srr__sec--first.) -->
 
     <!-- Policies + agreement + completion CTA -->
-    <section class="srr__sec" :class="{ 'srr__sec--first': flow === 'group' }">
+    <section v-if="!hidePolicies" class="srr__sec" :class="{ 'srr__sec--first': flow === 'group' }">
       <h4 class="srr__h">Policies</h4>
       <p class="srr__sub">Review and agree to the policies to complete your booking.</p>
-      <policies-agreement :flow="flow" :hotels="hotels" @submit="emit('confirm')" />
+      <policies-agreement :flow="flow" :hotels="hotels" :hide-cta="flat" @submit="emit('confirm')" />
     </section>
   </div>
 </template>

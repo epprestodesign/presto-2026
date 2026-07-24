@@ -22,6 +22,9 @@ export const journey = reactive({
   cart: [],
   // Whether the cart fly-out should be openable in the nav (forced once cart > 0).
   cartOpen: false,
+  // Group flow: the "Rooms Needed" entered on the landing widget, carried to the
+  // Browse widget so the search context persists across the step.
+  roomsNeeded: null,
 })
 
 // ── Group-block hold timer (DES-84) ──
@@ -79,17 +82,43 @@ export const cartVisible = computed(() => journey.flow === 'group' || journey.ca
 
 // ── Navigation ──
 
+// Reflect the current journey in the URL so every screen is deeplinkable /
+// shareable (read back by bootstrapFromUrl on load). Milestones: screen + flow,
+// plus the open hotel and cart size so details/checkout restore sensibly.
+function syncUrl() {
+  if (typeof window === 'undefined' || !window.history) return
+  const q = new URLSearchParams()
+  q.set('screen', journey.screen)
+  q.set('flow', journey.flow)
+  if (journey.active?.name) {
+    q.set('hotel', journey.active.name)
+    if (journey.active.city) q.set('city', journey.active.city)
+  }
+  if (journey.cart.length) q.set('n', String(journey.cart.length))
+  if (journey.roomsNeeded) q.set('rooms', String(journey.roomsNeeded))
+  window.history.replaceState(null, '', `${window.location.pathname}?${q.toString()}`)
+}
+
+// Group flow: set the requested room count (drives the Browse result tiers) and
+// keep the URL in sync so the query is shareable.
+export function setRoomsNeeded(v) {
+  journey.roomsNeeded = (typeof v === 'number' && v > 0) ? v : null
+  syncUrl()
+}
+
 export function nav(screen) {
   if (!SCREENS.includes(screen)) return
   journey.cartOpen = false
   journey.screen = screen
+  syncUrl()
   requestAnimationFrame(() => window.scrollTo({ top: 0 }))
 }
 
-export function startFlow(widgetMode) {
+export function startFlow(widgetMode, opts = {}) {
   journey.flow = widgetMode === 'group' ? 'group' : 'reserve'
   journey.cart = []
   journey.active = null
+  journey.roomsNeeded = opts.roomsNeeded ?? null // carry the landing "Rooms Needed"
   stopHoldTimer() // a fresh search clears any prior hold
   nav('browse')
 }
@@ -180,6 +209,8 @@ export function bootstrapFromUrl() {
   if (!screen || !SCREENS.includes(screen)) return
   const flow = q.get('flow')
   if (flow) journey.flow = flow === 'group' ? 'group' : 'reserve'
+  const rooms = parseInt(q.get('rooms') || '0', 10)
+  journey.roomsNeeded = rooms > 0 ? rooms : null
   const n = parseInt(q.get('n') || '0', 10)
   journey.cart = []
   for (let i = 0; i < n; i++) journey.cart.push({ ...SAMPLE[i % SAMPLE.length] })
