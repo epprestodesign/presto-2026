@@ -26,6 +26,8 @@ const props = defineProps({
   // When true, always show the Check-in – Check-out field (default: only in
   // 'reservations' mode). Used on Browse Hotels where dates apply to both flows.
   showDates: { type: Boolean, default: false },
+  // Seed the group "Rooms Needed" field (e.g. carried from the landing search).
+  initialRooms: { type: Number, default: null },
 })
 const mode = ref(props.mode)
 const modeOptions = [
@@ -118,7 +120,8 @@ const travelersLabel = computed(() => `${travelersTotal.value} traveler${travele
 
 // Group Block swaps the Travelers popover for a simple "Rooms Needed" number input.
 // DES-80: no default — the organizer must enter how many rooms they need.
-const roomsNeeded = ref(null)
+// Seeded from `initialRooms` when a value carries over from the landing search.
+const roomsNeeded = ref(props.initialRooms ?? null)
 </script>
 
 <template>

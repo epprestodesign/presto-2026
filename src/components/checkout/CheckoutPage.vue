@@ -8,6 +8,7 @@
 import { ref, computed, reactive, onMounted, onBeforeUnmount } from 'vue'
 import { useQuasar } from 'quasar'
 import CartReview from '../CartReview.vue'
+import HoldTimerPill from '../HoldTimerPill.vue'
 import StepReviewOrder from './steps/StepReviewOrder.vue'
 import StepContactInfo from './steps/StepContactInfo.vue'
 import StepPayment from './steps/StepPayment.vue'
@@ -20,14 +21,31 @@ const props = defineProps({
   currency: { type: String, default: '$' },
   // Group flow: render the teams block widget in the contact step.
   showTeams: { type: Boolean, default: true },
+  // Opt-in: show "Time left to book" as a full-width strip under the app bar
+  // (plus a floating pill on scroll) instead of inside the rail. Off by default
+  // so the live checkout keeps the rail timer.
+  timerTop: { type: Boolean, default: false },
 })
 
-// "Time left to book" countdown for the rail — rooms are held temporarily.
+// "Time left to book" countdown — rail timer by default, or the top strip +
+// floating pill when `timerTop`.
 const heldSecs = ref(props.cart.heldSeconds ?? 895)
 const timerText = computed(() => `${Math.floor(heldSecs.value / 60)} min : ${String(heldSecs.value % 60).padStart(2, '0')} sec`)
 let heldTimer = null
-onMounted(() => { heldTimer = setInterval(() => { if (heldSecs.value > 0) heldSecs.value-- }, 1000) })
-onBeforeUnmount(() => clearInterval(heldTimer))
+
+// `timerTop` only: the floating pill appears once the top strip scrolls away.
+const topbar = ref(null)
+const showPill = ref(false)
+let observer = null
+
+onMounted(() => {
+  heldTimer = setInterval(() => { if (heldSecs.value > 0) heldSecs.value-- }, 1000)
+  if (props.timerTop && topbar.value && 'IntersectionObserver' in window) {
+    observer = new IntersectionObserver(([entry]) => { showPill.value = !entry.isIntersecting }, { threshold: 0 })
+    observer.observe(topbar.value)
+  }
+})
+onBeforeUnmount(() => { clearInterval(heldTimer); observer?.disconnect() })
 const $q = useQuasar()
 const isGroup = computed(() => props.mode === 'group')
 const isMulti = computed(() => props.mode === 'reservations') // multiple room reservations
@@ -101,6 +119,17 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 
 <template>
   <div class="ck">
+    <!-- Opt-in: "Time left to book" appended under the app bar as a full-width strip. -->
+    <div v-if="timerTop" ref="topbar" class="ck__topbar">
+      <div class="ck__topbar-inner">
+        <div class="ck__topbar-main">
+          <span class="ck__timer-label"><q-icon name="timer" size="18px" /> Time left to book</span>
+          <span class="ck__timer-clock">{{ timerText }}</span>
+        </div>
+        <p class="ck__timer-note">Book before the timer runs out to secure this rate. If the timer expires, you'll need to run your search again.</p>
+      </div>
+    </div>
+
     <div class="ck__inner">
     <div class="ck__header">
       <h1 class="ck__h1">Confirm and pay</h1>
@@ -125,7 +154,7 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 
           <!-- open content — each step is its own component -->
           <div v-if="stepState(i + 1) === 'open'" class="ck__body">
-            <step-review-order v-if="s.key === 'review'" :mode="cartMode" :cart="liveCart" :currency="currency" bind @next="next" />
+            <step-review-order v-if="s.key === 'review'" :mode="cartMode" :cart="liveCart" :currency="currency" bind room-delete @next="next" />
             <step-contact-info v-else-if="s.key === 'contact'" :mode="mode" :show-teams="showTeams" :rooms="contactRooms" :reservations="isMulti ? contactReservations : null" v-model="contact" @next="next" />
             <step-payment v-else-if="s.key === 'payment'" v-model="payment" @next="next" />
             <step-review-reservation v-else :contact-summary="contactSummary" :payment-label="paymentLabel" :total="summary.total" :currency="currency" :flow="policyFlow" :hotels="policyHotels" @confirm="confirm" />
@@ -138,8 +167,9 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
       <aside class="ck__railwrap">
         <cart-review :mode="cartMode" :cart="liveCart" :currency="currency" readonly bind :show-requests="false" cards :order-title="(isGroup || isMulti) ? 'Review your order' : ''" />
 
-        <!-- Time left to book — the held-rooms countdown, under the price details -->
-        <div class="ck__timer">
+        <!-- Time left to book — the held-rooms countdown, under the price details
+             (hidden when the timer is shown as the top strip instead). -->
+        <div v-if="!timerTop" class="ck__timer">
           <div class="ck__timer-row">
             <span class="ck__timer-label"><q-icon name="timer" size="18px" /> Time left to book</span>
             <span class="ck__timer-clock">{{ timerText }}</span>
@@ -155,6 +185,9 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
       </aside>
     </div>
     </div>
+
+    <!-- `timerTop` only: floating countdown once the top strip scrolls out of view. -->
+    <hold-timer-pill v-if="timerTop && showPill" :seconds="heldSecs" position="bottom-right" />
   </div>
 </template>
 
@@ -164,6 +197,19 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 .ck__header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 .ck__h1 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--ds-color-text); }
 .ck__grid { display: grid; grid-template-columns: 1fr 400px; gap: 32px; align-items: start; }
+
+/* Opt-in (timerTop): full-width strip appended under the app bar. Negative
+   margins cancel the .ck padding so it bleeds edge-to-edge; inner content aligns
+   to the checkout column. */
+.ck__topbar { margin: -12px -24px 16px; background: var(--ds-palette-blue-100); border-bottom: 1px solid var(--ds-palette-blue-200, #BFDBFE); color: var(--ds-palette-blue-800); }
+/* max-width = the content column (--col where set, else 1040) + 24px padding each
+   side, so the label and note line up with "Confirm and pay" (.ck__inner) despite
+   the full-bleed — and the prototype (which widens .ck__inner to --col) too. */
+.ck__topbar-inner { max-width: calc(var(--col, 1040px) + 48px); margin: 0 auto; padding: 12px 24px; }
+.ck__topbar-main { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ck__topbar .ck__timer-label { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1rem; }
+.ck__topbar .ck__timer-clock { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 1.0625rem; }
+.ck__topbar .ck__timer-note { margin: 4px 0 0; font-size: 0.875rem; line-height: 1.4; }
 
 /* Time left to book — held-rooms countdown under the rail's price details. */
 .ck__timer { margin-top: 16px; background: var(--ds-palette-blue-100); border: 1px solid var(--ds-palette-blue-200, #BFDBFE); border-radius: var(--ds-radius-lg); padding: 16px 20px; color: var(--ds-palette-blue-800); }

@@ -3,6 +3,7 @@
 // Booking Widget and Core Booking Widget. Booking-type selector hidden (flow fixed).
 import HotelListPage from '../../components/browse/HotelListPage.vue'
 import PageFrame from '../../components/PageFrame.vue'
+import HoldTimerBanner from '../../components/HoldTimerBanner.vue'
 
 export default {
   title: 'Browse Hotels/Group Block',
@@ -35,3 +36,13 @@ export const TeamsBookingWidget = { name: 'Teams Booking Widget', render: page(t
 
 /** Group Block list page — Core Booking Widget (no team field). */
 export const CoreBookingWidget = { name: 'Core Booking Widget', render: page(false) }
+
+/** Hold active — with a group hold in progress, the "Time left to book" strip is
+ *  appended under the app bar (and a floating pill appears on scroll). */
+export const HoldActive = {
+  name: 'Hold Active — Timer',
+  render: () => ({
+    components: { PageFrame, HotelListPage, HoldTimerBanner },
+    template: `<page-frame cart-mode="hold" style="--col:1400px"><hold-timer-banner :seconds="372" /><hotel-list-page flow="group" :show-teams="true" /></page-frame>`,
+  }),
+}

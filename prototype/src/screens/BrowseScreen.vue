@@ -4,8 +4,9 @@
 // hotel cards — but driven by the 60-hotel dataset with real filter + sort logic.
 // Card CTA / hotel name → that hotel's Details page. Zero library changes.
 import { ref, computed } from 'vue'
-import { journey, cartMode, roomsFlow, cartVisible, checkoutMode, openHotel } from '../store.js'
-import { HOTELS, filterHotels, sortHotels, countFilters, groupAvailability, getHotelByName } from '../hotels.js'
+import { journey, holdTimer, cartMode, roomsFlow, cartVisible, checkoutMode, openHotel } from '../store.js'
+import HoldTimerBanner from '@lib/components/HoldTimerBanner.vue'
+import { HOTELS, filterHotels, sortHotels, countFilters, getHotelByName } from '../hotels.js'
 import { cartFor, EVENT } from '../fixtures.js'
 import PageFrame from '@lib/components/PageFrame.vue'
 import BookingWidget from '@lib/components/BookingWidget.vue'
@@ -27,16 +28,29 @@ const isGroup = computed(() => journey.flow === 'group')
 const results = computed(() => sortHotels(filterHotels(HOTELS, filters.value, roomsFlow.value), sort.value, roomsFlow.value))
 const filtersApplied = computed(() => countFilters(filters.value))
 
-// DES-75/76: hotels are grouped into availability tiers — (1) match, (2) have
-// availability but don't match filters, (3) sold out — each sorted by the applied
-// sort, with a firm line-break message between tiers. `results` is already
-// filtered + sorted, so filtering each tier preserves the sort order.
-const tier1 = computed(() => results.value.filter((h) => h.availability === 'available'))
-const tier2 = computed(() => results.value.filter((h) => h.availability === 'unmatched'))
-const tier3 = computed(() => results.value.filter((h) => h.availability === 'unavailable'))
+// DES-75/76: hotels are grouped into availability tiers — (1) match, (2) partial,
+// (3) sold out — each sorted by the applied sort, with a firm line-break message
+// between tiers. `results` is already filtered + sorted, so filtering each tier
+// preserves the sort order.
+// The requested room count (group flow) — drives which tier each hotel lands in.
+const roomsNeeded = computed(() => (isGroup.value ? (journey.roomsNeeded || 0) : 0))
+// Availability tier per hotel. Group: driven by rooms available vs requested —
+// enough rooms → matches (1); some but fewer than requested → partial (2); sold
+// out → unavailable (3). Reserve: the hotel's own availability attribute.
+const tierOf = (h) => {
+  if (isGroup.value) {
+    if (h.availability === 'unavailable') return 3
+    if (roomsNeeded.value && h.roomsAvailable < roomsNeeded.value) return 2
+    return 1
+  }
+  return h.availability === 'available' ? 1 : h.availability === 'unmatched' ? 2 : 3
+}
+const tier1 = computed(() => results.value.filter((h) => tierOf(h) === 1))
+const tier2 = computed(() => results.value.filter((h) => tierOf(h) === 2))
+const tier3 = computed(() => results.value.filter((h) => tierOf(h) === 3))
 // First break message differs by flow; the second (sold out) is shared.
 const msgUnmatched = computed(() => (isGroup.value
-  ? 'The hotels below have availability but may not match your selected filters or have enough rooms for all nights selected.'
+  ? `The hotels below have availability but fewer than the ${roomsNeeded.value} room${roomsNeeded.value === 1 ? '' : 's'} you requested.`
   : 'The below hotels have availability for your selected dates but do not match your selected filters'))
 const MSG_UNAVAILABLE = 'The below hotels do not have availability for your selected dates'
 const navCart = computed(() => (journey.cart.length ? cartFor(journey.cart, checkoutMode.value) : {}))
@@ -45,7 +59,10 @@ const navCart = computed(() => (journey.cart.length ? cartFor(journey.cart, chec
 function cardProps(h) {
   const base = { name: h.name, city: h.city, stars: h.stars, distance: h.distance, preferred: h.preferred, seed: h.seed, imageCategories: h.imageCategories, rooms: h.rooms }
   if (isGroup.value) {
-    return { ...base, flow: 'group', startingPrice: h.startingPrice, availability: groupAvailability(h.availability), roomsAvailable: h.roomsAvailable, roomsMax: h.roomsMax, roomsRequested: 1, refundable: h.refundable, lowRateGuarantee: h.lowRateGuarantee }
+    const tier = tierOf(h)
+    const availability = tier === 3 ? 'unavailable' : tier === 2 ? 'partial' : 'matches'
+    // partial → show the hotel's actual available count vs the requested count.
+    return { ...base, flow: 'group', startingPrice: h.startingPrice, availability, roomsAvailable: h.roomsAvailable, roomsMax: h.roomsAvailable, roomsRequested: roomsNeeded.value || 1, refundable: h.refundable, lowRateGuarantee: h.lowRateGuarantee }
   }
   return { ...base, fromNightly: h.fromNightly, total: h.total, availability: h.availability }
 }
@@ -55,6 +72,10 @@ const clearFilters = () => railRef.value?.clearAll()
 
 <template>
   <page-frame brand="Presto" :cart-mode="cartMode" :show-cart="cartVisible" :cart="navCart">
+    <!-- Hold countdown — appears under the app bar once a group hold is active
+         (rooms held), with a floating pill on scroll. -->
+    <hold-timer-banner v-if="holdTimer.active" :seconds="holdTimer.remaining" />
+
     <!-- Hero band (Hotel Listings banner: bg image + scrim) -->
     <section class="bhero" :style="heroStyle">
       <div class="bhero__inner">
@@ -67,7 +88,7 @@ const clearFilters = () => railRef.value?.clearAll()
     <!-- Booking widget band -->
     <div class="bwrap">
       <div class="bsearch">
-        <booking-widget :mode="isGroup ? 'group' : 'reservations'" :tabs="false" :show-mode="false" :show-teams="false" :show-dates="true" />
+        <booking-widget :mode="isGroup ? 'group' : 'reservations'" :tabs="false" :show-mode="false" :show-teams="false" :show-dates="true" :initial-rooms="journey.roomsNeeded" />
       </div>
     </div>
 

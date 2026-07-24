@@ -114,6 +114,9 @@ const preview = {
               'Photo Gallery', 'Detail Tabs', 'Hotel Summary Header', 'Amenities', 'Policies & Property',
             ],
           ],
+          'Checkout Experience Expanded', [
+            'Overview', ['Book Reservation', 'Group Block'],
+          ],
           'Checkout Experience', [
             'Book Reservation', 'Group Block',
             'Components', [

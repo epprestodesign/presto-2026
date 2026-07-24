@@ -25,6 +25,9 @@ const props = defineProps({
   orderTitle: { type: String, default: '' }, // hold: header above the hotels (e.g. "Review your order")
   collapsible: { type: Boolean, default: false }, // hold: orderTitle toggles the hotels list (starts collapsed)
   bind: { type: Boolean, default: false }, // edit the passed cart directly (share live state across instances)
+  // hold: show per-night quantities as read-only and offer a single "delete room"
+  // action instead of the +/- steppers (checkout review order — no qty editing).
+  roomDelete: { type: Boolean, default: false },
 })
 const emit = defineEmits(['update:count', 'update:total', 'requests'])
 
@@ -69,6 +72,13 @@ const removeNight = (hi, ri, ni) => {
   const rooms = hotels.value[hi].rooms
   rooms[ri].nights.splice(ni, 1)
   if (rooms[ri].nights.length === 0) rooms.splice(ri, 1)
+  if (rooms.length === 0) { hotels.value.splice(hi, 1); openHotels.value.splice(hi, 1) }
+}
+// Remove an entire held room (all its nights) from the order; drop the hotel
+// once its last room is gone. Used by the checkout review order's delete action.
+const removeRoom = (hi, ri) => {
+  const rooms = hotels.value[hi].rooms
+  rooms.splice(ri, 1)
   if (rooms.length === 0) { hotels.value.splice(hi, 1); openHotels.value.splice(hi, 1) }
 }
 const clear = () => { hotels.value = []; openHotels.value = [] }
@@ -239,17 +249,21 @@ defineExpose({ clear })
                   <span class="cr__rtitle">{{ r.type }}</span>
                   <span v-if="r.summary" class="cr__rsummary">{{ r.summary }}</span>
                 </div>
-                <span v-if="roomFlatPrice(r) != null" class="cr__rprice">{{ money(roomFlatPrice(r)) }}<small>/nt</small></span>
+                <div class="cr__roomhead-right">
+                  <span v-if="roomFlatPrice(r) != null" class="cr__rprice">{{ money(roomFlatPrice(r)) }}<small>/nt</small></span>
+                  <!-- roomDelete: one action removes the whole room (no qty editing). -->
+                  <button v-if="roomDelete" type="button" class="cr__roomdel" aria-label="Remove room" @click="removeRoom(hi, ri)"><q-icon name="delete_outline" size="20px" /></button>
+                </div>
               </div>
               <div v-for="(n, ni) in r.nights" :key="ni" class="cr__dayrow">
                 <div class="cr__dayinfo">
                   <span class="cr__date">{{ n.date }}</span>
-                  <span v-if="!readonly && !isReservations" class="cr__left">{{ n.roomsLeft - n.qty }} left</span>
+                  <span v-if="!readonly && !isReservations && !roomDelete" class="cr__left">{{ n.roomsLeft - n.qty }} left</span>
                 </div>
                 <!-- reservations: a fixed booked night → show its nightly rate -->
                 <span v-if="isReservations" class="cr__nightprice">{{ money(n.price ?? r.price) }}</span>
                 <!-- hold: editable per-night quantity -->
-                <quantity-stepper v-else-if="!readonly" v-model="n.qty" :min="1" :max="n.roomsLeft" removable size="sm" @remove="removeNight(hi, ri, ni)" />
+                <quantity-stepper v-else-if="!readonly && !roomDelete" v-model="n.qty" :min="1" :max="n.roomsLeft" removable size="sm" @remove="removeNight(hi, ri, ni)" />
                 <!-- DES-90: readonly hold (group block checkout) — rooms held that
                      night + that night's per-room cost, so differing nightly
                      rates are broken out per night. -->
@@ -317,10 +331,11 @@ defineExpose({ clear })
 .cr--cards .cr__pricecard { margin: 0; }
 .cr__hold--cards { gap: 16px; }
 .cr__holdwrap--card { background: var(--ds-color-surface); border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); overflow: hidden; }
-.cr__holdwrap--card .cr__hotelblock:last-child { border-bottom: 0; }
 .cr__resbody--card { background: var(--ds-color-surface); border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); overflow: hidden; }
 .cr__ordertitle { font-size: 1.375rem; font-weight: 700; color: var(--ds-color-text); margin: 0; padding: 18px 20px 10px; }
 .cr__hotelblock { border-bottom: 1px solid var(--ds-color-border); }
+/* The last hotel in the list is the container's last child — no trailing divider. */
+.cr__hotelblock:last-child { border-bottom: 0; }
 .cr__hotelhead { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 20px; background: none; border: 0; cursor: pointer; text-align: left; }
 .cr__hotelhead:hover { background: var(--ds-palette-slate-50); }
 .cr__hthumb { width: 44px; height: 44px; border-radius: var(--ds-radius-sm); object-fit: cover; flex: none; background: var(--ds-palette-slate-100); }
@@ -338,6 +353,9 @@ defineExpose({ clear })
 .cr__rsummary { font-size: 0.8125rem; color: var(--ds-color-text-subtle); }
 .cr__rprice { font-weight: 700; font-size: 0.9375rem; color: var(--ds-color-text); white-space: nowrap; }
 .cr__rprice small { font-weight: 500; color: var(--ds-color-text-subtle); font-size: 0.8125rem; }
+.cr__roomhead-right { display: inline-flex; align-items: center; gap: 10px; flex: none; }
+.cr__roomdel { flex: none; width: 34px; height: 34px; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); color: var(--ds-color-text-subtle); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: color var(--ds-duration-fast) var(--ds-ease-standard), background var(--ds-duration-fast) var(--ds-ease-standard); }
+.cr__roomdel:hover { color: var(--ds-color-text-danger); background: var(--ds-palette-red-50); border-color: var(--ds-palette-red-200, #FECACA); }
 .cr__dayrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0 0 16px; }
 .cr__dayinfo { display: flex; align-items: center; gap: 10px; }
 .cr__date { font-size: 0.875rem; color: var(--ds-color-text); }
