@@ -10,7 +10,20 @@ import { detailProps, cartFor } from '../fixtures.js'
 import PageFrame from '@lib/components/PageFrame.vue'
 import HotelDetailPage from '@lib/components/details/HotelDetailPage.vue'
 
-const detail = computed(() => detailProps(journey.active || { name: 'Hotel', city: '' }, roomsFlow.value))
+// Group flow: annotate each room with the per-night counts already held for it
+// (reactive to the cart) so the card can show "N in cart" + "Add N more". The
+// card's steppers stay for NEW rooms; deleting a block is handled in App.vue.
+const detail = computed(() => {
+  const d = detailProps(journey.active || { name: 'Hotel', city: '' }, roomsFlow.value)
+  if (roomsFlow.value === 'group') {
+    const entry = journey.cart.find((c) => c.name === journey.active?.name)
+    d.rooms = d.rooms.map((room) => {
+      const held = entry?.rooms?.find((r) => r.type === room.roomType)
+      return { ...room, inCart: room.nights.map((n) => held?.nights?.find((x) => x.date === n.date)?.qty || 0) }
+    })
+  }
+  return d
+})
 const navCart = computed(() => (journey.cart.length ? cartFor(journey.cart, checkoutMode.value) : {}))
 </script>
 

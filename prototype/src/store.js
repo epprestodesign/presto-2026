@@ -165,6 +165,27 @@ export function addRoomToHold(room) {
   startHoldTimer()
 }
 
+// Group/hold: remove an entire room-type block from a hotel's cart entry — the
+// single source of truth. Used by the details card's "Remove all from cart" and
+// the cart flyout / checkout delete-room (routed here so every view stays in
+// sync). `hotelName` defaults to the hotel currently open on Details.
+export function removeRoomFromHold(type, hotelName) {
+  const name = hotelName || journey.active?.name
+  if (!name) return
+  const entry = journey.cart.find((c) => c.name === name)
+  if (!entry || !entry.rooms) return
+  entry.rooms = entry.rooms.filter((r) => r.type !== type)
+  if (entry.rooms.length === 0) journey.cart = journey.cart.filter((c) => c.name !== name)
+  if (cartRoomCount() === 0) stopHoldTimer() // nothing held → clear the hold timer
+}
+
+// Empty the whole cart (the flyout's "Clear Cart") — the real source of truth,
+// so the empty state shows and the details card + badge reset.
+export function clearCart() {
+  journey.cart = []
+  stopHoldTimer()
+}
+
 // Total rooms held/booked across the cart (for the app-bar badge).
 export function cartRoomCount() {
   if (journey.flow === 'group') {

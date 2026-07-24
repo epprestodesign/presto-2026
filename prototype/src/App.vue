@@ -5,10 +5,38 @@
 // navigation is driven by matching the click target here. Capture phase + document
 // scope also catches TELEPORTED nodes (the cart fly-out, menus) that render
 // outside the active screen's DOM subtree.
-import { onMounted, onBeforeUnmount, watch, nextTick, computed } from 'vue'
-import { journey, holdTimer, nav, startFlow, openHotel, addActiveToCart, addRoomToHold, cartRoomCount, backToBrowse, goToCheckout, resetJourney, setRoomsNeeded } from './store.js'
+import { onMounted, onBeforeUnmount, watch, nextTick, computed, reactive } from 'vue'
+import { journey, holdTimer, nav, startFlow, openHotel, addActiveToCart, addRoomToHold, removeRoomFromHold, clearCart, cartRoomCount, backToBrowse, goToCheckout, resetJourney, setRoomsNeeded } from './store.js'
 import { getHotelByName, getHotel } from './hotels.js'
+import { loadImagery } from '@lib/lib/imagery'
 import HoldTimerPill from '@lib/components/HoldTimerPill.vue'
+import AddedToCartToast from '@lib/components/AddedToCartToast.vue'
+
+// "Added to cart" toast — drops from the nav cart icon after a room is added.
+const added = reactive({ show: false, key: 0, roomType: '', hotel: '', image: '', style: {} })
+async function resolveHotelImage(name) {
+  const h = getHotelByName(name)
+  if (!h) return ''
+  const lib = await loadImagery()
+  for (const c of h.imageCategories || []) { const arr = lib[c]; if (arr && arr.length) return arr[(h.seed || 0) % arr.length].url }
+  return ''
+}
+function showAddedToast(roomType, hotelName) {
+  const r = document.querySelector('.gnav__iconbtn')?.getBoundingClientRect()
+  added.roomType = roomType
+  added.hotel = hotelName
+  added.image = ''
+  added.style = r
+    ? { position: 'fixed', top: `${Math.round(r.bottom + 10)}px`, right: `${Math.round(window.innerWidth - r.right - 2)}px`, zIndex: 4000 }
+    : { position: 'fixed', top: '76px', right: '24px', zIndex: 4000 }
+  added.key++
+  added.show = true
+  resolveHotelImage(hotelName).then((url) => { if (url) added.image = url })
+}
+const onToastViewCart = () => { added.show = false; openCartFlyout() }
+const onToastCheckout = () => { added.show = false; goToCheckout() }
+// Dismiss the toast when navigating to another screen.
+watch(() => journey.screen, () => { added.show = false })
 // EventPipe wordmark (same asset the footer uses) — shown in the app bar in place
 // of the "Presto" text, recolored via CSS mask. Exposed as a CSS var on the root.
 import epLogo from '@lib/assets/eventpipe logos/eventpipe-logo.svg'
@@ -83,6 +111,9 @@ function onClickCapture(e) {
     if (hotel) { e.preventDefault(); e.stopPropagation(); openHotel(hotel); return }
   }
 
+  // Cart fly-out empty state "Browse hotels" → back to Browse (closes the flyout).
+  if (t.closest('.cf__empty-cta')) { backToBrowse(); return }
+
   // Cart fly-out "Go to checkout" (teleported to <body>) — reachable from
   // Browse/Details once the cart has items.
   if (t.closest('.cf__cta')) { goToCheckout(); return }
@@ -91,6 +122,22 @@ function onClickCapture(e) {
   // checkout order) → back to Browse to add more (keeps the cart; navigating
   // away closes the fly-out).
   if (t.closest('.cr__addhotel')) { backToBrowse(); return }
+
+  // Cart fly-out "Clear Cart" (kebab) → empty the REAL cart so the empty state
+  // shows and the details card + badge reset (CartReview clears its own view too).
+  if (t.closest('.cf__clear')) { clearCart(); return }
+
+  // Delete-room (CartReview roomDelete: cart fly-out + checkout) → remove the
+  // block from the REAL cart so the details card + nav badge stay in sync.
+  // CartReview also updates its own view on the same click (we don't stop the
+  // event), so the flyout/checkout reflects it immediately.
+  const roomdel = t.closest('.cr__roomdel')
+  if (roomdel) {
+    const type = roomdel.closest('.cr__room')?.querySelector('.cr__rtitle')?.textContent?.trim()
+    const hotelName = roomdel.closest('.cr__hotelblock')?.querySelector('.cr__hname')?.textContent?.trim()
+    if (type) removeRoomFromHold(type, hotelName)
+    return
+  }
 
   if (screen === 'landing') {
     // The BookingWidget "Search" button has no handler — read the widget's
@@ -133,16 +180,24 @@ function onClickCapture(e) {
   }
 
   if (screen === 'details') {
+    // Concept B: "Remove all from cart" on a group room card → drop that block
+    // (read the room type from the card, like the add path reads its quantities).
+    const rmBtn = t.closest('.rcg__removeall')
+    if (rmBtn) {
+      const type = rmBtn.closest('.rcg')?.querySelector('.rcg__title')?.textContent?.trim()
+      if (type) removeRoomFromHold(type)
+      return
+    }
     // Room card CTA ("Reserve Room" / "Add N to Cart"). Disabled = sold out /
     // nothing selected. RoomsCarousel/HotelDetailPage don't relay these events.
     const rcta = t.closest('.rcr__cta, .rcg__cta')
     if (rcta && !rcta.disabled) {
       if (journey.flow === 'group') {
-        // Group/hold: read THIS room card's per-night selection, accumulate it
-        // into the hotel's held rooms, then fly the cart out to confirm. Adding
-        // a different room type / night accumulates rather than replacing.
+        // Group/hold (Concept B): read THIS card's per-night selection and
+        // accumulate it into the held rooms, then drop the "Added to cart" toast
+        // from the cart icon (the card resets to 0 and shows "N in cart").
         const room = readGroupRoom(rcta.closest('.rcg'))
-        if (room && room.nights.length) { addRoomToHold(room); openCartFlyout() }
+        if (room && room.nights.length) { addRoomToHold(room); showAddedToast(room.type, journey.active?.name || '') }
       } else {
         // Single/multiple: go straight to checkout.
         addActiveToCart()
@@ -181,13 +236,18 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickCapture, true
 </script>
 
 <template>
-  <div class="proto" :style="{ '--ep-logo': `url(${epLogo})` }">
+  <div class="proto" :class="`proto--${journey.screen}`" :style="{ '--ep-logo': `url(${epLogo})` }">
     <div class="proto__stage">
       <component :is="screens[journey.screen]" />
     </div>
     <!-- DES-84: floating hold countdown — starts on first room added, persists
          across screens (hidden on checkout, where the rail carries the timer). -->
     <hold-timer-pill v-if="showHoldPill" :seconds="holdTimer.remaining" />
+
+    <!-- "Added to cart" toast — drops from the nav cart icon on each room add. -->
+    <added-to-cart-toast v-if="added.show" :key="added.key" :style="added.style"
+      :room-type="added.roomType" :hotel="added.hotel" :image="added.image" :auto-dismiss="4500"
+      @view-cart="onToastViewCart" @checkout="onToastCheckout" @dismiss="added.show = false" />
   </div>
 </template>
 
@@ -215,6 +275,15 @@ body { background: var(--ds-palette-slate-100, #f1f2f4); }
 .gnav-wrap {
   background: var(--ds-color-surface);
   border-bottom: 1px solid var(--ds-color-border);
+}
+/* Sticky nav on Browse + Details so the cart stays reachable while scrolling
+   through the results / room cards — and the "Added to cart" toast (anchored to
+   the cart icon) always lands on-screen. */
+.proto--browse .gnav-wrap,
+.proto--details .gnav-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 .gnav {
   max-width: var(--col) !important;
