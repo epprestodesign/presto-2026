@@ -141,6 +141,8 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 
       <!-- RIGHT: sticky order summary (same as CheckoutPage) -->
       <aside class="ck__railwrap">
+        <!-- DES-411: group block → back to the hotel list to add more properties. -->
+        <button v-if="isGroup" type="button" class="ck__viewhotels"><q-icon name="add" size="18px" /> View Additional Hotels</button>
         <cart-review :mode="cartMode" :cart="liveCart" :currency="currency" readonly bind :show-requests="false" cards :order-title="(isGroup || isMulti) ? 'Review your order' : ''" />
       </aside>
     </div>
@@ -180,6 +182,9 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 .ck__railbtn:hover { background: var(--ds-palette-navy-50); }
 .ck__railbtn--ghost { border-color: var(--ds-color-border-bold); color: var(--ds-color-text); }
 .ck__railbtn--ghost:hover { background: var(--ds-palette-slate-100); }
+/* DES-411: group-block "View Additional Hotels" — sits above the order rail. */
+.ck__viewhotels { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 48px; margin-bottom: 12px; border: 1px solid var(--ds-color-border-brand); border-radius: var(--ds-radius-button); background: var(--ds-color-surface); color: var(--ds-color-text-brand); font-family: inherit; font-weight: 700; font-size: 0.9375rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
+.ck__viewhotels:hover { background: var(--ds-palette-navy-50); }
 .ck__railwrap { position: sticky; top: 20px; }
 
 .ck__step { background: var(--ds-color-surface); border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); padding: 18px 20px; margin-bottom: 16px; }

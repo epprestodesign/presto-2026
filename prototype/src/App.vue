@@ -127,10 +127,20 @@ function onClickCapture(e) {
   // shows and the details card + badge reset (CartReview clears its own view too).
   if (t.closest('.cf__clear')) { clearCart(); return }
 
-  // Edit-room (CartReview roomEdit: cart fly-out + checkout "Review order") →
-  // back to the hotel list so the user can adjust their blocks (DES-414). Keeps
-  // the cart intact; navigating away closes the fly-out.
-  if (t.closest('.cr__roomedit')) { backToBrowse(); return }
+  // Edit-room (CartReview roomEdit) → DES-414. Destination depends on where it's
+  // clicked: the cart fly-out edits that block on its hotel's DETAILS page, while
+  // the checkout "Review order" step goes back to the hotel LIST. Cart is kept
+  // intact; navigating away closes the fly-out.
+  const roomedit = t.closest('.cr__roomedit')
+  if (roomedit) {
+    if (roomedit.closest('.cf')) {
+      const hotelName = roomedit.closest('.cr__hotelblock')?.querySelector('.cr__hname')?.textContent?.trim()
+      const entry = hotelName && journey.cart.find((c) => c.name === hotelName)
+      if (entry) { openHotel(entry); return }
+    }
+    backToBrowse()
+    return
+  }
 
   // Delete-room (CartReview roomDelete: cart fly-out + checkout) → remove the
   // block from the REAL cart so the details card + nav badge stay in sync.
@@ -212,6 +222,9 @@ function onClickCapture(e) {
   }
 
   if (screen === 'checkout') {
+    // Group block: "View Additional Hotels" (top of the order rail) → back to the
+    // hotel list to add more properties to the block (DES-411). Cart is kept.
+    if (t.closest('.ck__viewhotels')) { backToBrowse(); return }
     // Rail actions: "Start over" → reset · "Edit reservation" → the hotel's
     // Details page (DES-87; falls back to Browse if no active hotel, e.g. group).
     const rail = t.closest('.ck__railbtn')
