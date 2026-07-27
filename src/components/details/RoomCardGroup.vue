@@ -75,8 +75,6 @@ const commit = () => {
   emit(removed ? 'remove' : 'add', committedTotal.value)
 }
 const onSubmit = () => { if (!ctaDisabled.value) commit() }
-// Convenience: clear the selection and commit (removes the room from the cart).
-const removeAll = () => { staged.value = props.nights.map(() => 0); commit() }
 </script>
 
 <template>
@@ -102,8 +100,6 @@ const removeAll = () => { staged.value = props.nights.map(() => 0); commit() }
                the night's availability (DES-416). -->
           <quantity-stepper v-model="staged[i]" :min="0" :max="soldout ? 0 : n.roomsLeft" size="sm" />
         </div>
-        <!-- What's actually committed to the cart for this night. -->
-        <div v-if="committed[i]" class="rcg__incart"><q-icon name="check_circle" size="15px" /> {{ committed[i] }} in cart</div>
       </div>
     </div>
 
@@ -115,7 +111,6 @@ const removeAll = () => { staged.value = props.nights.map(() => 0); commit() }
         <button type="button" class="rcg__cta" :class="{ 'rcg__cta--ready': !ctaDisabled }" :disabled="ctaDisabled" @click="onSubmit">
           {{ ctaLabel }}
         </button>
-        <button v-if="inCartMode" type="button" class="rcg__removeall" @click="removeAll"><q-icon name="delete_outline" size="17px" /> Remove all from cart</button>
       </template>
       <template v-else>
         <button type="button" class="rcg__unavail" disabled>Unavailable</button>
@@ -140,8 +135,6 @@ const removeAll = () => { staged.value = props.nights.map(() => 0); commit() }
 .rcg__h { margin: 0 0 10px; font-size: 1.0625rem; font-weight: 700; color: var(--ds-color-text-brand); }
 .rcg__nightwrap { padding: 2px 0; }
 .rcg__nightwrap + .rcg__nightwrap { border-top: 1px solid var(--ds-color-border); }
-.rcg__incart { display: inline-flex; align-items: center; gap: 5px; margin: 0 0 8px 2px; color: var(--ds-palette-green-700); font-weight: 600; font-size: 0.8125rem; }
-.rcg__incart .q-icon { color: var(--ds-palette-green-600); }
 .rcg__night { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 12px; padding: 8px 0; }
 .rcg__ndate { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .rcg__date { color: var(--ds-color-text-brand); font-weight: 700; font-size: 1rem; }
@@ -159,8 +152,6 @@ const removeAll = () => { staged.value = props.nights.map(() => 0); commit() }
 .rcg__cta { width: 100%; height: 46px; margin-top: 14px; border: 0; border-radius: var(--ds-radius-button); background: var(--ds-palette-slate-300); color: #fff; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: default; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
 .rcg__cta--ready { background: var(--ds-color-background-brand-bold); cursor: pointer; }
 .rcg__cta--ready:hover { background: var(--ds-palette-navy-800); }
-.rcg__removeall { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 10px; background: none; border: 0; padding: 6px 0; color: var(--ds-color-text-danger); font-family: inherit; font-weight: 600; font-size: 0.9375rem; cursor: pointer; }
-.rcg__removeall:hover { text-decoration: underline; }
 
 /* Sold-out / unavailable state */
 .rcg__unavail { width: 100%; height: 48px; border: 0; border-radius: var(--ds-radius-button); background: var(--ds-color-background-danger-bold); color: #fff; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: default; }

@@ -6,7 +6,7 @@
 // scope also catches TELEPORTED nodes (the cart fly-out, menus) that render
 // outside the active screen's DOM subtree.
 import { onMounted, onBeforeUnmount, watch, nextTick, computed, reactive } from 'vue'
-import { journey, holdTimer, nav, startFlow, openHotel, addActiveToCart, addRoomToHold, removeRoomFromHold, clearCart, cartRoomCount, backToBrowse, goToCheckout, resetJourney, setRoomsNeeded } from './store.js'
+import { journey, holdTimer, nav, startFlow, openHotel, addActiveToCart, setRoomInHold, removeRoomFromHold, clearCart, cartRoomCount, backToBrowse, goToCheckout, resetJourney, setRoomsNeeded } from './store.js'
 import { getHotelByName, getHotel } from './hotels.js'
 import { loadImagery } from '@lib/lib/imagery'
 import HoldTimerPill from '@lib/components/HoldTimerPill.vue'
@@ -65,8 +65,8 @@ function readGroupRoom(card) {
     qty: parseInt(n.querySelector('.qstep__val')?.textContent?.trim() || '0', 10),
     price: parseFloat((n.querySelector('.rcg__nrate')?.textContent || '').replace(/[^0-9.]/g, '')) || 0,
     roomsLeft: parseInt((n.querySelector('.rcg__left')?.textContent || '').match(/(\d+)/)?.[1] || '9', 10),
-  })).filter((n) => n.date && n.qty > 0)
-  return { type, summary, price: nights[0]?.price || 0, nights }
+  })).filter((n) => n.date) // keep all nights (incl. qty 0) so decreases/removals register
+  return { type, summary, price: nights.find((n) => n.qty > 0)?.price || nights[0]?.price || 0, nights }
 }
 
 // The GlobalNav badge count only updates when its fly-out mounts CartReview, and
@@ -98,6 +98,11 @@ function onClickCapture(e) {
   if (!(t instanceof Element)) return
   const screen = journey.screen
 
+  // Opening the cart fly-out (clicking the nav cart button) should dismiss the
+  // "Added to cart" toast so it doesn't float over the flyout. Don't return —
+  // let GlobalNav handle opening the flyout.
+  if (t.closest('.gnav__iconbtn')) added.show = false
+
   // Brand logo in the global nav → home (Landing), from any screen.
   if (t.closest('.gnav__brand')) { resetJourney(); return }
 
@@ -127,18 +132,16 @@ function onClickCapture(e) {
   // shows and the details card + badge reset (CartReview clears its own view too).
   if (t.closest('.cf__clear')) { clearCart(); return }
 
-  // Edit-room (CartReview roomEdit) → DES-414. Destination depends on where it's
-  // clicked: the cart fly-out edits that block on its hotel's DETAILS page, while
-  // the checkout "Review order" step goes back to the hotel LIST. Cart is kept
-  // intact; navigating away closes the fly-out.
+  // Edit-room (CartReview roomEdit) → DES-414 / DES-417: open that block's hotel
+  // DETAILS page, from BOTH the cart fly-out and the checkout "Review order" step.
+  // Resolve the hotel by the block's name; fall back to Browse if not found. Cart
+  // is kept intact; navigating away closes the fly-out.
   const roomedit = t.closest('.cr__roomedit')
   if (roomedit) {
-    if (roomedit.closest('.cf')) {
-      const hotelName = roomedit.closest('.cr__hotelblock')?.querySelector('.cr__hname')?.textContent?.trim()
-      const entry = hotelName && journey.cart.find((c) => c.name === hotelName)
-      if (entry) { openHotel(entry); return }
-    }
-    backToBrowse()
+    const hotelName = roomedit.closest('.cr__hotelblock')?.querySelector('.cr__hname')?.textContent?.trim()
+    const entry = hotelName && journey.cart.find((c) => c.name === hotelName)
+    if (entry) openHotel(entry)
+    else backToBrowse()
     return
   }
 
@@ -195,24 +198,24 @@ function onClickCapture(e) {
   }
 
   if (screen === 'details') {
-    // Concept B: "Remove all from cart" on a group room card → drop that block
-    // (read the room type from the card, like the add path reads its quantities).
-    const rmBtn = t.closest('.rcg__removeall')
-    if (rmBtn) {
-      const type = rmBtn.closest('.rcg')?.querySelector('.rcg__title')?.textContent?.trim()
-      if (type) removeRoomFromHold(type)
-      return
-    }
-    // Room card CTA ("Reserve Room" / "Add N to Cart"). Disabled = sold out /
-    // nothing selected. RoomsCarousel/HotelDetailPage don't relay these events.
+    // Room card CTA ("Reserve Room" / "Add to Cart" / "Update"). Disabled = sold
+    // out / nothing selected / no change. RoomsCarousel/HotelDetailPage don't
+    // relay these events, so we read the card's DOM.
     const rcta = t.closest('.rcr__cta, .rcg__cta')
     if (rcta && !rcta.disabled) {
       if (journey.flow === 'group') {
-        // Group/hold (Concept B): read THIS card's per-night selection and
-        // accumulate it into the held rooms, then drop the "Added to cart" toast
-        // from the cart icon (the card resets to 0 and shows "N in cart").
+        // Group/hold (DES-416): the card's steppers show the FULL desired quantity
+        // for this room type, so SET the held rooms to that (decreases reduce the
+        // cart; zeroing removes it). Only toast when it's a net add.
         const room = readGroupRoom(rcta.closest('.rcg'))
-        if (room && room.nights.length) { addRoomToHold(room); showAddedToast(room.type, journey.active?.name || '') }
+        if (room) {
+          const hotelName = journey.active?.name || ''
+          const existing = journey.cart.find((c) => c.name === hotelName)?.rooms?.find((r) => r.type === room.type)
+          const prior = existing ? existing.nights.reduce((a, n) => a + n.qty, 0) : 0
+          const now = room.nights.reduce((a, n) => a + n.qty, 0)
+          setRoomInHold(room)
+          if (now > prior) showAddedToast(room.type, hotelName)
+        }
       } else {
         // Single/multiple: go straight to checkout.
         addActiveToCart()
