@@ -37,6 +37,10 @@ const emit = defineEmits(['manage', 'contact'])
 const cartVisible = computed(() =>
   typeof props.showCart === 'boolean' ? props.showCart : props.cartMode === 'hold'
 )
+// DES-412: the group-block (hold) cart shows a plain red dot when it holds
+// inventory — not a count (an exact number is too complex to keep accurate).
+// Other flows keep the numeric badge.
+const dotOnly = computed(() => props.cartMode === 'hold')
 
 // Cart fly-out.
 const cartOpen = ref(props.openCart)
@@ -72,7 +76,9 @@ const count = ref(0)
         <button class="gnav__manage" @click="emit('manage')">{{ manageLabel }}</button>
         <button v-if="cartVisible" class="gnav__iconbtn" aria-label="Open cart" @click="cartOpen = true">
           <q-icon name="shopping_cart" size="22px" />
-          <span class="gnav__badge">{{ count }}</span>
+          <!-- DES-412: group block → red dot (has inventory); else numeric badge. -->
+          <span v-if="dotOnly" v-show="count > 0" class="gnav__dot" aria-hidden="true" />
+          <span v-else class="gnav__badge">{{ count }}</span>
         </button>
       </div>
     </header>
@@ -96,6 +102,8 @@ const count = ref(0)
 .gnav__iconbtn { position: relative; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--ds-color-border-brand); background: transparent; color: var(--ds-color-text-brand); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
 .gnav__iconbtn:hover { background: var(--ds-palette-navy-50); border-color: var(--ds-color-border-brand); }
 .gnav__badge { position: absolute; top: -2px; right: -2px; min-width: 22px; height: 22px; padding: 0 5px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-danger-bold); color: #fff; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+/* DES-412: group-block cart inventory indicator — a plain red dot, no number. */
+.gnav__dot { position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--ds-color-background-danger-bold); border: 2px solid var(--ds-color-surface); }
 </style>
 
 <!-- Unscoped: q-menu content is teleported outside this component. -->

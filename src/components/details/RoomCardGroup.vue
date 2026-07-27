@@ -2,10 +2,23 @@
 // RoomCardGroup — "Group Block" vertical room card for the Hotel Details
 // "Select Your Room" section. Header (room type, bed config, occupancy) + a
 // "Rooms per Night" list with per-night quantity steppers + starting price + an
-// "Add to Cart" CTA (muted until a room is picked). No room-type image or
-// amenities list. When a room is sold out (at least one night unavailable), the
-// footer shows an "Unavailable" state.
-import { ref, computed } from 'vue'
+// "Add to Cart" / "Update" CTA. When a room is sold out (at least one night
+// unavailable), the footer shows an "Unavailable" state.
+//
+// DES-416 — the steppers show the FULL quantity currently in the cart for this
+// room type (not "new to add"), and persist across submits:
+//   1. Staging      — stepping a night changes the on-screen selection only.
+//   2. First submit — while nothing's in the cart the CTA reads "Add to Cart",
+//      disabled until some night > 0. Clicking commits the selection.
+//   3. Numbers stay — after committing, the steppers keep the chosen quantities.
+//   4. Becomes Update — once anything's in the cart the CTA reads "Update".
+//   5. Update gating — right after a commit the on-screen values match the cart,
+//      so Update is disabled until a quantity changes.
+//   6. Adjusting     — any change re-enables Update; committing pushes the new
+//      quantities (up = add more, down = reduce).
+//   7. Zero-out      — zeroing every night and clicking Update removes the room
+//      type entirely; the CTA reverts to "Add to Cart".
+import { ref, computed, watch } from 'vue'
 import QuantityStepper from '../QuantityStepper.vue'
 
 const props = defineProps({
@@ -14,10 +27,8 @@ const props = defineProps({
   maxOccupancy: { type: Number, default: null },
   features: { type: Array, default: () => [] },   // accepted but not rendered
   nights: { type: Array, default: () => [] },      // [{ date, roomsLeft, price }]
-  // Per-night counts already held for this room type. When provided, the card
-  // shows a "N in cart" line under each night, relabels the CTA to "Add N more to
-  // Cart", and offers a "Remove all from cart" action (emits `remove`). The
-  // steppers always represent NEW rooms to add and reset to 0 after each add.
+  // Per-night counts already in the cart for this room type. Seeds both the
+  // steppers (what's shown) and the committed baseline (what's actually held).
   inCart: { type: Array, default: () => [] },
   currency: { type: String, default: '$' },
   availability: { type: String, default: 'available' }, // available | limited | soldout
@@ -26,26 +37,46 @@ const props = defineProps({
   imageCategories: { type: Array, default: () => [] },
   seed: { type: Number, default: 0 },
 })
-const emit = defineEmits(['add', 'remove'])
+// `update` carries the full committed state for this room type; `add`/`remove`
+// remain as coarse signals for hosts that only care about entering/leaving cart.
+const emit = defineEmits(['add', 'remove', 'update'])
 
 const soldout = computed(() => props.availability === 'soldout')
 const money = (n) => props.currency + Number(n ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const leftLabel = (n) => (n <= 0 ? 'Sold Out' : n <= 3 ? `Only ${n} left` : `${n} left`)
 const leftClass = (n) => (n <= 0 ? 'is-sold' : n <= 3 ? 'is-limited' : 'is-ok')
 
-const qty = ref(props.nights.map(() => 0))
-const totalSelected = computed(() => qty.value.reduce((a, b) => a + b, 0))
+const seed = (src) => props.nights.map((n, i) => src?.[i] || 0)
+// staged = what the steppers show; committed = what's actually in the cart.
+const staged = ref(seed(props.inCart))
+const committed = ref(seed(props.inCart))
+// Re-seed if the host pushes a new cart state for this room type.
+watch(() => props.inCart, (v) => { staged.value = seed(v); committed.value = seed(v) })
+
+const stagedTotal = computed(() => staged.value.reduce((a, b) => a + b, 0))
+const committedTotal = computed(() => committed.value.reduce((a, b) => a + b, 0))
+// In-cart mode (rule 4): something for this room type is already held.
+const inCartMode = computed(() => committedTotal.value > 0)
+// Dirty (rules 5/6): the steppers differ from what's committed.
+const dirty = computed(() => staged.value.some((v, i) => v !== committed.value[i]))
 const startingPrice = computed(() => (props.nights.length ? Math.min(...props.nights.map((n) => n.price)) : 0))
-// Cart awareness — how many of this room type are held, and the remaining
-// availability per night (total left minus what's already held).
-const inCartCount = computed(() => (props.inCart || []).reduce((a, b) => a + (b || 0), 0))
-const remaining = (i) => Math.max(0, props.nights[i].roomsLeft - (props.inCart[i] || 0))
-const addLabel = computed(() => {
-  if (totalSelected.value === 0) return inCartCount.value > 0 ? 'Select rooms to add more' : 'Add to Cart'
-  return inCartCount.value > 0 ? `Add ${totalSelected.value} more to Cart` : `Add ${totalSelected.value} to Cart`
-})
-// Emit the selection, then clear the steppers back to zeros.
-const onAdd = () => { if (totalSelected.value > 0) { emit('add', totalSelected.value); qty.value = props.nights.map(() => 0) } }
+// Rooms that would remain that night if the staged selection were taken.
+const remaining = (i) => Math.max(0, props.nights[i].roomsLeft - staged.value[i])
+
+const ctaLabel = computed(() => (inCartMode.value ? 'Update' : 'Add to Cart'))
+// Add to Cart: needs a selection. Update: needs a change from the cart.
+const ctaDisabled = computed(() => (soldout.value ? true : inCartMode.value ? !dirty.value : stagedTotal.value === 0))
+
+// Commit the staged selection to the cart. Zeroing everything removes the room.
+const commit = () => {
+  const removed = stagedTotal.value === 0
+  committed.value = [...staged.value]
+  emit('update', { total: committedTotal.value, nights: [...committed.value] })
+  emit(removed ? 'remove' : 'add', committedTotal.value)
+}
+const onSubmit = () => { if (!ctaDisabled.value) commit() }
+// Convenience: clear the selection and commit (removes the room from the cart).
+const removeAll = () => { staged.value = props.nights.map(() => 0); commit() }
 </script>
 
 <template>
@@ -67,10 +98,12 @@ const onAdd = () => { if (totalSelected.value > 0) { emit('add', totalSelected.v
             <span class="rcg__nrate">{{ money(n.price) }} / night</span>
           </div>
           <span class="rcg__left" :class="leftClass(remaining(i))">{{ leftLabel(remaining(i)) }}</span>
-          <quantity-stepper v-model="qty[i]" :min="0" :max="soldout ? 0 : remaining(i)" size="sm" />
+          <!-- Steppers show the FULL quantity in cart for this night, capped at
+               the night's availability (DES-416). -->
+          <quantity-stepper v-model="staged[i]" :min="0" :max="soldout ? 0 : n.roomsLeft" size="sm" />
         </div>
-        <!-- Concept B: inventory already held for this night. -->
-        <div v-if="inCart[i]" class="rcg__incart"><q-icon name="check_circle" size="15px" /> {{ inCart[i] }} in cart</div>
+        <!-- What's actually committed to the cart for this night. -->
+        <div v-if="committed[i]" class="rcg__incart"><q-icon name="check_circle" size="15px" /> {{ committed[i] }} in cart</div>
       </div>
     </div>
 
@@ -79,10 +112,10 @@ const onAdd = () => { if (totalSelected.value > 0) { emit('add', totalSelected.v
       <template v-if="!soldout">
         <div class="rcg__starting">STARTING PRICE</div>
         <div class="rcg__amount"><strong>{{ money(startingPrice) }}</strong> <span>/ night</span></div>
-        <button type="button" class="rcg__cta" :class="{ 'rcg__cta--ready': totalSelected > 0 }" :disabled="totalSelected === 0" @click="onAdd">
-          {{ addLabel }}
+        <button type="button" class="rcg__cta" :class="{ 'rcg__cta--ready': !ctaDisabled }" :disabled="ctaDisabled" @click="onSubmit">
+          {{ ctaLabel }}
         </button>
-        <button v-if="inCartCount" type="button" class="rcg__removeall" @click="emit('remove')"><q-icon name="delete_outline" size="17px" /> Remove all from cart</button>
+        <button v-if="inCartMode" type="button" class="rcg__removeall" @click="removeAll"><q-icon name="delete_outline" size="17px" /> Remove all from cart</button>
       </template>
       <template v-else>
         <button type="button" class="rcg__unavail" disabled>Unavailable</button>

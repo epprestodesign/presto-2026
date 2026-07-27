@@ -110,6 +110,11 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
     <div class="ck__inner">
     <div class="ck__header">
       <h1 class="ck__h1">Confirm and pay</h1>
+      <!-- DES-410: reservation actions moved to the top of the page. -->
+      <div v-if="!isGroup" class="ck__headeractions">
+        <button type="button" class="ck__railbtn"><q-icon name="edit" size="18px" /> Edit reservation</button>
+        <button type="button" class="ck__railbtn ck__railbtn--ghost"><q-icon name="restart_alt" size="18px" /> Start over</button>
+      </div>
     </div>
 
     <div class="ck__grid">
@@ -137,11 +142,6 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
       <!-- RIGHT: sticky order summary (same as CheckoutPage) -->
       <aside class="ck__railwrap">
         <cart-review :mode="cartMode" :cart="liveCart" :currency="currency" readonly bind :show-requests="false" cards :order-title="(isGroup || isMulti) ? 'Review your order' : ''" />
-
-        <div v-if="!isGroup" class="ck__railactions">
-          <button type="button" class="ck__railbtn"><q-icon name="edit" size="18px" /> Edit reservation</button>
-          <button type="button" class="ck__railbtn ck__railbtn--ghost"><q-icon name="restart_alt" size="18px" /> Start over</button>
-        </div>
       </aside>
     </div>
     </div>
@@ -154,8 +154,11 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 <style scoped>
 .ck { background: var(--ds-palette-neutral-100); min-height: 100vh; padding: 12px 24px 40px; }
 .ck__inner { max-width: 1040px; margin: 0 auto; }
-.ck__header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.ck__header { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; margin-bottom: 14px; }
 .ck__h1 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--ds-color-text); }
+/* DES-410: reservation actions in the page header (auto-width, right-aligned). */
+.ck__headeractions { display: flex; gap: 10px; }
+.ck__headeractions .ck__railbtn { flex: none; padding: 0 18px; }
 .ck__grid { display: grid; grid-template-columns: 1fr 400px; gap: 32px; align-items: start; }
 
 /* Time left to book — full-width strip appended under the app bar. Negative
@@ -172,8 +175,7 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 .ck__timer-clock { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 1.0625rem; }
 .ck__timer-note { margin: 4px 0 0; font-size: 0.875rem; line-height: 1.4; }
 
-/* Reservation rail actions — Edit / Start over */
-.ck__railactions { display: flex; gap: 10px; margin-top: 12px; }
+/* Reservation actions — Edit / Start over (now in the page header, DES-410) */
 .ck__railbtn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 46px; border: 1px solid var(--ds-color-border-brand); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); color: var(--ds-color-text-brand); font-family: inherit; font-weight: 700; font-size: 0.9375rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
 .ck__railbtn:hover { background: var(--ds-palette-navy-50); }
 .ck__railbtn--ghost { border-color: var(--ds-color-border-bold); color: var(--ds-color-text); }
