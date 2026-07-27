@@ -12,12 +12,15 @@ const props = defineProps({
   cart: { type: Object, default: () => ({}) },
   currency: { type: String, default: '$' },
 })
-const emit = defineEmits(['update:modelValue', 'update:count', 'browse'])
+const emit = defineEmits(['update:modelValue', 'update:count', 'browse', 'edit-room'])
 const $q = useQuasar()
 
 const close = () => emit('update:modelValue', false)
 // Empty state "Browse hotels": tell the host to navigate (browse) and close.
 const onBrowse = () => { emit('browse'); close() }
+// DES-414: relay a room block's "Edit" up to the host (navigate to that hotel's
+// details page) and close the flyout.
+const onEditRoom = (payload) => { emit('edit-room', payload); close() }
 const money = (n) => props.currency + Number(n ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const isReserve = computed(() => props.mode === 'reserve')
 // Empty cart → show the empty state (illustration + "Browse hotels") instead of
@@ -106,6 +109,7 @@ onBeforeUnmount(() => clearInterval(timer))
             ref="reviewRef" :mode="mode" :cart="cart" :currency="currency" :show-requests="isReserve"
             :room-delete="mode === 'hold'"
             @update:count="onCount" @update:total="total = $event" @requests="requestsOpen = true"
+            @edit-room="onEditRoom"
           />
         </div>
 

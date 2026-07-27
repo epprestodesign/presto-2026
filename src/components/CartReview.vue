@@ -29,7 +29,7 @@ const props = defineProps({
   // action instead of the +/- steppers (checkout review order — no qty editing).
   roomDelete: { type: Boolean, default: false },
 })
-const emit = defineEmits(['update:count', 'update:total', 'requests'])
+const emit = defineEmits(['update:count', 'update:total', 'requests', 'edit-room'])
 
 const money = (n) => props.currency + Number(n ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 // Taxes & Fees disclaimer — shown in a tooltip on the price-details Taxes line.
@@ -250,7 +250,13 @@ defineExpose({ clear })
                   <span v-if="r.summary" class="cr__rsummary">{{ r.summary }}</span>
                 </div>
                 <div class="cr__roomhead-right">
-                  <span v-if="roomFlatPrice(r) != null" class="cr__rprice">{{ money(roomFlatPrice(r)) }}<small>/nt</small></span>
+                  <!-- DES-415: group blocks (hold) are held, not charged, so the
+                       room-block "/nt" cost preview is removed. Charged
+                       reservations still show it. -->
+                  <span v-if="roomFlatPrice(r) != null && !isHold" class="cr__rprice">{{ money(roomFlatPrice(r)) }}<small>/nt</small></span>
+                  <!-- DES-414: "Edit" this room block → host navigates back to the
+                       hotel details page for it. Sits next to the trash can. -->
+                  <button v-if="roomDelete" type="button" class="cr__roomedit" aria-label="Edit room block" @click="emit('edit-room', { hotel: h.name, room: r.type, hi, ri })"><q-icon name="edit" size="19px" /></button>
                   <!-- roomDelete: one action removes the whole room (no qty editing). -->
                   <button v-if="roomDelete" type="button" class="cr__roomdel" aria-label="Remove room" @click="removeRoom(hi, ri)"><q-icon name="delete_outline" size="20px" /></button>
                 </div>
@@ -353,7 +359,10 @@ defineExpose({ clear })
 .cr__rsummary { font-size: 0.8125rem; color: var(--ds-color-text-subtle); }
 .cr__rprice { font-weight: 700; font-size: 0.9375rem; color: var(--ds-color-text); white-space: nowrap; }
 .cr__rprice small { font-weight: 500; color: var(--ds-color-text-subtle); font-size: 0.8125rem; }
-.cr__roomhead-right { display: inline-flex; align-items: center; gap: 10px; flex: none; }
+.cr__roomhead-right { display: inline-flex; align-items: center; gap: 8px; flex: none; }
+/* DES-414: Edit room block — mirrors the trash-can button, brand hover. */
+.cr__roomedit { flex: none; width: 34px; height: 34px; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); color: var(--ds-color-text-subtle); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: color var(--ds-duration-fast) var(--ds-ease-standard), background var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard); }
+.cr__roomedit:hover { color: var(--ds-color-text-brand); background: var(--ds-palette-navy-50); border-color: var(--ds-color-border-brand); }
 .cr__roomdel { flex: none; width: 34px; height: 34px; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); color: var(--ds-color-text-subtle); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: color var(--ds-duration-fast) var(--ds-ease-standard), background var(--ds-duration-fast) var(--ds-ease-standard); }
 .cr__roomdel:hover { color: var(--ds-color-text-danger); background: var(--ds-palette-red-50); border-color: var(--ds-palette-red-200, #FECACA); }
 .cr__dayrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0 0 16px; }
