@@ -41,6 +41,16 @@ const cartVisible = computed(() =>
 // inventory — not a count (an exact number is too complex to keep accurate).
 // Other flows keep the numeric badge.
 const dotOnly = computed(() => props.cartMode === 'hold')
+// Whether the passed cart currently holds any rooms. Derived straight from the
+// cart prop so the red dot appears the moment inventory is first added — it does
+// NOT wait for the fly-out to mount CartReview and emit a count.
+const cartHasRooms = computed(() => {
+  const c = props.cart
+  if (!c) return false
+  return c.hotels ? c.hotels.some((h) => (h.rooms || []).length) : !!c.hotel
+})
+// Show the dot as soon as the cart has inventory, or once the live count is > 0.
+const showDot = computed(() => cartHasRooms.value || count.value > 0)
 
 // Cart fly-out.
 const cartOpen = ref(props.openCart)
@@ -77,7 +87,7 @@ const count = ref(0)
         <button v-if="cartVisible" class="gnav__iconbtn" aria-label="Open cart" @click="cartOpen = true">
           <q-icon name="shopping_cart" size="22px" />
           <!-- DES-412: group block → red dot (has inventory); else numeric badge. -->
-          <span v-if="dotOnly" v-show="count > 0" class="gnav__dot" aria-hidden="true" />
+          <span v-if="dotOnly" v-show="showDot" class="gnav__dot" aria-hidden="true" />
           <span v-else class="gnav__badge">{{ count }}</span>
         </button>
       </div>
