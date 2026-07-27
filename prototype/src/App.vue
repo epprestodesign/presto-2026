@@ -127,6 +127,11 @@ function onClickCapture(e) {
   // shows and the details card + badge reset (CartReview clears its own view too).
   if (t.closest('.cf__clear')) { clearCart(); return }
 
+  // Edit-room (CartReview roomEdit: cart fly-out + checkout "Review order") →
+  // back to the hotel list so the user can adjust their blocks (DES-414). Keeps
+  // the cart intact; navigating away closes the fly-out.
+  if (t.closest('.cr__roomedit')) { backToBrowse(); return }
+
   // Delete-room (CartReview roomDelete: cart fly-out + checkout) → remove the
   // block from the REAL cart so the details card + nav badge stay in sync.
   // CartReview also updates its own view on the same click (we don't stop the
