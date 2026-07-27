@@ -165,6 +165,38 @@ export function addRoomToHold(room) {
   startHoldTimer()
 }
 
+// Group/hold: SET a room type's held quantities to exactly what the card shows
+// (DES-416). Unlike addRoomToHold (which sums), this REPLACES the per-night
+// quantities so decreases actually reduce the cart. `room.nights` carries the
+// staged values (may include 0). Zeroing every night removes the room type — and
+// the hotel entry once its last room is gone.
+export function setRoomInHold(room) {
+  const h = journey.active
+  if (!h || !room) return
+  const nights = (room.nights || []).filter((n) => n.qty > 0)
+  let entry = journey.cart.find((c) => c.name === h.name)
+  // Everything zeroed → remove this room type (and the hotel if now empty).
+  if (nights.length === 0) {
+    if (entry && entry.rooms) {
+      entry.rooms = entry.rooms.filter((r) => r.type !== room.type)
+      if (entry.rooms.length === 0) journey.cart = journey.cart.filter((c) => c.name !== entry.name)
+    }
+    if (cartRoomCount() === 0) stopHoldTimer()
+    return
+  }
+  if (!entry) { entry = { name: h.name, city: h.city, rooms: [] }; journey.cart.push(entry) }
+  if (!entry.rooms) entry.rooms = []
+  const existing = entry.rooms.find((r) => r.type === room.type)
+  if (existing) {
+    existing.nights = nights.map((n) => ({ ...n }))
+    existing.summary = room.summary || existing.summary
+    existing.price = room.price ?? existing.price
+  } else {
+    entry.rooms.push({ ...room, nights: nights.map((n) => ({ ...n })) })
+  }
+  startHoldTimer()
+}
+
 // Group/hold: remove an entire room-type block from a hotel's cart entry — the
 // single source of truth. Used by the details card's "Remove all from cart" and
 // the cart flyout / checkout delete-room (routed here so every view stays in

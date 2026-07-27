@@ -33,8 +33,8 @@ and persist across submits:
    is disabled until a quantity changes.
 6. **Adjusting** — any change re-enables *Update*; committing pushes the new
    quantities (up = add more, down = reduce).
-7. **Zero-out** — zeroing every night and clicking *Update* (or *Remove all from
-   cart*) removes the room type; the CTA reverts to *Add to Cart*.
+7. **Zero-out** — zeroing every night and clicking *Update* removes the room type
+   from the cart; the CTA reverts to *Add to Cart*.
 
 **Availability edge cases:** available (green) · only-N-left (orange) · sold out
 (dimmed card, disabled CTA, zeroed steppers).
@@ -55,7 +55,8 @@ export const Available = {
 }
 
 /** In cart — rooms already committed, so the CTA reads "Update" and is disabled
- * until you change a stepper. Zero every night + Update to remove the room. */
+ * until you change a stepper. Decreasing reduces the cart; zeroing every night +
+ * Update removes the room. */
 export const InCart = {
   name: 'In Cart (Update state)',
   render,
