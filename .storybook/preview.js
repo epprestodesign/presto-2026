@@ -43,6 +43,20 @@ const preview = {
         dark: { name: 'dark', value: '#141218' }
       }
     },
+    // Accessibility (addon-a11y / axe-core). Audit every story against WCAG 2.2
+    // level A + AA. The extra 2.1/2.2 tags cover criteria added after 2.0 (e.g.
+    // 2.2's focus-appearance / target-size). Findings show in the Accessibility
+    // panel mapped to their WCAG success criterion; 'todo' surfaces them without
+    // failing local dev (the CI run enforces).
+    a11y: {
+      test: 'todo',
+      config: {
+        runOnly: {
+          type: 'tag',
+          values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'],
+        },
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -57,7 +71,7 @@ const preview = {
         order: [
           'Getting Started', ['Introduction', 'Architecture & Conventions', 'User Journey & Build Spec', 'Story Template'],
           'Foundations', [
-            'Colors', 'Palette', 'Typography', 'Icons', 'Imagery',
+            'Colors', 'Palette', 'Color Contrast', 'Typography', 'Icons', 'Imagery',
             'Spacing', 'Border Radius', 'Elevation', 'Breakpoints', 'Motion',
           ],
           'Components', [
