@@ -1,0 +1,57 @@
+name: Accessibility (WCAG 2.2 AA)
+
+# Runs axe-core against every Storybook story via the Storybook test-runner.
+# Advisory by default: violations are reported in the job log but do NOT fail the
+# run (so it can land without blocking on the existing backlog). To enforce it as
+# a hard gate, set A11Y_STRICT to "true" below (or make this a required check).
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      strict:
+        description: "Fail the job on any WCAG violation"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# Run JS-based actions on Node 24 (silences the Node 20 deprecation notice).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  a11y:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The test-runner drives a real browser via Playwright.
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+        env:
+          STORYBOOK_DISABLE_TELEMETRY: "1"
+          VITE_IMAGERY_URL: "https://epprestodesign.github.io/presto-ds-imagery"
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+
+      - name: Run accessibility audit
+        run: pnpm a11y:ci
+        env:
+          # Flip to "true" (or the workflow_dispatch input) to enforce as a gate.
+          A11Y_STRICT: ${{ github.event.inputs.strict || 'false' }}
