@@ -26,9 +26,15 @@ function showAddedToast(roomType, hotelName) {
   added.roomType = roomType
   added.hotel = hotelName
   added.image = ''
-  added.style = r
-    ? { position: 'fixed', top: `${Math.round(r.bottom + 10)}px`, right: `${Math.round(window.innerWidth - r.right - 2)}px`, zIndex: 4000 }
-    : { position: 'fixed', top: '76px', right: '24px', zIndex: 4000 }
+  // Phones: center the toast (anchoring it to the top-right cart icon pushes the
+  // 360px card off the left edge). Desktop: keep it under the cart icon.
+  const mobile = window.innerWidth < 600
+  const top = r ? Math.round(r.bottom + 10) : 76
+  added.style = mobile
+    ? { position: 'fixed', top: `${top}px`, left: '50%', transform: 'translateX(-50%)', width: 'calc(100vw - 24px)', maxWidth: '360px', zIndex: 4000 }
+    : r
+      ? { position: 'fixed', top: `${top}px`, right: `${Math.round(window.innerWidth - r.right - 2)}px`, zIndex: 4000 }
+      : { position: 'fixed', top: '76px', right: '24px', zIndex: 4000 }
   added.key++
   added.show = true
   resolveHotelImage(hotelName).then((url) => { if (url) added.image = url })
@@ -37,6 +43,14 @@ const onToastViewCart = () => { added.show = false; openCartFlyout() }
 const onToastCheckout = () => { added.show = false; goToCheckout() }
 // Dismiss the toast when navigating to another screen.
 watch(() => journey.screen, () => { added.show = false })
+// When embedded in the mobile-prototype showcase, report the current screen (and
+// active flow) to the parent so its mock browser address bar reflects the stage.
+// No-op when running standalone (window.parent === window).
+watch(() => [journey.screen, journey.flow], ([screen, flow]) => {
+  if (typeof window !== 'undefined' && window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: 'presto:screen', screen, flow }, '*')
+  }
+}, { immediate: true })
 // EventPipe wordmark (same asset the footer uses) — shown in the app bar in place
 // of the "Presto" text, recolored via CSS mask. Exposed as a CSS var on the root.
 import epLogo from '@lib/assets/eventpipe logos/eventpipe-logo.svg'
@@ -185,14 +199,13 @@ function onClickCapture(e) {
       }
       return
     }
-    // Hotel NAME → its Details page. (The card CTA is handled by the card's own
-    // @choose/@select event in BrowseScreen — not intercepted here, to avoid
-    // double navigation.) Resolve to the full hotel record for a coherent Details.
-    const nameEl = t.closest('.hc__name')
-    if (nameEl) {
-      const name = nameEl.textContent?.trim()
-      const hotel = getHotelByName(name)
-      if (hotel) openHotel(hotel)
+    // Any hotel card (name or CTA) → its Details page. The library HotelListPage
+    // cards don't relay Vue events, so we resolve the hotel from the card's DOM.
+    // Fall back to a name-only record when it isn't in the sample dataset.
+    const card = t.closest('.hc')
+    if (card && (t.closest('.hc__name') || t.closest('.hc__cta'))) {
+      const name = card.querySelector('.hc__name')?.textContent?.trim()
+      if (name) openHotel(getHotelByName(name) || { name, city: '' })
     }
     return
   }
@@ -283,6 +296,10 @@ body { background: var(--ds-palette-slate-100, #f1f2f4); }
 /* The shared content column: capped at 1440px, but always leaving an even ~4%
    gutter on each side so content never touches the viewport edge. */
 .proto__stage { width: 100%; min-height: 100vh; background: var(--ds-color-surface, #fff); --col: min(1440px, 92%); }
+/* Phones: the content column goes full-width so the ONLY gutter is each page/
+   component's own 16px padding — no extra 92%-column margin (which doubled the
+   gutter to ~32px and read as off-center). */
+@media (max-width: 600px) { .proto__stage { --col: 100%; } }
 
 /* Cap all interior content to a centered 1440px column with side gutters, so
    elements sit inline within the body and never run to the viewport edge.
@@ -312,6 +329,13 @@ body { background: var(--ds-palette-slate-100, #f1f2f4); }
   padding-inline: 0 !important;
   background: transparent !important;
   border-bottom: 0 !important;
+}
+/* Phones: give the nav the same 8px gutter as the page content (the column no
+   longer constrains below its width, so add the gutter directly). */
+@media (max-width: 600px) {
+  /* Full-width nav so its 16px padding lands the logo/hamburger on the same
+     edges as the page content/cards (no extra --col column inset). */
+  .gnav { max-width: none !important; padding-inline: 16px !important; }
 }
 
 /* App-bar brand: replace the "Presto" wordmark with the EventPipe logo (the same

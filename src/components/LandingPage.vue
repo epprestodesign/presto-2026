@@ -234,4 +234,16 @@ const heroStyle = { backgroundImage: `${scrim}, url(${defaultBg})` }
 }
 .lp__logo { height: 30px; width: auto; display: block; }
 .lp__legal { color: var(--ds-color-text-subtle); font-size: 0.8125rem; }
+
+/* Phones — placed last so these win the cascade over the desktop rules above.
+   Smaller hero + 4px page gutters (the widget keeps its own interior padding). */
+@media (max-width: 600px) {
+  .lp__hero { min-height: 0; padding: 40px 0; }
+  .lp__hero-inner { padding: 0 16px; }
+  .lp__hero-logo { height: 32px; margin-bottom: 12px; }
+  .lp__event { font-size: 1.875rem; }
+  .lp__dates { font-size: 1rem; }
+  .lp__widget { margin-top: -8px; padding: 0 16px; }
+  .lp__content { padding: 40px 16px 8px; }
+}
 </style>

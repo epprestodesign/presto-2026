@@ -60,6 +60,15 @@ jobs:
       - name: Nest prototype under Storybook
         run: cp -r prototype/dist storybook-static/prototype
 
+      # Mobile prototype — a device-frame showcase that embeds the prototype above
+      # in a 390px iframe (its `../prototype/` src resolves to the sibling deploy).
+      - name: Build mobile prototype (device-frame showcase)
+        working-directory: prototype-mobile
+        run: node ../node_modules/vite/bin/vite.js build --base=/presto-2026/prototype-mobile/
+
+      - name: Nest mobile prototype under Storybook
+        run: cp -r prototype-mobile/dist storybook-static/prototype-mobile
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: storybook-static

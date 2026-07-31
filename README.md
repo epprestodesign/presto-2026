@@ -20,7 +20,13 @@ components (zero forks) — all three modes: **Book Reservation**, **Group Block
 and **Multiple Reservations**. Search hotels on a live Google map, filter, pick
 rooms, checkout, and confirm, at 1440px.
 
-**▶ Launch: https://epprestodesign.github.io/presto-2026/prototype/**
+**▶ Launch (desktop, 1440px): https://epprestodesign.github.io/presto-2026/prototype/**
+
+**📱 Launch (mobile, 360–414px): https://epprestodesign.github.io/presto-2026/prototype-mobile/**
+— the same journey in a device frame that showcases the responsive design system
+(width toggle + a mock browser URL that tracks each stage). Source in
+[`prototype-mobile/`](prototype-mobile/); it embeds the prototype above at phone
+width so the components render their mobile layouts.
 
 It's deployed alongside Storybook (also linked from the Storybook **Getting
 Started → Introduction** page). Source lives in [`prototype/`](prototype/) — a
@@ -159,6 +165,8 @@ required by the Unsplash API Guidelines.
 
 ## Deployment
 Handled by [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): builds
-Storybook, builds the [`prototype/`](prototype/) app (nested at `/prototype/`), and
-publishes `storybook-static/` to GitHub Pages on every push to `main`. Pages is
+Storybook, builds the [`prototype/`](prototype/) app (nested at `/prototype/`), the
+[`prototype-mobile/`](prototype-mobile/) device-frame showcase (nested at
+`/prototype-mobile/`), and publishes `storybook-static/` to GitHub Pages on every
+push to `main`. Pages is
 already enabled (**Settings → Pages → Source: GitHub Actions**).
