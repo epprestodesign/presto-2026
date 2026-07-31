@@ -293,7 +293,7 @@ watch(valid, (v) => emit('update:valid', v), { immediate: true })
 
 /* Address row (DES-94): City / State / Postal, full-width 3-up. */
 .rg__addrrow { grid-column: 1 / -1; display: grid; grid-template-columns: 2fr 1.4fr 1fr; gap: 14px; align-items: start; }
-@media (max-width: 560px) { .rg__addrrow { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .rg__addrrow, .cgf__grid, .rg__guest { grid-template-columns: 1fr; } }
 
 /* Additional email rows (DES-93): input + remove button. */
 .rg__emailrow { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }

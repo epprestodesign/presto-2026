@@ -81,4 +81,11 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
   .gh__cell--lead { grid-row: auto; }
   .gh__cell { aspect-ratio: 4 / 3; }
 }
+/* Phones (<600px): single-column photo stack (lead larger), full-screen modal. */
+@media (max-width: 600px) {
+  .gh__grid { grid-template-columns: 1fr; }
+  .gh__cell--lead { aspect-ratio: 16 / 10; }
+  .gh__modal { padding: 0; }
+  .gh__dialog { width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; border-radius: 0; }
+}
 </style>

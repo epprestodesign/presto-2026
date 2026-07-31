@@ -43,6 +43,19 @@ const preview = {
         dark: { name: 'dark', value: '#141218' }
       }
     },
+    // Mobile QA presets — flip any story to a phone width from the toolbar.
+    // Primary target is 390 (iPhone 12/13/14); 360 is the small-Android floor and
+    // 414 the large-phone ceiling of the 360–414 band we design to. No default is
+    // forced, so stories stay responsive/desktop until you pick a viewport (or a
+    // story opts in via `globals: { viewport: { value: 'mobile' } }`).
+    viewport: {
+      options: {
+        mobileSm: { name: 'Mobile — 360', styles: { width: '360px', height: '800px' } },
+        mobile: { name: 'Mobile — 390 (target)', styles: { width: '390px', height: '844px' } },
+        mobileLg: { name: 'Mobile — 414', styles: { width: '414px', height: '896px' } },
+        tablet: { name: 'Tablet — 768', styles: { width: '768px', height: '1024px' } },
+      },
+    },
     // Accessibility (addon-a11y / axe-core). Audit every story against WCAG 2.2
     // level A + AA. The extra 2.1/2.2 tags cover criteria added after 2.0 (e.g.
     // 2.2's focus-appearance / target-size). Findings show in the Accessibility

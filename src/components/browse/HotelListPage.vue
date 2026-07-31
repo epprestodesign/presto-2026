@@ -394,7 +394,19 @@ const sort = ref('distance')
   .hlp__rail--right { display: none; }
 }
 @media (max-width: 820px) {
-  .hlp__grid { grid-template-columns: 1fr; }
-  .hlp__rail--left { display: none; }
+  /* Single column. The filter rail now stacks above the results (it collapses
+     to a "Filters" toggle on phones) instead of being hidden. */
+  .hlp__grid { grid-template-columns: 1fr !important; }
+}
+
+/* Phones (<600px): tighten paddings, drop the ad rail, stack the skeletons. */
+@media (max-width: 600px) {
+  .hlp__container { padding: 0 16px; }
+  .hlp__grid { gap: 16px; padding: 16px 0 32px; }
+  .hlp__rail--right { display: none; }
+  .hlp__hero-inner { padding: 20px; }
+  .hlp__skel { flex-direction: column; min-height: 0; }
+  .hlp__skel-media { width: 100%; height: 180px; }
+  .hlp__skel-price { width: 100%; align-items: flex-start; }
 }
 </style>

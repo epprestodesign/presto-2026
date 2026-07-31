@@ -3,8 +3,10 @@
 // expiry, CVC, billing ZIP, and a human-check, with a Save that stays disabled
 // until the form is valid. Emits `save` with the new card on success.
 import { ref, computed } from 'vue'
+import { useQuasar } from 'quasar'
 
 defineProps({ modelValue: { type: Boolean, default: false } })
+const $q = useQuasar()
 const emit = defineEmits(['update:modelValue', 'save', 'back'])
 
 const number = ref('')
@@ -44,7 +46,7 @@ const save = () => {
 </script>
 
 <template>
-  <q-dialog :model-value="modelValue" @update:model-value="emit('update:modelValue', $event)">
+  <q-dialog :model-value="modelValue" :maximized="$q.screen.lt.sm" @update:model-value="emit('update:modelValue', $event)">
     <div class="apd">
       <div class="apd__head">
         <button class="apd__icon" aria-label="Back" @click="emit('back'); close()"><q-icon name="arrow_back" size="22px" /></button>
@@ -85,6 +87,8 @@ const save = () => {
 
 <style scoped>
 .apd { width: 560px; max-width: 92vw; background: var(--ds-color-surface); border-radius: var(--ds-radius-lg); overflow: hidden; display: flex; flex-direction: column; }
+/* Phones: fills the maximized dialog. */
+@media (max-width: 600px) { .apd { width: 100%; max-width: 100%; height: 100%; border-radius: 0; } }
 .apd__head { display: flex; align-items: center; padding: 16px 18px; }
 .apd__icon { width: 36px; height: 36px; border: 0; border-radius: 50%; background: none; color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .apd__icon:hover { background: var(--ds-palette-slate-100); }

@@ -66,5 +66,5 @@ onBeforeUnmount(() => { if (typeof document !== 'undefined') { document.body.sty
 .dsp__body { flex: 1; overflow-y: auto; padding: 4px 24px 24px; }
 .dsp__foot { flex: none; border-top: 1px solid var(--ds-color-border); padding: 16px 24px; background: var(--ds-color-surface); }
 
-@media (max-width: 520px) { .dsp__panel { width: 100vw !important; } }
+@media (max-width: 600px) { .dsp__panel { width: 100vw !important; } }
 </style>

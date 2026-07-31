@@ -57,7 +57,7 @@ const openPrice = (room) => { activeRoom.value = room; priceOpen.value = true }
    their cell (their intrinsic 360px width is overridden to 100%). */
 .rcar__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
 .rcar__item { min-width: 0; display: flex; }
-.rcar__item > :deep(.rcr), .rcar__item > :deep(.rcg) { width: 100%; height: 100%; }
+.rcar__item > :deep(.rcr), .rcar__item > :deep(.rcg) { width: 100%; max-width: none; height: 100%; }
 
 @media (max-width: 900px) { .rcar__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .rcar__grid { grid-template-columns: minmax(0, 1fr); } }

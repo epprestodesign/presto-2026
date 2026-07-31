@@ -243,4 +243,24 @@ const print = () => { if (typeof window !== 'undefined') window.print() }
   .conf__sumhead-right { align-items: flex-start; text-align: left; }
   .conf__actions { justify-content: flex-start; }
 }
+/* Phones: tighter gutters + a fully top-down stack — nothing sits side-by-side.
+   Success banner, summary header, meta pairs and the hotel head all stack; the
+   hotel photo goes full-width. */
+@media (max-width: 600px) {
+  .conf { padding: 24px 16px 48px; }
+  .conf__card { padding: 20px 18px; }
+  /* Success banner → icon + text, then a full-width action button. */
+  .conf__banner { flex-direction: column; align-items: flex-start; padding: 16px 18px; gap: 12px; }
+  .conf__banner-cta { width: 100%; }
+  /* Summary header → contact block above the actions/release. */
+  .conf__sumhead { flex-direction: column; gap: 14px; }
+  .conf__actions { justify-content: flex-start; }
+  /* Meta pairs → label above value, one per row. */
+  .conf__metagrid { display: block; }
+  .conf__metarow { display: block; margin-bottom: 12px; }
+  .conf__metarow dt { margin-bottom: 2px; }
+  /* Hotel head → full-width photo above the name/stars/address. */
+  .conf__hotelhead { flex-direction: column; }
+  .conf__thumb { width: 100%; height: 180px; }
+}
 </style>

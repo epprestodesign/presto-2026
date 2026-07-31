@@ -184,6 +184,18 @@ const money2 = (n) => props.currency + Number(n ?? 0).toLocaleString('en-US', { 
 .hc__lrg { display: inline-flex; align-items: center; gap: 4px; color: var(--ds-color-text-success); border: 1px solid var(--ds-color-text-success); border-radius: var(--ds-radius-pill); padding: 3px 12px; font-size: 0.8125rem; font-weight: 600; margin: 6px 0 10px; }
 .hc__cta { height: 52px; padding: 0 24px; border: 0; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
 .hc__cta:hover { background: var(--ds-palette-navy-800); }
+
+/* Phones (<600px): image on top, content below; footer actions go full-width. */
+@media (max-width: 600px) {
+  .hc__top { flex-direction: column; }
+  .hc--horizontal .hc__top { min-height: 0; }
+  .hc__media { width: 100%; height: 200px; }
+  .hc__main { padding: 18px; }
+  .hc__footer { flex-direction: column; align-items: stretch; gap: 12px; padding-top: 16px; }
+  .hc__availtoggle { margin-right: 0; min-height: 0; }
+  .hc__price { align-items: flex-start; text-align: left; }
+  .hc__cta { width: 100%; }
+}
 .hc__cta--muted { background: var(--ds-palette-navy-400); }
 
 /* availability panel */

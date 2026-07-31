@@ -53,17 +53,38 @@ export const LandingPage = {
   }),
 }
 
-/** Hotel listings banner (1440×200) — event name + date range. */
+/** Hotel listings banner (1440×200) — event name + date range. On narrow
+ *  screens the 1440/200 ratio would collapse below the content height, so a
+ *  minHeight keeps the name + dates readable (see the Mobile story). */
 export const HotelListings = {
   name: 'Hotel Listings',
   render: () => ({
-    setup: () => ({ style: { ...bg(defaultBg), width: '100%', aspectRatio: '1440 / 200' }, EVENT_NAME, EVENT_DATES, epLogoWhite }),
+    setup: () => ({ style: { ...bg(defaultBg), width: '100%', aspectRatio: '1440 / 200', minHeight: '150px' }, EVENT_NAME, EVENT_DATES, epLogoWhite }),
     template: `
       <section :style="style">
         <div style="padding:0 24px; max-width:760px">
           <img :src="epLogoWhite" alt="EventPipe" style="height:30px;width:auto;display:block;margin:0 auto 12px" />
           <div class="text-h5" style="font-weight:700; line-height:1.15; margin:0">{{ EVENT_NAME }}</div>
           <div class="text-body1" style="margin-top:6px">{{ EVENT_DATES }}</div>
+        </div>
+      </section>`,
+  }),
+}
+
+/** Mobile (390px) — the listings banner keeps a readable min-height instead of
+ *  collapsing to the ~54px its 1440/200 ratio would give at phone width. */
+export const Mobile = {
+  name: 'Mobile (390)',
+  tags: ['mobile'],
+  globals: { viewport: { value: 'mobile', isRotated: false } },
+  render: () => ({
+    setup: () => ({ style: { ...bg(defaultBg), width: '100%', aspectRatio: '1440 / 200', minHeight: '150px' }, EVENT_NAME, EVENT_DATES, epLogoWhite }),
+    template: `
+      <section :style="style">
+        <div style="padding:0 20px; max-width:760px">
+          <img :src="epLogoWhite" alt="EventPipe" style="height:26px;width:auto;display:block;margin:0 auto 10px" />
+          <div class="text-h6" style="font-weight:700; line-height:1.2; margin:0">{{ EVENT_NAME }}</div>
+          <div class="text-body2" style="margin-top:6px">{{ EVENT_DATES }}</div>
         </div>
       </section>`,
   }),

@@ -67,3 +67,12 @@ export const Page = { name: 'Group Block w/ Team Block', render: build(true) }
 /** A group block held without team assignment — the teams block widget is hidden
  *  (just the group block name + primary contact). */
 export const NoTeamBlock = { name: 'Group Block', render: build(false) }
+
+/** Mobile (390px) — single column: the stepped accordion, then the order summary
+ *  below (rail no longer sticky); form fields stack; header actions wrap. */
+export const Mobile = {
+  name: 'Mobile (390)',
+  tags: ['mobile'],
+  globals: { viewport: { value: 'mobile', isRotated: false } },
+  render: build(true),
+}

@@ -287,6 +287,7 @@ watch([added, expected, contact, notHolding, groupBlockName, additionalEmails], 
 .gtb__addreq:hover { text-decoration: underline; }
 
 .gtb__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 560px) { .gtb__grid { grid-template-columns: 1fr; } }
 .gtb__grid--mt { margin-top: 14px; }
 .gtb__field { display: flex; flex-direction: column; gap: 6px; }
 .gtb__field--full { grid-column: 1 / -1; }

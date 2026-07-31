@@ -295,12 +295,28 @@ const roomsNeeded = ref(props.initialRooms ?? null)
 .bw__add { display: flex; align-items: center; gap: 8px; margin-top: 20px; font-size: 0.875rem; font-weight: 500; cursor: pointer; width: fit-content; color: var(--ds-color-text-brand); }
 .bw__link { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; color: var(--ds-color-text-brand); }
 .bw__step { width: 40px; min-width: 40px; height: 40px; min-height: 40px; font-size: 13px; border-radius: 50%; }
+
+/* Phones (<600px): the horizontal field row stacks; the search button and each
+   field go full-width so nothing overflows a 360–390px screen. */
+@media (max-width: 600px) {
+  .bw { padding: 16px; }
+  .bw__tabs { gap: 18px; overflow-x: auto; }
+  .bw__fields { flex-direction: column; align-items: stretch; gap: 10px; }
+  .bw__fields > * { width: 100%; }
+  .bw__search { width: 100%; }
+}
 .bw__step :deep(.q-icon) { font-size: 22px; }
 </style>
 
 <style>
 .bw-menu { box-shadow: var(--ds-shadow-1) !important; border: 1px solid var(--ds-color-border); }
 .bw-dialog { box-shadow: var(--ds-shadow-2); }
+/* Phones: the popovers have fixed 360/380px inner widths — cap them to the
+   viewport so they don't overflow a 360–390px screen (wide content scrolls). */
+@media (max-width: 600px) {
+  .bw-menu { max-width: 96vw; }
+  .bw-menu > div { width: auto !important; max-width: 92vw; overflow-x: auto; }
+}
 /* Quasar dashes the outline of readonly outlined fields; our triggers are
    readonly by design — keep the border solid. */
 .bw__input.q-field--outlined .q-field__control:before { border-style: solid; }

@@ -90,6 +90,31 @@ const count = ref(0)
           <span v-if="dotOnly" v-show="showDot" class="gnav__dot" aria-hidden="true" />
           <span v-else class="gnav__badge">{{ count }}</span>
         </button>
+
+        <!-- Mobile (<600px): Contact Us + Manage Booking collapse into this menu;
+             the brand and cart stay in the bar. Hidden on desktop via CSS. -->
+        <button class="gnav__hamburger" aria-label="Menu">
+          <q-icon name="menu" size="24px" />
+          <q-menu anchor="bottom right" self="top right" :offset="[0, 10]" class="gnav__mobilemenu">
+            <div class="gnav__mobilemenu-card">
+              <button class="gnav__mm-manage" @click="emit('manage')">{{ manageLabel }}</button>
+              <div class="gnav__mm-sep" />
+              <h4 class="gnav__contact-name">{{ contactInfo.name }}</h4>
+              <div class="gnav__contact-block">
+                <span class="gnav__contact-h">Hours</span>
+                <p class="gnav__contact-p">{{ contactInfo.hours }}</p>
+              </div>
+              <div class="gnav__contact-block">
+                <span class="gnav__contact-h">By Phone</span>
+                <a class="gnav__contact-row" :href="'tel:' + contactInfo.phone.replace(/[^0-9+]/g, '')"><q-icon name="call" size="18px" /> {{ contactInfo.phone }}</a>
+              </div>
+              <div class="gnav__contact-block">
+                <span class="gnav__contact-h">By Email</span>
+                <a class="gnav__contact-row" :href="'mailto:' + contactInfo.email"><q-icon name="mail" size="18px" /> {{ contactInfo.email }}</a>
+              </div>
+            </div>
+          </q-menu>
+        </button>
       </div>
     </header>
 
@@ -114,18 +139,35 @@ const count = ref(0)
 .gnav__badge { position: absolute; top: -2px; right: -2px; min-width: 22px; height: 22px; padding: 0 5px; border-radius: var(--ds-radius-pill); background: var(--ds-color-background-danger-bold); color: #fff; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 /* DES-412: group-block cart inventory indicator — a plain red dot, no number. */
 .gnav__dot { position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--ds-color-background-danger-bold); border: 2px solid var(--ds-color-surface); }
+
+/* Hamburger — hidden on desktop, shown on phones (<600px). */
+.gnav__hamburger { display: none; width: 44px; height: 44px; border-radius: var(--ds-radius-md); border: 1px solid var(--ds-color-border-brand); background: transparent; color: var(--ds-color-text-brand); cursor: pointer; align-items: center; justify-content: center; }
+.gnav__hamburger:hover { background: var(--ds-palette-navy-50); }
+.gnav__mm-manage { width: 100%; height: 44px; border-radius: var(--ds-radius-button); border: 1px solid var(--ds-color-border-brand); background: transparent; color: var(--ds-color-text-brand); font-family: inherit; font-weight: 700; font-size: 0.9375rem; cursor: pointer; }
+.gnav__mm-manage:hover { background: var(--ds-palette-navy-50); }
+.gnav__mm-sep { height: 1px; background: var(--ds-color-border); margin: 16px 0; }
+
+/* Phone layout: condense the bar, drop the inline links, show the hamburger. */
+@media (max-width: 600px) {
+  .gnav { height: 60px; padding: 0 16px; gap: 10px; }
+  .gnav__brand { font-size: 1.25rem; }
+  .gnav__actions { gap: 10px; }
+  .gnav__contact, .gnav__manage { display: none; }
+  .gnav__hamburger { display: inline-flex; }
+  .gnav__iconbtn { width: 44px; height: 44px; }
+}
 </style>
 
 <!-- Unscoped: q-menu content is teleported outside this component. -->
 <style>
-.gnav__contactmenu { border-radius: var(--ds-radius-lg); box-shadow: var(--ds-shadow-3, 0 8px 24px rgba(0,0,0,0.18)); }
-.gnav__contactmenu .gnav__contactcard { width: 320px; max-width: 88vw; padding: 24px; }
-.gnav__contactmenu .gnav__contact-name { margin: 0 0 18px; text-align: center; font-size: 1.25rem; font-weight: 800; color: var(--ds-color-text-brand); }
-.gnav__contactmenu .gnav__contact-block { margin-top: 18px; }
+.gnav__contactmenu, .gnav__mobilemenu { border-radius: var(--ds-radius-lg); box-shadow: var(--ds-shadow-3, 0 8px 24px rgba(0,0,0,0.18)); }
+.gnav__contactmenu .gnav__contactcard, .gnav__mobilemenu .gnav__mobilemenu-card { width: 300px; max-width: 88vw; padding: 20px; }
+.gnav__contactmenu .gnav__contact-name, .gnav__mobilemenu .gnav__contact-name { margin: 0 0 18px; text-align: center; font-size: 1.25rem; font-weight: 800; color: var(--ds-color-text-brand); }
+.gnav__contactmenu .gnav__contact-block, .gnav__mobilemenu .gnav__contact-block { margin-top: 18px; }
 .gnav__contactmenu .gnav__contact-block:first-of-type { margin-top: 0; }
-.gnav__contactmenu .gnav__contact-h { display: block; font-size: 1rem; font-weight: 700; color: var(--ds-color-text); margin-bottom: 5px; }
-.gnav__contactmenu .gnav__contact-p { margin: 0; color: var(--ds-color-text); font-size: 0.9375rem; line-height: 1.45; }
-.gnav__contactmenu .gnav__contact-row { display: inline-flex; align-items: center; gap: 10px; color: var(--ds-color-text); font-size: 0.9375rem; text-decoration: none; }
-.gnav__contactmenu .gnav__contact-row:hover { text-decoration: underline; }
-.gnav__contactmenu .gnav__contact-row .q-icon { color: var(--ds-color-text-brand); flex: none; }
+.gnav__contactmenu .gnav__contact-h, .gnav__mobilemenu .gnav__contact-h { display: block; font-size: 1rem; font-weight: 700; color: var(--ds-color-text); margin-bottom: 5px; }
+.gnav__contactmenu .gnav__contact-p, .gnav__mobilemenu .gnav__contact-p { margin: 0; color: var(--ds-color-text); font-size: 0.9375rem; line-height: 1.45; }
+.gnav__contactmenu .gnav__contact-row, .gnav__mobilemenu .gnav__contact-row { display: inline-flex; align-items: center; gap: 10px; color: var(--ds-color-text); font-size: 0.9375rem; text-decoration: none; }
+.gnav__contactmenu .gnav__contact-row:hover, .gnav__mobilemenu .gnav__contact-row:hover { text-decoration: underline; }
+.gnav__contactmenu .gnav__contact-row .q-icon, .gnav__mobilemenu .gnav__contact-row .q-icon { color: var(--ds-color-text-brand); flex: none; }
 </style>
