@@ -66,4 +66,13 @@ const money = (n, c = '$') => c + Number(n ?? 0).toLocaleString('en-US', { minim
 .os__total small { font-weight: 600; font-size: 0.8125rem; color: var(--ds-color-text-subtle); }
 .os__breakdown { background: none; border: 0; padding: 6px 0 0; color: var(--ds-color-text); font-weight: 600; text-decoration: underline; cursor: pointer; font-size: 0.875rem; }
 .os__note { display: flex; align-items: center; gap: 8px; margin-top: 16px; background: var(--ds-palette-rose-50, #FFF1F2); color: var(--ds-palette-rose-700, #BE123C); border-radius: var(--ds-radius-pill); padding: 10px 14px; font-size: 0.8125rem; font-weight: 500; }
+
+/* Phones: top-down — the summary hero photo goes full-width above the title
+   (matching Confirmation); the card is no longer sticky. Price line-items stay
+   as key/value rows. */
+@media (max-width: 600px) {
+  .os { position: static; padding: 18px; }
+  .os__top { flex-direction: column; }
+  .os__img { width: 100%; height: 160px; }
+}
 </style>

@@ -198,4 +198,11 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 .ck__submit:hover { background: var(--ds-palette-navy-800); }
 
 @media (max-width: 880px) { .ck__grid { grid-template-columns: 1fr; } }
+/* Phones: tighter gutters; the order-summary rail flows below the steps. */
+@media (max-width: 600px) {
+  .ck { padding: 12px 16px 32px; }
+  .ck__railwrap { position: static; }
+  .ck__step { padding: 16px; }
+  .ck__grid { gap: 20px; }
+}
 </style>

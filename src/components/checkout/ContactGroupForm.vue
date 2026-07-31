@@ -58,6 +58,7 @@ const err = (f) => {
 <style scoped>
 .cgf__h { font-size: 1rem; font-weight: 700; color: var(--ds-color-text); margin: 0 0 12px; }
 .cgf__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 560px) { .cgf__grid { grid-template-columns: 1fr; } }
 .cgf__field { display: flex; flex-direction: column; gap: 6px; }
 .cgf__field--full { grid-column: 1 / -1; }
 .cgf__field span { font-size: 0.8125rem; font-weight: 600; color: var(--ds-color-text); }

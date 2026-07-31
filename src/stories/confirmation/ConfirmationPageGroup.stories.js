@@ -28,3 +28,16 @@ export const Page = {
     template: `<page-frame cart-mode="hold" :show-cart="false"><confirmation-page mode="hold" :data="data" /></page-frame>`,
   }),
 }
+
+/** Mobile (390px) — tighter gutters; the summary header stacks and actions
+ *  left-align. */
+export const Mobile = {
+  name: 'Mobile (390)',
+  tags: ['mobile'],
+  globals: { viewport: { value: 'mobile', isRotated: false } },
+  render: () => ({
+    components: { PageFrame, ConfirmationPage },
+    setup: () => ({ data: holdData }),
+    template: `<page-frame cart-mode="hold" :show-cart="false"><confirmation-page mode="hold" :data="data" /></page-frame>`,
+  }),
+}

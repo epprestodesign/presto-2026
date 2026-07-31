@@ -170,6 +170,18 @@ const money = (n) => props.currency + Number(n ?? 0).toLocaleString('en-US', { m
 .hc__taxes { color: var(--ds-color-text-subtle); font-size: 0.8125rem; margin-bottom: 6px; }
 .hc__cta { height: 52px; padding: 0 24px; border: 0; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
 .hc__cta:hover { background: var(--ds-palette-navy-800); }
+
+/* Phones (<600px): image on top, content below; footer actions go full-width. */
+@media (max-width: 600px) {
+  .hc__top { flex-direction: column; }
+  .hc--horizontal .hc__top { min-height: 0; }
+  .hc__media { width: 100%; height: 200px; }
+  .hc__main { padding: 18px; }
+  .hc__footer { flex-direction: column; align-items: stretch; gap: 12px; padding-top: 16px; }
+  .hc__availtoggle { margin-right: 0; min-height: 0; }
+  .hc__price { align-items: flex-start; text-align: left; }
+  .hc__cta { width: 100%; }
+}
 .hc__cta--muted { background: var(--ds-palette-navy-400); }
 
 /* availability panel */

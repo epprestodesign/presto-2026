@@ -90,6 +90,11 @@ function pick (c) {
 .drc__nav--prev { left: 4px; }
 .drc__nav--next { right: 4px; }
 .drc__months { display: flex; gap: 40px; }
+/* Phones: the two months stack (side-by-side is ~640px, well over a phone). */
+@media (max-width: 600px) {
+  .drc__months { flex-direction: column; gap: 20px; align-items: center; }
+  .drc__month { width: 100%; max-width: 320px; }
+}
 .drc__month { width: 300px; padding: 0 12px; }
 .drc__title { text-align: center; font-weight: 700; font-size: 1.125rem; margin-bottom: 24px; }
 .drc__dow { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; color: var(--ds-color-text-subtlest); font-size: 0.75rem; margin-bottom: 6px; }

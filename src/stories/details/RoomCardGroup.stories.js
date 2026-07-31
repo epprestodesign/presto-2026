@@ -54,6 +54,18 @@ export const Available = {
   ] },
 }
 
+/** Mobile (390px) — the card fills the phone width (no fixed 360px). On the
+ *  Details page the room grid collapses to a single column at ≤600px. */
+export const Mobile = {
+  name: 'Mobile (390)',
+  tags: ['mobile'],
+  globals: { viewport: { value: 'mobile', isRotated: false } },
+  render,
+  args: { ...base, availability: 'available', nights: [
+    { date: 'Thu, 7/9/2026', roomsLeft: 6, price: 179 }, { date: 'Fri, 7/10/2026', roomsLeft: 8, price: 179 }, { date: 'Sat, 7/11/2026', roomsLeft: 5, price: 179 },
+  ] },
+}
+
 /** In cart — rooms already committed, so the CTA reads "Update" and is disabled
  * until you change a stepper. Decreasing reduces the cart; zeroing every night +
  * Update removes the room. */

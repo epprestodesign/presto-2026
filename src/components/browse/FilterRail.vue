@@ -27,6 +27,9 @@ const exactOnly = computed({
   get: () => props.exactOnly,
   set: (v) => emit('update:exactOnly', v),
 })
+// On phones the rail collapses under a "Filters" toggle so it doesn't push the
+// results far down the page. Always expanded on desktop (CSS handles that).
+const open = ref(false)
 const propertyQuery = ref('')
 const brandSel = ref([])
 const amenitySel = ref([])
@@ -49,7 +52,14 @@ function clearAll() {
 </script>
 
 <template>
-  <div class="fr">
+  <div class="fr" :class="{ 'is-open': open }">
+    <!-- Mobile-only trigger (hidden on desktop) — collapses the whole rail. -->
+    <button type="button" class="fr__toggle" :aria-expanded="open" @click="open = !open">
+      <span><q-icon name="tune" size="18px" /> Filters</span>
+      <q-icon :name="open ? 'expand_less' : 'expand_more'" size="22px" />
+    </button>
+
+    <div class="fr__body">
     <!-- VIEW MAP -->
     <div class="fr__section">
       <view-map-field v-model="radius" @view-map="emit('view-map')" />
@@ -101,6 +111,7 @@ function clearAll() {
         <q-icon name="close" size="18px" /> Clear All Filters
       </button>
     </div>
+    </div><!-- /fr__body -->
   </div>
 </template>
 
@@ -123,4 +134,19 @@ function clearAll() {
   background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem;
 }
 .fr__apply:hover { background: var(--ds-palette-navy-800, #0a1f4d); }
+
+/* Mobile trigger — hidden on desktop; the rail body is always visible there. */
+.fr__toggle { display: none; }
+@media (max-width: 600px) {
+  .fr__toggle {
+    display: flex; align-items: center; justify-content: space-between; width: 100%; height: 48px;
+    padding: 0 16px; border: 1px solid var(--ds-color-border-brand); border-radius: var(--ds-radius-button);
+    background: var(--ds-color-surface); color: var(--ds-color-text-brand); font-family: inherit;
+    font-weight: 700; font-size: 0.9375rem; cursor: pointer;
+  }
+  .fr__toggle > span { display: inline-flex; align-items: center; gap: 8px; }
+  /* Collapsed by default on phones; the toggle reveals it. */
+  .fr__body { display: none; padding-top: 12px; }
+  .fr.is-open .fr__body { display: block; }
+}
 </style>

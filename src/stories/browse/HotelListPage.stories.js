@@ -36,3 +36,13 @@ export const TeamsBookingWidget = { name: 'Teams Booking Widget', render: page(t
 
 /** Book Reservation list page — Core Booking Widget (no team field). */
 export const CoreBookingWidget = { name: 'Core Booking Widget', render: page(false) }
+
+/** Mobile (390px) — the whole page at phone width: condensed nav, stacked
+ *  booking widget, the filter rail collapsed under a "Filters" toggle, single-
+ *  column hotel cards (image on top), and the ad rail dropped. */
+export const Mobile = {
+  name: 'Mobile (390)',
+  tags: ['mobile'],
+  globals: { viewport: { value: 'mobile', isRotated: false } },
+  render: page(false),
+}

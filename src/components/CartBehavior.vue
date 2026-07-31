@@ -147,5 +147,12 @@ const open = () => { cartOpen.value = true }
 .cb__cta { margin: 16px 24px; width: calc(100% - 48px); height: 54px; border: 0; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-family: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; }
 .cb__cta:hover { background: var(--ds-palette-navy-800); }
 
-@media (max-width: 520px) { .cb__panel { width: 100vw; } .cb__scroll.is-pushed { margin-right: 0; } }
+/* Phones (<600px): the cart is a full-screen sheet — "push" collapses to an
+   overlay (there's no room to push content aside on a phone). */
+@media (max-width: 600px) {
+  .cb__panel { width: 100vw; max-width: 100vw; }
+  .cb__scroll.is-pushed { margin-right: 0; }
+  .cb__toolbar { flex-wrap: wrap; }
+  .cb__toolbar-hint { flex-basis: 100%; order: 3; }
+}
 </style>

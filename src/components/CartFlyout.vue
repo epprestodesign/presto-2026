@@ -214,5 +214,6 @@ onBeforeUnmount(() => clearInterval(timer))
 .cf__sub-foot { flex: none; padding: 16px 24px 24px; }
 .cf__sub-save { width: 100%; height: 52px; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 1rem; }
 
-@media (max-width: 520px) { .cf__panel, .cf__sub { width: 100vw; } }
+/* Phones (<600px): the cart takes the full screen. */
+@media (max-width: 600px) { .cf__panel, .cf__sub { width: 100vw; max-width: 100vw; } }
 </style>

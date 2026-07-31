@@ -121,7 +121,9 @@ const onSubmit = () => { if (!ctaDisabled.value) commit() }
 </template>
 
 <style scoped>
-.rcg { display: flex; flex-direction: column; width: 360px; background: var(--ds-color-surface); border: 1px solid rgba(0,0,0,0.04); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 20px rgba(0,0,0,0.06); }
+/* Fluid: fills its column (and shrinks to fit a 360px phone) but caps standalone.
+   Inside RoomsCarousel the width/cap is overridden so grid cells fill fully. */
+.rcg { display: flex; flex-direction: column; width: 100%; max-width: 400px; background: var(--ds-color-surface); border: 1px solid rgba(0,0,0,0.04); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 20px rgba(0,0,0,0.06); }
 
 /* Head grows to fill, pushing the Rooms-per-Night + footer to a consistent
    baseline so they align across equal-height cards in the grid. */

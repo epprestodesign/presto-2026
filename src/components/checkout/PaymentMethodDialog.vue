@@ -3,6 +3,7 @@
 // (single-select with a check) plus an "Add payment method" list. Choosing
 // Debit/Credit opens AddPaymentDialog; saving a card adds + selects it.
 import { ref } from 'vue'
+import { useQuasar } from 'quasar'
 import { paymentLogo } from '../../lib/paymentLogos'
 import AddPaymentDialog from './AddPaymentDialog.vue'
 
@@ -14,6 +15,7 @@ const props = defineProps({
   selected: { type: String, default: 'amex' },
 })
 const emit = defineEmits(['update:modelValue', 'confirm'])
+const $q = useQuasar()
 
 const saved = ref(props.methods.map((m) => ({ ...m })))
 const sel = ref(props.selected)
@@ -33,7 +35,7 @@ const confirm = () => { emit('confirm', saved.value.find((m) => m.id === sel.val
 </script>
 
 <template>
-  <q-dialog :model-value="modelValue" @update:model-value="emit('update:modelValue', $event)">
+  <q-dialog :model-value="modelValue" :maximized="$q.screen.lt.sm" @update:model-value="emit('update:modelValue', $event)">
     <div class="pmd">
       <div class="pmd__head">
         <button class="pmd__close" aria-label="Close" @click="close"><q-icon name="close" size="22px" /></button>
@@ -71,6 +73,8 @@ const confirm = () => { emit('confirm', saved.value.find((m) => m.id === sel.val
 
 <style scoped>
 .pmd { width: 480px; max-width: 92vw; max-height: 88vh; background: var(--ds-color-surface); border-radius: var(--ds-radius-lg); overflow: hidden; display: flex; flex-direction: column; }
+/* Phones: fills the maximized dialog. */
+@media (max-width: 600px) { .pmd { width: 100%; max-width: 100%; max-height: 100%; height: 100%; border-radius: 0; } }
 .pmd__head { display: flex; align-items: center; padding: 14px 16px; flex: none; }
 .pmd__close { width: 36px; height: 36px; border: 0; border-radius: 50%; background: none; color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .pmd__close:hover { background: var(--ds-palette-slate-100); }

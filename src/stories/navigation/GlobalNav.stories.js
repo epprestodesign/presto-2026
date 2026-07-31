@@ -182,3 +182,17 @@ export const ReservationsCart = {
     template: `<global-nav brand="Soccer League" cart-mode="reservations" :cart="cart" :show-cart="true" :open-cart="true" />`,
   }),
 }
+
+/** Mobile (390px) — Contact Us + Manage Booking collapse into the hamburger
+ *  menu; only the brand and cart icon stay in the bar. Tap the ☰ to review the
+ *  collapsed menu. */
+export const Mobile = {
+  name: 'Mobile (390)',
+  tags: ['mobile'],
+  globals: { viewport: { value: 'mobile', isRotated: false } },
+  render: () => ({
+    components: { GlobalNav },
+    setup: () => ({ cart: holdCart }),
+    template: `<global-nav brand="Soccer League" cart-mode="hold" :cart="cart" />`,
+  }),
+}
