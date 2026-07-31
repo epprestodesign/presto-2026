@@ -206,6 +206,14 @@ function onClickCapture(e) {
     if (card && (t.closest('.hc__name') || t.closest('.hc__cta'))) {
       const name = card.querySelector('.hc__name')?.textContent?.trim()
       if (name) openHotel(getHotelByName(name) || { name, city: '' })
+      return
+    }
+    // Compact horizontal card (mobile) — the CTA is hidden, so the whole card is
+    // the tap target. The Availability toggle is exempt so its panel still opens.
+    const hcard = t.closest('.hch')
+    if (hcard && !t.closest('.hch__availtoggle')) {
+      const name = hcard.querySelector('.hch__name')?.textContent?.trim()
+      if (name) openHotel(getHotelByName(name) || { name, city: '' })
     }
     return
   }
@@ -299,7 +307,11 @@ body { background: var(--ds-palette-slate-100, #f1f2f4); }
 /* Phones: the content column goes full-width so the ONLY gutter is each page/
    component's own 16px padding — no extra 92%-column margin (which doubled the
    gutter to ~32px and read as off-center). */
-@media (max-width: 600px) { .proto__stage { --col: 100%; } }
+@media (max-width: 600px) {
+  .proto__stage { --col: 100%; }
+  /* Details tabs stick just below the sticky app nav (60px tall on phones). */
+  .proto__stage { --hdp-tabs-top: 60px; --hlp-bar-top: 60px; }
+}
 
 /* Cap all interior content to a centered 1440px column with side gutters, so
    elements sit inline within the body and never run to the viewport edge.
@@ -397,6 +409,8 @@ body { background: var(--ds-palette-slate-100, #f1f2f4); }
 /* Browse: make hotel names read as links to their Details page. */
 .hc__name { cursor: pointer; }
 .hc__name:hover { text-decoration: underline; }
+/* Compact horizontal card (mobile) — whole card taps through to Details. */
+.hch { cursor: pointer; }
 
 /* Perf: the browse list is long (60 cards on a very tall page). Skip rendering
    + painting off-screen cards so scrolling stays smooth. The intrinsic-size MUST

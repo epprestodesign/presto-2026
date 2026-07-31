@@ -114,11 +114,11 @@ const preview = {
             'Global Nav & Cart', 'Cart Flyout', 'Cart Behavior', 'Added To Cart', 'Page Frame',
           ],
           'Landing Page', [
-            'Book Reservation', 'Group Block',
+            'Book Reservation', 'Group Block', 'Mobile',
             'Components', ['Teams Booking Widget', 'Core Booking Widget'],
           ],
           'Browse Hotels', [
-            'Book Reservation', 'Group Block',
+            'Book Reservation', 'Group Block', 'Mobile',
             'Components', [
               // Grouped by page region — top bar, left rail, results, right rail, footer.
               'Top Bar', ['Breadcrumbs', 'Results Toolbar'],
@@ -133,7 +133,7 @@ const preview = {
             ],
           ],
           'Hotel Details', [
-            'Book Reservation', 'Group Block',
+            'Book Reservation', 'Group Block', 'Mobile',
             'Components', [
               // Both flow folders list their components in the SAME order.
               'Book Reservation', ['Rooms', 'Room Card', 'Room Booking Dialog'],
@@ -145,7 +145,7 @@ const preview = {
             'Overview', ['Book Reservation', 'Group Block'],
           ],
           'Checkout Experience', [
-            'Book Reservation', 'Group Block',
+            'Book Reservation', 'Group Block', 'Mobile',
             'Components', [
               'Book Reservation', ['Review Order', 'Contact Info', 'Reservation Guests', 'Payment', 'Review Reservation'],
               'Group Block', ['Review Order', 'Contact Info', 'Review Reservation'],

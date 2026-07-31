@@ -6,12 +6,14 @@
 // Layout: Hero banner → Booking Widget search bar (tucked onto the hero) →
 // results toolbar (count + Sort) → 3-column body (filters · results · ads).
 import { ref, computed } from 'vue'
+import { useQuasar } from 'quasar'
 import defaultBg from '../../../background-img/defaultBackgroundImage.png'
 import epLogoWhite from '../../assets/eventpipe logos/eventpipe-logo-fff.svg'
 import BookingWidget from '../BookingWidget.vue'
 import FilterRail from './FilterRail.vue'
 import SortDropdown from './SortDropdown.vue'
 import HotelCardGroup from './HotelCardGroup.vue'
+import HotelCardHorizontal from './HotelCardHorizontal.vue'
 import DisplayAd from '../DisplayAd.vue'
 import ResultsToolbar from './ResultsToolbar.vue'
 import { sampleRooms } from '../../stories/browse/_rooms-sample.js'
@@ -35,6 +37,12 @@ const isGroup = computed(() => props.flow === 'group')
 const isLoading = computed(() => props.state === 'loading')
 const isError = computed(() => props.state === 'error')
 const isEmpty = computed(() => props.state === 'empty')
+
+// On phones (<600px) the results switch to the compact Expedia-style horizontal
+// card (thin image column, no big CTA); desktop keeps the full listing card.
+// Both flows use the same data, so the same component serves reserve + group.
+const $q = useQuasar()
+const ResultCard = computed(() => ($q.screen.lt.sm ? HotelCardHorizontal : HotelCardGroup))
 
 // "Exact Matches Only" (from the filter rail). When ON, it demonstrates the
 // filtered edge case: nothing matches the strict filter, so the matching set
@@ -148,6 +156,9 @@ const displaySections = computed(() =>
       seed: h.seed,
       imageCategories: h.imageCategories,
       startingPrice: h.startingPrice ?? h.fromNightly,
+      // Reserve-flow price block (From / total) for the horizontal mobile card.
+      fromNightly: h.fromNightly,
+      total: h.total,
       availability: isGroup.value ? h.availability : (AVAIL_MAP[h.availability] || h.availability),
       roomsAvailable: h.roomsAvailable ?? 5,
       roomsMax: h.roomsMax ?? 4,
@@ -210,9 +221,15 @@ const sort = ref('distance')
     <!-- BODY: filters · results · (optional) ad rail -->
     <div class="hlp__container">
       <div class="hlp__grid" :style="gridStyle">
-        <!-- LEFT: filter rail module -->
+        <!-- LEFT: filter rail module. On phones it becomes a compact bar —
+             [Filters] + [Sort By] on one line — with the count centered below
+             (in the results toolbar). Sort here is hidden on desktop (the results
+             toolbar carries it there). -->
         <aside class="hlp__rail hlp__rail--left">
-          <filter-rail v-model:exact-only="exactOnly" />
+          <div class="hlp__filterbar">
+            <filter-rail class="hlp__filterbar-rail" :result-count="resultCount" v-model:exact-only="exactOnly" />
+            <sort-dropdown class="hlp__filterbar-sort" :model-value="sort" variant="box" label="Sort By" @update:model-value="sort = $event" />
+          </div>
         </aside>
 
         <!-- MIDDLE: results toolbar + state-driven results -->
@@ -264,7 +281,8 @@ const sort = ref('distance')
 
           <!-- FULL / PARTIAL — matching block (paginated) + fallback blocks -->
           <template v-else>
-            <hotel-card-group
+            <component
+              :is="ResultCard"
               v-for="(hotel, hi) in mainHotels"
               :key="'main-' + hi"
               v-bind="hotel"
@@ -278,7 +296,8 @@ const sort = ref('distance')
                 <hr class="hlp__section-rule" />
                 <h3 class="hlp__section-heading">{{ section.heading }}</h3>
               </div>
-              <hotel-card-group
+              <component
+                :is="ResultCard"
                 v-for="(hotel, hi) in section.hotels"
                 :key="'tail-' + si + '-' + hi"
                 v-bind="hotel"
@@ -306,7 +325,7 @@ const sort = ref('distance')
 /* hero */
 .hlp__hero {
   position: relative;
-  min-height: 200px;
+  min-height: 132px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -315,7 +334,7 @@ const sort = ref('distance')
   background-color: #000;
   overflow: hidden;
 }
-.hlp__hero-inner { padding: 24px; max-width: 760px; }
+.hlp__hero-inner { padding: 18px 24px; max-width: 760px; }
 .hlp__hero-logo { height: 30px; width: auto; margin: 0 auto 12px; display: block; }
 .hlp__event { font-weight: 700; line-height: 1.15; margin: 0; }
 .hlp__dates { margin-top: 6px; }
@@ -400,11 +419,41 @@ const sort = ref('distance')
 }
 
 /* Phones (<600px): tighten paddings, drop the ad rail, stack the skeletons. */
+/* Desktop: the filter bar is just the FilterRail column; its inline Sort is
+   hidden (the results toolbar carries Sort on desktop). */
+.hlp__filterbar-sort { display: none; }
+
 @media (max-width: 600px) {
   .hlp__container { padding: 0 16px; }
-  .hlp__grid { gap: 16px; padding: 16px 0 32px; }
+  .hlp__grid { gap: 12px; padding: 16px 0 32px; }
   .hlp__rail--right { display: none; }
-  .hlp__hero-inner { padding: 20px; }
+  /* The Filters + Sort bar sticks below the app nav while the results scroll.
+     --hlp-bar-top is the nav height the host sets (0 by default; the prototype
+     sets 60px so it tucks under the sticky global nav). */
+  .hlp__rail--left {
+    position: sticky; top: var(--hlp-bar-top, 0px); z-index: 20;
+    background: var(--ds-color-surface-sunken); padding: 10px 0;
+    box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.18);
+  }
+  /* Filters + Sort on one line — an even 2-col grid (exactly equal widths) with a
+     shared 56px height ("meeting in the middle" of the 48px trigger and 62px sort). */
+  .hlp__filterbar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+  .hlp__filterbar-rail, .hlp__filterbar-sort { min-width: 0; }
+  .hlp__filterbar-sort { display: block; }
+  /* Match the Sort box's neutral border so both controls read as a set. */
+  .hlp__filterbar-rail :deep(.fr__toggle) { height: 56px; width: 100%; min-width: 0; border-color: var(--ds-color-border-bold); color: var(--ds-color-text); }
+  .hlp__filterbar-sort { overflow: hidden; }
+  .hlp__filterbar-sort :deep(.srt) { width: 100%; min-width: 0; }
+  /* Override the box variant's min-width: 210px (it overflowed the column and
+     caused horizontal scroll on phones). */
+  .hlp__filterbar-sort :deep(.srt__btn) { height: 56px !important; min-height: 56px !important; width: 100% !important; min-width: 0 !important; }
+  /* Count centered below; the toolbar's own Sort is hidden (moved to the bar). */
+  .hlp__toolbar { margin-bottom: 8px; }
+  .hlp__toolbar :deep(.rtb) { justify-content: center; }
+  .hlp__toolbar :deep(.rtb__count) { width: 100%; text-align: center; }
+  .hlp__toolbar :deep(.srt) { display: none; }
+  .hlp__hero { min-height: 0; }
+  .hlp__hero-inner { padding: 16px; }
   .hlp__skel { flex-direction: column; min-height: 0; }
   .hlp__skel-media { width: 100%; height: 180px; }
   .hlp__skel-price { width: 100%; align-items: flex-start; }

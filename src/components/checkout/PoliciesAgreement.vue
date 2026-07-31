@@ -137,4 +137,15 @@ const submit = () => { if (allAgreed.value) emit('submit') }
 .pol__cta { width: 100%; height: 56px; margin-top: 8px; border: 0; border-radius: var(--ds-radius-button); background: var(--ds-palette-slate-300); color: #fff; font-family: inherit; font-size: 1.0625rem; font-weight: 700; cursor: default; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
 .pol__cta--ready { background: var(--ds-color-background-brand-bold); cursor: pointer; }
 .pol__cta--ready:hover { background: var(--ds-palette-navy-800); }
+
+/* Phones: smaller policy type so the section reads compactly. */
+@media (max-width: 600px) {
+  .pol__title { font-size: 1.125rem; }
+  .pol__hotelname { font-size: 1rem; }
+  .pol__eyebrow { font-size: 0.6875rem; }
+  .pol__sectitle { font-size: 0.9375rem; }
+  .pol__secbody { font-size: 0.8125rem; line-height: 1.55; }
+  .pol__agree { font-size: 0.8125rem; padding: 14px 4px; }
+  .pol__cta { height: 50px; font-size: 1rem; }
+}
 </style>
