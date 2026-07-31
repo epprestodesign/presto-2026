@@ -247,7 +247,10 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 .ck__summary { color: var(--ds-color-text-subtle); font-size: 0.9375rem; margin: 8px 0 0 38px; }
 .ck__body { margin-top: 18px; }
 
-@media (max-width: 880px) { .ck__grid { grid-template-columns: 1fr; } }
+@media (max-width: 880px) {
+  .ck__grid { grid-template-columns: minmax(0, 1fr); }
+  .ck__steps, .ck__railwrap { min-width: 0; }
+}
 /* Phones: tighter gutters; the order-summary rail flows below the steps (not
    sticky) once stacked. */
 @media (max-width: 600px) {
@@ -255,5 +258,9 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
   .ck__railwrap { position: static; }
   .ck__step { padding: 16px; }
   .ck__grid { gap: 20px; }
+  /* The timer top bar bleeds to the page edge; match the 16px mobile gutter so
+     it doesn't overflow the viewport (was -24px, causing horizontal scroll). */
+  .ck__topbar { margin-inline: -16px; }
+  .ck__topbar-inner { padding: 12px 16px; }
 }
 </style>

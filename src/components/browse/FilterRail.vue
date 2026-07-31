@@ -1,35 +1,30 @@
 <script setup>
-// FilterRail — the Browse Hotels left-rail filter MODULE: a thin composition that
-// stacks every per-section filter field in order (View Map, Exact Matches,
-// Property Name, Parent Brand, Amenities, Search Radius, Budget, Min Star Rating,
-// Room Type, Clear All). Owns all the state refs and hands each one to its field
-// via v-model; the shared `radius` ref binds to BOTH the map preview and the
-// search-radius slider so they stay in sync.
+// FilterRail — the Browse Hotels left-rail filter MODULE. It owns all the filter
+// state and renders the field stack (FilterRailFields) TWICE from the same refs:
+//   • desktop → inline in the left column
+//   • phones  → inside a full-screen DsModal (same shell as the Price Details /
+//     Availability dialogs) opened by the "Filters" trigger, with a sticky
+//     "Show N results" footer.
+// Rendering one shared state into both keeps desktop + mobile perfectly in sync.
 import { ref, computed } from 'vue'
-import ViewMapField from './filter-rail/ViewMapField.vue'
-import ExactMatchesField from './filter-rail/ExactMatchesField.vue'
-import PropertyNameField from './filter-rail/PropertyNameField.vue'
-import ParentBrandField from './filter-rail/ParentBrandField.vue'
-import AmenitiesField from './filter-rail/AmenitiesField.vue'
-import SearchRadiusField from './filter-rail/SearchRadiusField.vue'
-import BudgetField from './filter-rail/BudgetField.vue'
-import StarRatingField from './filter-rail/StarRatingField.vue'
-import RoomTypeField from './filter-rail/RoomTypeField.vue'
+import DsModal from '../DsModal.vue'
+import FilterRailFields from './FilterRailFields.vue'
 
-// `exactOnly` is lifted so the page can react to it (drive the filtered edge
-// case). The rest of the filter state stays local to the rail.
+// `exactOnly` is lifted so the page can react to it (the filtered edge case).
 const props = defineProps({
   exactOnly: { type: Boolean, default: false },
+  // Live result count — shown in the mobile dialog's "Show N results" CTA.
+  resultCount: { type: Number, default: null },
 })
 const emit = defineEmits(['view-map', 'update:exactOnly'])
+
+// Mobile dialog open state.
+const open = ref(false)
 
 const exactOnly = computed({
   get: () => props.exactOnly,
   set: (v) => emit('update:exactOnly', v),
 })
-// On phones the rail collapses under a "Filters" toggle so it doesn't push the
-// results far down the page. Always expanded on desktop (CSS handles that).
-const open = ref(false)
 const propertyQuery = ref('')
 const brandSel = ref([])
 const amenitySel = ref([])
@@ -39,7 +34,7 @@ const budget = ref({ basis: 'night', max: '' })
 const minStars = ref(0)
 const roomSel = ref([])
 
-function clearAll() {
+function clearAll () {
   exactOnly.value = false
   propertyQuery.value = ''
   brandSel.value = []
@@ -49,104 +44,105 @@ function clearAll() {
   minStars.value = 0
   roomSel.value = []
 }
+
+const showLabel = computed(() =>
+  props.resultCount == null
+    ? 'Show results'
+    : `Show ${props.resultCount.toLocaleString('en-US')} result${props.resultCount === 1 ? '' : 's'}`
+)
 </script>
 
 <template>
-  <div class="fr" :class="{ 'is-open': open }">
-    <!-- Mobile-only trigger (hidden on desktop) — collapses the whole rail. -->
-    <button type="button" class="fr__toggle" :aria-expanded="open" @click="open = !open">
+  <div class="fr">
+    <!-- Mobile-only trigger (hidden on desktop) — opens the DS modal. -->
+    <button type="button" class="fr__toggle" :aria-expanded="open" @click="open = true">
       <span><q-icon name="tune" size="18px" /> Filters</span>
-      <q-icon :name="open ? 'expand_less' : 'expand_more'" size="22px" />
+      <q-icon name="expand_more" size="22px" />
     </button>
 
-    <div class="fr__body">
-    <!-- VIEW MAP -->
-    <div class="fr__section">
-      <view-map-field v-model="radius" @view-map="emit('view-map')" />
-    </div>
+    <!-- Desktop: the field stack rendered inline as the left column. -->
+    <filter-rail-fields
+      class="fr__inline"
+      :exact-only="exactOnly"
+      :property-query="propertyQuery"
+      :brand-sel="brandSel"
+      :amenity-sel="amenitySel"
+      :radius="radius"
+      :budget="budget"
+      :min-stars="minStars"
+      :room-sel="roomSel"
+      @update:exact-only="exactOnly = $event"
+      @update:property-query="propertyQuery = $event"
+      @update:brand-sel="brandSel = $event"
+      @update:amenity-sel="amenitySel = $event"
+      @update:radius="radius = $event"
+      @update:budget="budget = $event"
+      @update:min-stars="minStars = $event"
+      @update:room-sel="roomSel = $event"
+      @view-map="emit('view-map')"
+      @clear="clearAll"
+    />
 
-    <!-- EXACT MATCHES ONLY -->
-    <div class="fr__section fr__section--exact">
-      <exact-matches-field v-model="exactOnly" />
-    </div>
-
-    <!-- SEARCH BY PROPERTY NAME -->
-    <div class="fr__section">
-      <property-name-field v-model="propertyQuery" />
-    </div>
-
-    <!-- PARENT BRAND -->
-    <div class="fr__section">
-      <parent-brand-field v-model="brandSel" />
-    </div>
-
-    <!-- AMENITIES -->
-    <div class="fr__section">
-      <amenities-field v-model="amenitySel" />
-    </div>
-
-    <!-- SEARCH RADIUS -->
-    <div class="fr__section">
-      <search-radius-field v-model="radius" />
-    </div>
-
-    <!-- YOUR BUDGET -->
-    <div class="fr__section">
-      <budget-field v-model="budget" />
-    </div>
-
-    <!-- MINIMUM STAR RATING -->
-    <div class="fr__section">
-      <star-rating-field v-model="minStars" />
-    </div>
-
-    <!-- ROOM TYPE -->
-    <div class="fr__section">
-      <room-type-field v-model="roomSel" />
-    </div>
-
-    <!-- CLEAR ALL -->
-    <div class="fr__section fr__section--clear">
-      <button type="button" class="fr__apply" @click="clearAll">
-        <q-icon name="close" size="18px" /> Clear All Filters
-      </button>
-    </div>
-    </div><!-- /fr__body -->
+    <!-- Phones: the SAME fields inside the design-system modal (matches the
+         Price Details / Availability dialog chrome). -->
+    <ds-modal
+      v-model="open"
+      title="Filters"
+      header-align="center"
+      size="fullscreen"
+      :z-index="4000"
+    >
+      <filter-rail-fields
+        :exact-only="exactOnly"
+        :property-query="propertyQuery"
+        :brand-sel="brandSel"
+        :amenity-sel="amenitySel"
+        :radius="radius"
+        :budget="budget"
+        :min-stars="minStars"
+        :room-sel="roomSel"
+        @update:exact-only="exactOnly = $event"
+        @update:property-query="propertyQuery = $event"
+        @update:brand-sel="brandSel = $event"
+        @update:amenity-sel="amenitySel = $event"
+        @update:radius="radius = $event"
+        @update:budget="budget = $event"
+        @update:min-stars="minStars = $event"
+        @update:room-sel="roomSel = $event"
+        @view-map="emit('view-map')"
+        @clear="clearAll"
+      />
+      <template #footer="{ close }">
+        <button type="button" class="fr__showresults" @click="close">{{ showLabel }}</button>
+      </template>
+    </ds-modal>
   </div>
 </template>
 
 <style scoped>
-/* Transparent rail — sits directly on the grey page, sections split by hairlines
-   (matches the reference: floating white map card, then flush filter sections). */
-.fr {
-  background: transparent;
-}
-.fr__section { padding: 16px 0; border-top: 1px solid var(--ds-color-border); }
-.fr__section:first-child { border-top: 0; padding-top: 0; }
-/* Exact Matches is a self-contained card — no divider between it and the map. */
-.fr__section--exact { border-top: 0; }
-.fr__section--clear { border-top: 1px solid var(--ds-color-border); }
+.fr { background: transparent; }
 
-/* Clear-all button (shares the apply-button styling) */
-.fr__apply {
-  width: 100%; height: 44px; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;
-  border: 0; border-radius: var(--ds-radius-button); cursor: pointer;
-  background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem;
-}
-.fr__apply:hover { background: var(--ds-palette-navy-800, #0a1f4d); }
-
-/* Mobile trigger — hidden on desktop; the rail body is always visible there. */
+/* Desktop: inline rail visible, the mobile trigger hidden. */
 .fr__toggle { display: none; }
+
+/* The "Show N results" button fills the modal's sticky footer. */
+.fr__showresults {
+  flex: 1; height: 52px; border: 0; border-radius: var(--ds-radius-button);
+  background: var(--ds-color-background-brand-bold); color: #fff; font-family: inherit;
+  font-weight: 700; font-size: 1rem; cursor: pointer;
+}
+.fr__showresults:hover { background: var(--ds-palette-navy-800, #0a1f4d); }
+
+/* Phones: hide the inline rail, show the "Filters" trigger (a box matching the
+   Sort control; HotelListPage's filter bar sets its final height/border). */
 @media (max-width: 600px) {
+  .fr__inline { display: none; }
   .fr__toggle {
-    display: flex; align-items: center; justify-content: space-between; width: 100%; height: 48px;
-    padding: 0 16px; border: 1px solid var(--ds-color-border-brand); border-radius: var(--ds-radius-button);
-    background: var(--ds-color-surface); color: var(--ds-color-text-brand); font-family: inherit;
+    display: flex; align-items: center; justify-content: space-between; width: 100%; height: 56px;
+    padding: 0 16px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-button);
+    background: var(--ds-color-surface); color: var(--ds-color-text); font-family: inherit;
     font-weight: 700; font-size: 0.9375rem; cursor: pointer;
   }
   .fr__toggle > span { display: inline-flex; align-items: center; gap: 8px; }
-  /* Collapsed by default on phones; the toggle reveals it. */
-  .fr__body { display: none; padding-top: 12px; }
-  .fr.is-open .fr__body { display: block; }
 }
 </style>

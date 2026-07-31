@@ -119,5 +119,28 @@ const protection = ref(null)
 .bp__fine { margin: 0; color: var(--ds-color-text-subtle); font-size: 0.875rem; line-height: 1.5; }
 .bp__link { color: var(--ds-color-text-info); text-decoration: underline; }
 
-@media (max-width: 560px) { .bp__reasons { grid-template-columns: 1fr 1fr; } }
+/* Phones: smaller type throughout, and the covered-reasons cards become a
+   single-row swipeable carousel instead of a wrapping grid. */
+@media (max-width: 600px) {
+  .srr__sec { margin-top: 20px; padding-top: 20px; }
+  .srr__h { font-size: 0.9375rem; }
+  .srr__sub { font-size: 0.8125rem; margin: 4px 0 12px; }
+  .bp { padding: 16px; }
+  .bp__title { font-size: 1rem; }
+  .bp__desc { font-size: 0.8125rem; line-height: 1.45; margin: 8px 0 14px; }
+  .bp__reasons {
+    display: flex; grid-template-columns: none; gap: 10px;
+    overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    margin-inline: -4px; padding: 2px 4px 6px;
+  }
+  .bp__reason { flex: 0 0 42%; min-width: 118px; scroll-snap-align: start; padding: 14px 10px; gap: 8px; }
+  .bp__reason-icon { width: 40px; height: 40px; }
+  .bp__reason-label { font-size: 0.8125rem; }
+  .bp__opt { padding: 14px 12px; gap: 12px; }
+  .bp__opt:first-of-type { margin-top: 16px; }
+  .bp__opt-main { font-size: 0.875rem; }
+  .bp__opt-price { font-size: 1rem; }
+  .bp__rec { font-size: 0.6875rem; padding: 2px 8px; }
+  .bp__fine { font-size: 0.75rem; line-height: 1.45; }
+}
 </style>

@@ -158,9 +158,9 @@ onMounted(async () => {
 /* Phones: near-edge-to-edge gutters. */
 @media (max-width: 600px) {
   .hdp { padding: 16px; }
-  /* Non-sticky on phones — the app's own nav is sticky, so a sticky tab bar at
-     top:0 collides with it ("appends at the top" on scroll). */
-  .hdp__tabs { position: static; margin: 16px 0; }
+  /* Tabs stay sticky; the sticky offset is a var the host can set so they stick
+     BELOW an app nav (the prototype sets it to the nav height). */
+  .hdp__tabs { top: var(--hdp-tabs-top, 0); }
 }
 .hdp__section { padding-top: 28px; }
 .hdp__section--ruled { margin-top: 20px; border-top: 1px solid var(--ds-color-border); padding-top: 32px; }

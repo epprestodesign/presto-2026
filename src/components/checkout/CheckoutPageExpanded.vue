@@ -197,12 +197,21 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 .ck__submit { width: 100%; height: 60px; border: 0; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-family: inherit; font-size: 1.125rem; font-weight: 700; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
 .ck__submit:hover { background: var(--ds-palette-navy-800); }
 
-@media (max-width: 880px) { .ck__grid { grid-template-columns: 1fr; } }
+/* Collapse to one column below 880. minmax(0,1fr) + min-width:0 let the column
+   shrink to the viewport instead of stretching to a child's min-content (which
+   caused horizontal scroll on phones). */
+@media (max-width: 880px) {
+  .ck__grid { grid-template-columns: minmax(0, 1fr); }
+  .ck__steps, .ck__railwrap { min-width: 0; }
+}
 /* Phones: tighter gutters; the order-summary rail flows below the steps. */
 @media (max-width: 600px) {
   .ck { padding: 12px 16px 32px; }
   .ck__railwrap { position: static; }
   .ck__step { padding: 16px; }
   .ck__grid { gap: 20px; }
+  /* Match the 16px mobile gutter so the bleeding top bar doesn't overflow. */
+  .ck__topbar { margin-inline: -16px; }
+  .ck__topbar-inner { padding: 12px 16px; }
 }
 </style>

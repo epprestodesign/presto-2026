@@ -4,7 +4,13 @@
 // with a 2×2 cluster on the right, and a "See all N photos" pill that opens a
 // full gallery modal. The modal grid reuses the DsImageList primitive.
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { useQuasar } from 'quasar'
 import DsImageList from '../DsImageList.vue'
+
+const $q = useQuasar()
+// Phones: the gallery is a single top-down column (scroll through every photo);
+// desktop keeps the 3-up grid.
+const modalCols = computed(() => ($q.screen.lt.sm ? 1 : 3))
 
 const props = defineProps({
   images: { type: Array, default: () => [] },       // [{ src, title }] — mosaic uses up to 5
@@ -33,6 +39,10 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
         :key="i"
         class="gh__cell"
         :class="{ 'gh__cell--lead': i === 0, 'gh__cell--more': i === mosaic.length - 1 }"
+        role="button"
+        tabindex="0"
+        @click="show"
+        @keydown.enter="show"
       >
         <img :src="img.src" :alt="img.title || ''" class="gh__img" />
         <button
@@ -52,7 +62,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
           <button type="button" class="gh__close" aria-label="Close gallery" @click="close"><q-icon name="close" size="22px" /></button>
         </div>
         <div class="gh__body">
-          <ds-image-list :items="all" :cols="3" gap="8px" />
+          <ds-image-list :items="all" :cols="modalCols" gap="8px" />
         </div>
       </div>
     </div>
@@ -61,7 +71,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
 
 <style scoped>
 .gh__grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; border-radius: var(--ds-radius-lg); overflow: hidden; }
-.gh__cell { position: relative; min-height: 0; background: var(--ds-palette-slate-100); }
+.gh__cell { position: relative; min-height: 0; background: var(--ds-palette-slate-100); cursor: pointer; }
 .gh__cell--lead { grid-row: 1 / 3; }
 .gh__img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .gh__pill { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.6); color: #fff; border: 0; border-radius: var(--ds-radius-pill); padding: 6px 14px; font-family: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
