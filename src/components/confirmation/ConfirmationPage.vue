@@ -248,7 +248,7 @@ const print = () => { if (typeof window !== 'undefined') window.print() }
    hotel photo goes full-width. */
 @media (max-width: 600px) {
   .conf { padding: 24px 16px 48px; }
-  .conf__card { padding: 20px 18px; }
+  .conf__card { padding: 20px 16px; }
   /* Success banner → icon + text, then a full-width action button. */
   .conf__banner { flex-direction: column; align-items: flex-start; padding: 16px 18px; gap: 12px; }
   .conf__banner-cta { width: 100%; }

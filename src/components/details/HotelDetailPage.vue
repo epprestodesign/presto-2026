@@ -155,6 +155,13 @@ onMounted(async () => {
 .hdp__back:hover { color: var(--ds-color-text-brand); }
 .hdp__back .q-icon { color: inherit; }
 .hdp__tabs { position: sticky; top: 0; z-index: 5; background: var(--ds-color-surface); margin: 24px 0; }
+/* Phones: near-edge-to-edge gutters. */
+@media (max-width: 600px) {
+  .hdp { padding: 16px; }
+  /* Non-sticky on phones — the app's own nav is sticky, so a sticky tab bar at
+     top:0 collides with it ("appends at the top" on scroll). */
+  .hdp__tabs { position: static; margin: 16px 0; }
+}
 .hdp__section { padding-top: 28px; }
 .hdp__section--ruled { margin-top: 20px; border-top: 1px solid var(--ds-color-border); padding-top: 32px; }
 </style>

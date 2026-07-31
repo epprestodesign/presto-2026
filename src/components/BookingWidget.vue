@@ -200,13 +200,18 @@ const roomsNeeded = ref(props.initialRooms ?? null)
         <q-input outlined stack-label readonly class="bw__input cursor-pointer" label="Check-in - Check-out" :model-value="dateLabel">
           <template #prepend><q-icon name="calendar_month" /></template>
         </q-input>
-        <q-menu class="bw-menu" :offset="[0, 8]">
+        <q-menu class="bw-menu bw-menu--full" :offset="[0, 8]">
           <div style="padding:20px 32px 24px">
+            <div class="bw-dialoghead">
+              <span class="bw-dialoghead__title">Select dates</span>
+              <button class="bw-dialoghead__close" type="button" v-close-popup aria-label="Close"><q-icon name="close" size="24px" /></button>
+            </div>
             <date-range-calendar v-model="range" />
             <q-separator class="q-mt-md" />
             <div class="row q-gutter-sm q-mt-md justify-start">
               <q-btn v-for="f in flexOptions" :key="f" :outline="flex !== f" :color="flex === f ? 'primary' : 'grey-8'" rounded dense no-caps padding="6px 18px" :label="f" @click="flex = f" />
             </div>
+            <div class="bw-dialogdone"><q-btn unelevated color="primary" label="Done" v-close-popup class="full-width" style="height:48px;border-radius:var(--ds-radius-button)" /></div>
           </div>
         </q-menu>
       </div>
@@ -224,7 +229,7 @@ const roomsNeeded = ref(props.initialRooms ?? null)
         <q-input outlined stack-label readonly class="bw__input cursor-pointer" label="Travelers" :model-value="travelersLabel">
           <template #prepend><q-icon name="group" /></template>
         </q-input>
-        <q-menu class="bw-menu" :offset="[0, 8]">
+        <q-menu class="bw-menu bw-menu--full" :offset="[0, 8]">
           <div style="width:380px;padding:20px 24px">
             <div v-for="(room, i) in rooms" :key="i" :class="{ 'q-mt-lg': i > 0 }">
               <div class="text-subtitle1 q-mb-xs" style="font-weight:700">Room {{ i + 1 }}</div>
@@ -299,11 +304,13 @@ const roomsNeeded = ref(props.initialRooms ?? null)
 /* Phones (<600px): the horizontal field row stacks; the search button and each
    field go full-width so nothing overflows a 360–390px screen. */
 @media (max-width: 600px) {
+  /* Interior on phones (16px); the divider bleeds to the same edge. */
   .bw { padding: 16px; }
+  .bw__divider { margin: 0 -16px 20px; }
   .bw__tabs { gap: 18px; overflow-x: auto; }
   .bw__fields { flex-direction: column; align-items: stretch; gap: 10px; }
   .bw__fields > * { width: 100%; }
-  .bw__search { width: 100%; }
+  .bw__search { width: 100%; height: 52px; }
 }
 .bw__step :deep(.q-icon) { font-size: 22px; }
 </style>
@@ -311,11 +318,29 @@ const roomsNeeded = ref(props.initialRooms ?? null)
 <style>
 .bw-menu { box-shadow: var(--ds-shadow-1) !important; border: 1px solid var(--ds-color-border); }
 .bw-dialog { box-shadow: var(--ds-shadow-2); }
+/* Full-window dialog header/footer — mobile only. */
+.bw-dialoghead, .bw-dialogdone { display: none; }
+
 /* Phones: the popovers have fixed 360/380px inner widths — cap them to the
    viewport so they don't overflow a 360–390px screen (wide content scrolls). */
 @media (max-width: 600px) {
   .bw-menu { max-width: 96vw; }
   .bw-menu > div { width: auto !important; max-width: 92vw; overflow-x: auto; }
+  /* Flagged popovers (Travelers, Dates) become a full-window dialog on phones. */
+  .bw-menu--full.q-menu {
+    position: fixed !important; inset: 0 !important;
+    width: 100vw !important; height: 100dvh !important;
+    max-width: 100vw !important; max-height: 100dvh !important;
+    transform: none !important; border-radius: 0 !important;
+  }
+  .bw-menu--full > div {
+    width: 100% !important; max-width: 100% !important; height: 100%;
+    overflow-y: auto; box-sizing: border-box; padding: 20px 16px;
+  }
+  .bw-menu--full .bw-dialoghead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .bw-menu--full .bw-dialoghead__title { font-size: 1.25rem; font-weight: 800; color: var(--ds-color-text); }
+  .bw-menu--full .bw-dialoghead__close { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--ds-palette-slate-100); color: var(--ds-color-text); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .bw-menu--full .bw-dialogdone { display: block; margin-top: 24px; }
 }
 /* Quasar dashes the outline of readonly outlined fields; our triggers are
    readonly by design — keep the border solid. */

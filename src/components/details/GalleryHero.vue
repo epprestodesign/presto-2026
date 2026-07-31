@@ -81,10 +81,12 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
   .gh__cell--lead { grid-row: auto; }
   .gh__cell { aspect-ratio: 4 / 3; }
 }
-/* Phones (<600px): single-column photo stack (lead larger), full-screen modal. */
+/* Phones (<600px): swipeable horizontal carousel (one photo per view with
+   scroll-snap); full-screen "all photos" modal. */
 @media (max-width: 600px) {
-  .gh__grid { grid-template-columns: 1fr; }
-  .gh__cell--lead { aspect-ratio: 16 / 10; }
+  .gh__grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; gap: 4px; height: auto !important; }
+  .gh__cell { flex: 0 0 100%; scroll-snap-align: start; aspect-ratio: 4 / 3; }
+  .gh__cell--lead { grid-row: auto; aspect-ratio: 4 / 3; }
   .gh__modal { padding: 0; }
   .gh__dialog { width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; border-radius: 0; }
 }
