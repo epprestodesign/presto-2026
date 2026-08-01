@@ -112,13 +112,15 @@ const preview = {
           ],
           'App Shell', [
             'Global Nav & Cart', 'Cart Flyout', 'Cart Behavior', 'Added To Cart', 'Page Frame',
+            'Mobile',
           ],
           'Landing Page', [
-            'Book Reservation', 'Group Block', 'Mobile',
+            'Book Reservation', 'Group Block',
             'Components', ['Teams Booking Widget', 'Core Booking Widget'],
+            'Mobile',
           ],
           'Browse Hotels', [
-            'Book Reservation', 'Group Block', 'Mobile',
+            'Book Reservation', 'Group Block',
             'Components', [
               // Grouped by page region — top bar, left rail, results, right rail, footer.
               'Top Bar', ['Breadcrumbs', 'Results Toolbar'],
@@ -131,29 +133,33 @@ const preview = {
               'Right Rail', ['Display Ads', ['160×600', '160×320', '120×600']],
               'Footer', ['Pagination'],
             ],
+            'Mobile',
           ],
           'Hotel Details', [
-            'Book Reservation', 'Group Block', 'Mobile',
+            'Book Reservation', 'Group Block',
             'Components', [
               // Both flow folders list their components in the SAME order.
               'Book Reservation', ['Rooms', 'Room Card', 'Room Booking Dialog'],
               'Group Block', ['Rooms', 'Room Card', 'Room Booking Dialog'],
               'Photo Gallery', 'Detail Tabs', 'Hotel Summary Header', 'Amenities', 'Policies & Property',
             ],
+            'Mobile',
           ],
           'Checkout Experience Expanded', [
             'Overview', ['Book Reservation', 'Group Block'],
           ],
           'Checkout Experience', [
-            'Book Reservation', 'Group Block', 'Mobile',
+            'Book Reservation', 'Group Block',
             'Components', [
               'Book Reservation', ['Review Order', 'Contact Info', 'Reservation Guests', 'Payment', 'Review Reservation'],
               'Group Block', ['Review Order', 'Contact Info', 'Review Reservation'],
             ],
             'Old Designs',
+            'Mobile',
           ],
           'Confirmation', [
             'Book Reservation', 'Group Block',
+            'Mobile',
           ],
           '*',
           'Manage Booking', [

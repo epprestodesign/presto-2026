@@ -7,6 +7,8 @@ import { holdData } from './ConfirmationPage.stories.js'
 export default {
   title: 'Confirmation/Group Block',
   component: ConfirmationPage,
+  // 'Mobile' is relocated to Confirmation/Mobile (ConfirmationMobile.stories.js).
+  excludeStories: ['Mobile'],
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',

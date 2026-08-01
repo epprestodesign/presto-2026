@@ -8,6 +8,8 @@ import PageFrame from '../../components/PageFrame.vue'
 export default {
   title: 'Browse Hotels/Book Reservation',
   component: HotelListPage,
+  // 'Mobile' is relocated to Browse Hotels/Mobile (BrowseMobile.stories.js).
+  excludeStories: ['Mobile'],
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',

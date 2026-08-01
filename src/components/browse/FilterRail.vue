@@ -6,7 +6,7 @@
 //     Availability dialogs) opened by the "Filters" trigger, with a sticky
 //     "Show N results" footer.
 // Rendering one shared state into both keeps desktop + mobile perfectly in sync.
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import DsModal from '../DsModal.vue'
 import FilterRailFields from './FilterRailFields.vue'
 
@@ -16,7 +16,7 @@ const props = defineProps({
   // Live result count — shown in the mobile dialog's "Show N results" CTA.
   resultCount: { type: Number, default: null },
 })
-const emit = defineEmits(['view-map', 'update:exactOnly'])
+const emit = defineEmits(['view-map', 'update:exactOnly', 'update:filters'])
 
 // Mobile dialog open state.
 const open = ref(false)
@@ -45,18 +45,51 @@ function clearAll () {
   roomSel.value = []
 }
 
+// Relay the full filter set to the page (which filters + sorts the listings)
+// whenever anything changes. immediate so the page starts with a known baseline.
+watch([propertyQuery, brandSel, amenitySel, radius, budget, minStars, roomSel], () => {
+  emit('update:filters', {
+    propertyQuery: propertyQuery.value,
+    brands: [...brandSel.value],
+    amenities: [...amenitySel.value],
+    radius: radius.value,
+    budget: { ...budget.value },
+    minStars: minStars.value,
+    roomTypes: [...roomSel.value],
+  })
+}, { deep: true, immediate: true })
+
 const showLabel = computed(() =>
   props.resultCount == null
     ? 'Show results'
     : `Show ${props.resultCount.toLocaleString('en-US')} result${props.resultCount === 1 ? '' : 's'}`
 )
+
+// Number of active filters — shown as a badge on the "Filters" chip (replaces the
+// tune icon with a white count in a primary-colour circle once any filter is set).
+const activeCount = computed(() => {
+  let n = 0
+  if (exactOnly.value) n++
+  if (propertyQuery.value.trim()) n++
+  n += brandSel.value.length
+  n += amenitySel.value.length
+  if (radius.value !== 0.25) n++
+  if (budget.value && budget.value.max !== '' && budget.value.max != null) n++
+  if (minStars.value > 0) n++
+  n += roomSel.value.length
+  return n
+})
 </script>
 
 <template>
   <div class="fr">
     <!-- Mobile-only trigger (hidden on desktop) — opens the DS modal. -->
     <button type="button" class="fr__toggle" :aria-expanded="open" @click="open = true">
-      <span><q-icon name="tune" size="18px" /> Filters</span>
+      <span>
+        <span v-if="activeCount > 0" class="fr__count">{{ activeCount }}</span>
+        <q-icon v-else name="tune" size="18px" />
+        Filters
+      </span>
       <q-icon name="expand_more" size="22px" />
     </button>
 
@@ -93,6 +126,7 @@ const showLabel = computed(() =>
       :z-index="4000"
     >
       <filter-rail-fields
+        hide-clear
         :exact-only="exactOnly"
         :property-query="propertyQuery"
         :brand-sel="brandSel"
@@ -113,6 +147,7 @@ const showLabel = computed(() =>
         @clear="clearAll"
       />
       <template #footer="{ close }">
+        <button type="button" class="fr__clearall" @click="clearAll">Clear all</button>
         <button type="button" class="fr__showresults" @click="close">{{ showLabel }}</button>
       </template>
     </ds-modal>
@@ -125,13 +160,26 @@ const showLabel = computed(() =>
 /* Desktop: inline rail visible, the mobile trigger hidden. */
 .fr__toggle { display: none; }
 
-/* The "Show N results" button fills the modal's sticky footer. */
+/* Modal footer (DsModal lays it out space-between): "Clear all" text button on
+   the left, filled "Show N results" on the right — matching the reference. */
+.fr__clearall {
+  background: none; border: 0; padding: 8px 4px; font-family: inherit; font-size: 1rem;
+  font-weight: 700; color: var(--ds-color-text); text-decoration: underline; text-underline-offset: 3px;
+  cursor: pointer;
+}
 .fr__showresults {
-  flex: 1; height: 52px; border: 0; border-radius: var(--ds-radius-button);
+  height: 48px; padding: 0 28px; border: 0; border-radius: var(--ds-radius-button);
   background: var(--ds-color-background-brand-bold); color: #fff; font-family: inherit;
   font-weight: 700; font-size: 1rem; cursor: pointer;
 }
 .fr__showresults:hover { background: var(--ds-palette-navy-800, #0a1f4d); }
+
+/* Active-filter count badge on the "Filters" chip (replaces the tune icon). */
+.fr__count {
+  width: 22px; height: 22px; flex: none; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: var(--ds-color-background-brand-bold); color: #fff;
+  font-size: 0.75rem; font-weight: 700; line-height: 1;
+}
 
 /* Phones: hide the inline rail, show the "Filters" trigger (a box matching the
    Sort control; HotelListPage's filter bar sets its final height/border). */

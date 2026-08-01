@@ -15,6 +15,8 @@ const useHero = (category, seed) => {
 export default {
   title: 'Checkout Experience/Group Block',
   component: CheckoutPage,
+  // 'Mobile' is relocated to Checkout Experience/Mobile (CheckoutMobile.stories.js).
+  excludeStories: ['Mobile'],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `
 The **Checkout Page** (Group Block) is the "Confirm and pay" flow with the
