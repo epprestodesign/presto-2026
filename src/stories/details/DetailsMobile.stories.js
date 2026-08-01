@@ -6,6 +6,7 @@
 //   • 16px page gutters throughout
 import { Page } from './HotelDetailPage.stories.js'
 import { Default as GalleryDefault } from './PhotoGallery.stories.js'
+import { Mobile as RoomCardMobile } from './RoomCardGroup.stories.js'
 
 export default {
   title: 'Hotel Details/Mobile',
@@ -24,3 +25,6 @@ export const HotelDetailPage = mobile(Page, 'Hotel Detail Page')
 /** The photo gallery at 390 — swipe the carousel; tap to open the full-screen,
  *  single-column (top-down) all-photos view. */
 export const PhotoGallery = mobile(GalleryDefault, 'Photo Gallery', { layout: 'padded' })
+
+/** The Group Block room card at 390 — fills the phone width (single column). */
+export const RoomCard = mobile(RoomCardMobile, 'Room Card', { layout: 'padded' })

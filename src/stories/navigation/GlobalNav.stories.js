@@ -125,7 +125,8 @@ export default {
   component: GlobalNav,
   // holdCart / reserveCart / reservationsCart are shared cart DATA (also imported
   // by the Group Block story), not stories.
-  excludeStories: ['holdCart', 'reserveCart', 'reservationsCart'],
+  // 'Mobile' is relocated to the App Shell/Mobile folder (AppShellMobile.stories.js).
+  excludeStories: ['holdCart', 'reserveCart', 'reservationsCart', 'Mobile'],
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',

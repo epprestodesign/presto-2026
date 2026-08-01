@@ -6,6 +6,7 @@
 //     smaller type; the Policies section type is reduced to match
 import { BookReservation } from './CheckoutPageExpanded.stories.js'
 import { Reservation } from './StepReviewReservation.stories.js'
+import { Mobile as GroupCheckoutMobile } from './CheckoutPageGroup.stories.js'
 
 export default {
   title: 'Checkout Experience/Mobile',
@@ -17,6 +18,9 @@ const mobile = (story, name) => ({ ...story, name, globals: { viewport: { value:
 
 /** The full expanded checkout at 390 — every step open, single column. */
 export const Checkout = mobile(BookReservation, 'Checkout')
+
+/** The Group Block (hold) checkout at 390 — stepped accordion, order summary below. */
+export const GroupBlock = mobile(GroupCheckoutMobile, 'Group Block')
 
 /** Review Reservation at 390 — "Protect your stay" reasons carousel + Policies. */
 export const ProtectYourStay = mobile(Reservation, 'Protect Your Stay & Policies')

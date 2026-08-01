@@ -24,6 +24,9 @@ defineProps({
   budget: { type: Object, default: () => ({ basis: 'night', max: '' }) },
   minStars: { type: Number, default: 0 },
   roomSel: { type: Array, default: () => [] },
+  // Hide the in-body "Clear All Filters" button (the mobile modal moves Clear all
+  // into its footer, so it shouldn't also appear at the bottom of the fields).
+  hideClear: { type: Boolean, default: false },
 })
 const emit = defineEmits([
   'update:exactOnly', 'update:propertyQuery', 'update:brandSel', 'update:amenitySel',
@@ -69,8 +72,8 @@ const emit = defineEmits([
     <div class="frf__section">
       <room-type-field :model-value="roomSel" @update:model-value="emit('update:roomSel', $event)" />
     </div>
-    <!-- CLEAR ALL -->
-    <div class="frf__section frf__section--clear">
+    <!-- CLEAR ALL (hidden in the mobile modal — it lives in the footer there) -->
+    <div v-if="!hideClear" class="frf__section frf__section--clear">
       <button type="button" class="frf__clear" @click="emit('clear')">
         <q-icon name="close" size="18px" /> Clear All Filters
       </button>

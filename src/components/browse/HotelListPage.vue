@@ -49,7 +49,18 @@ const ResultCard = computed(() => ($q.screen.lt.sm ? HotelCardHorizontal : Hotel
 // empties (count → 0, "(1 filter applied)" messaging shows) and the results
 // collapse to the "…do not match your selected filters" fallback section.
 const exactOnly = ref(false)
-const filtersApplied = computed(() => (exactOnly.value ? 1 : 0))
+const filtersApplied = computed(() => {
+  const f = activeFilters.value
+  let n = exactOnly.value ? 1 : 0
+  if (f.propertyQuery && f.propertyQuery.trim()) n++
+  if (f.minStars) n++
+  if (f.brands && f.brands.length) n++
+  if (f.amenities && f.amenities.length) n++
+  if (f.roomTypes && f.roomTypes.length) n++
+  if (f.budget && f.budget.max) n++
+  if (f.radius != null && f.radius !== 0.25) n++
+  return n
+})
 
 // When an ad size is provided, add a third right-rail column sized to the ad.
 const gridStyle = computed(() =>
@@ -69,121 +80,121 @@ const heroStyle = {
 }
 
 // --- Sample results ----------------------------------------------------------
-// Book Reservation cards (name · stars · availability · from-nightly / total).
-const reserveSections = [
-  {
-    heading: null,
-    hotels: [
-      { name: 'The Grand Riverside Hotel', stars: 4, distance: '0.3 mi from Main Arena', preferred: true, fromNightly: 189, total: 756, availability: 'available', seed: 1 },
-      { name: 'Omni Downtown Suites', stars: 4.5, distance: '0.6 mi from Main Arena', fromNightly: 219, total: 876, availability: 'available', seed: 2 },
-      { name: 'Hampton Inn & Suites', stars: 3, distance: '1.1 mi from Main Arena', fromNightly: 149, total: 596, availability: 'available', seed: 4 },
-      { name: 'Courtyard by Marriott Arena', stars: 3.5, distance: '0.8 mi from Main Arena', fromNightly: 169, total: 676, availability: 'available', seed: 7 },
-      { name: 'Residence Inn Midtown', stars: 4, distance: '1.4 mi from Main Arena', fromNightly: 199, total: 796, availability: 'available', seed: 8 },
-      { name: 'Hyatt Place Convention Center', stars: 4, distance: '0.9 mi from Main Arena', fromNightly: 209, total: 836, availability: 'available', seed: 9 },
-      { name: 'La Quinta Inn & Suites', stars: 2.5, distance: '1.8 mi from Main Arena', fromNightly: 129, total: 516, availability: 'available', seed: 10 },
-      { name: 'Aloft City Center', stars: 4, distance: '1.2 mi from Main Arena', fromNightly: 179, total: 716, availability: 'available', seed: 11 },
-      { name: 'Sheraton Grand Downtown', stars: 4.5, distance: '0.5 mi from Main Arena', fromNightly: 239, total: 956, availability: 'available', seed: 12 },
-    ],
-  },
-  {
-    heading: 'The below hotels have availability for your selected dates but do not match your selected filters',
-    hotels: [
-      { name: 'Kimpton Gray Hotel', stars: null, distance: '2.4 mi from Main Arena', fromNightly: 249, total: 996, availability: 'unmatched', seed: 3 },
-      { name: 'The Whitman Boutique', stars: 4, distance: '2.9 mi from Main Arena', fromNightly: 279, total: 1116, availability: 'unmatched', seed: 6 },
-    ],
-  },
-  {
-    heading: 'The below hotels do not have availability for your selected dates',
-    hotels: [
-      { name: 'Holiday Inn Express Chicago', stars: 2, distance: '3.5 mi from Main Arena', fromNightly: 109, total: 436, availability: 'unavailable', seed: 5 },
-    ],
-  },
-]
-
-// Group Block cards (name · stars · rooms-availability · starting price / night).
-const groupSections = [
-  {
-    heading: null,
-    hotels: [
-      { name: 'Embassy Suites Downtown', stars: 4, distance: '0.3 mi from Main Arena', preferred: true, startingPrice: 269, availability: 'matches', roomsAvailable: 8, seed: 2 },
-      { name: 'The Grand Riverside Hotel', stars: 4.5, distance: '0.6 mi from Main Arena', startingPrice: 289, availability: 'matches', roomsAvailable: 5, seed: 1 },
-      { name: 'Marriott Marquis', stars: 4.5, distance: '0.7 mi from Main Arena', startingPrice: 299, availability: 'matches', roomsAvailable: 12, seed: 7 },
-      { name: 'Hilton Garden Inn', stars: 4, distance: '1.0 mi from Main Arena', startingPrice: 239, availability: 'matches', roomsAvailable: 6, seed: 8 },
-      { name: 'Doubletree Convention Center', stars: 4, distance: '0.9 mi from Main Arena', startingPrice: 259, availability: 'matches', roomsAvailable: 9, seed: 9 },
-      { name: 'The Westin Downtown', stars: 4.5, distance: '0.5 mi from Main Arena', startingPrice: 319, availability: 'matches', roomsAvailable: 7, seed: 12 },
-      { name: 'Hyatt Regency', stars: 4, distance: '1.1 mi from Main Arena', startingPrice: 249, availability: 'matches', roomsAvailable: 10, seed: 11 },
-      { name: 'Renaissance Hotel', stars: 4, distance: '1.3 mi from Main Arena', startingPrice: 279, availability: 'matches', roomsAvailable: 4, seed: 10 },
-      { name: 'AC Hotel Midtown', stars: 4, distance: '1.5 mi from Main Arena', startingPrice: 229, availability: 'matches', roomsAvailable: 5, seed: 13 },
-    ],
-  },
-  {
-    heading: 'The hotels below have availability but may not match your selected filters or have enough rooms for all nights selected.',
-    hotels: [
-      { name: 'Kimpton Gray Hotel', stars: null, distance: '2.4 mi from Main Arena', startingPrice: 249, availability: 'partial', roomsMax: 4, roomsRequested: 10, seed: 3 },
-      { name: 'Hampton Inn & Suites', stars: 3, distance: '1.1 mi from Main Arena', startingPrice: 179, availability: 'partial', roomsMax: 6, roomsRequested: 10, seed: 4 },
-    ],
-  },
-  {
-    heading: 'The below hotels do not have availability for your selected dates',
-    hotels: [
-      { name: 'Holiday Inn Express Chicago', stars: 2, distance: '3.5 mi from Main Arena', startingPrice: 109, availability: 'unavailable', seed: 5 },
-    ],
-  },
-]
-
-const sections = computed(() => (isGroup.value ? groupSections : reserveSections))
-
-// Both flows render the Group Block card (horizontal) WITH the expandable
-// Availability panel. Reserve-flow availability keys map onto the group card's
-// states, and every hotel gets sample room-availability data.
-const AVAIL_MAP = { available: 'matches', unmatched: 'partial', unavailable: 'unavailable' }
-// Grey city subtitle under each hotel name — assigned deterministically by seed
-// so the sample listings read like a real metro spread.
+// A 56-property pool (14 per parent brand) generated deterministically so the
+// filters + sort have enough to stress-test. Each hotel carries the raw fields
+// the filters/sort read: brand, amenities, room types, numeric distance/price.
 const CITIES = ['Kansas City', 'Overland Park', 'Lenexa', 'Olathe', 'Shawnee', 'Leawood', 'Merriam', 'Prairie Village', 'Liberty', 'Gladstone', 'Independence', 'Blue Springs', 'Raytown', 'Grandview']
-const displaySections = computed(() =>
-  sections.value.map((s) => ({
-    heading: s.heading,
-    hotels: s.hotels.map((h) => ({
-      name: h.name,
-      // Book Reservation flow drives qualitative status wording on the card.
-      flow: props.flow,
-      // Book Reservation → "Choose Your Room"; Group Block → "Select Rooms".
-      ctaLabel: isGroup.value ? 'Select Rooms' : 'Choose Your Room',
-      city: CITIES[(h.seed ?? 0) % CITIES.length],
-      stars: h.stars,
-      distance: h.distance,
-      preferred: h.preferred,
-      seed: h.seed,
-      imageCategories: h.imageCategories,
-      startingPrice: h.startingPrice ?? h.fromNightly,
-      // Reserve-flow price block (From / total) for the horizontal mobile card.
-      fromNightly: h.fromNightly,
-      total: h.total,
-      availability: isGroup.value ? h.availability : (AVAIL_MAP[h.availability] || h.availability),
-      roomsAvailable: h.roomsAvailable ?? 5,
-      roomsMax: h.roomsMax ?? 4,
-      roomsRequested: h.roomsRequested ?? 10,
-      // Vary the refund-policy chip + Low Rate Guarantee pill across listings.
-      refundable: (h.seed ?? 0) % 3 !== 2,
-      lowRateGuarantee: (h.seed ?? 0) % 2 === 0,
-      rooms: sampleRooms,
-    })),
-  }))
-)
-// The matching (first) block; 'partial' state keeps only a couple of matches so
-// the fallback blocks dominate.
-const mainHotels = computed(() => {
-  const hotels = displaySections.value[0]?.hotels || []
-  if (isEmpty.value || exactOnly.value) return []
-  return props.state === 'partial' ? hotels.slice(0, 1) : hotels
+const BRAND_HOTELS = {
+  'Marriott International': ['Marriott', 'Courtyard by Marriott', 'Residence Inn', 'AC Hotel', 'Renaissance', 'Sheraton', 'Westin'],
+  'Hilton Worldwide': ['Hilton', 'Hampton Inn & Suites', 'DoubleTree', 'Embassy Suites', 'Homewood Suites', 'Hilton Garden Inn', 'Canopy'],
+  'Hyatt Hotels': ['Hyatt Regency', 'Hyatt Place', 'Hyatt House', 'Grand Hyatt', 'Andaz', 'Thompson', 'Caption by Hyatt'],
+  'IHG Hotels & Resorts': ['Holiday Inn', 'Holiday Inn Express', 'Crowne Plaza', 'Kimpton', 'InterContinental', 'Staybridge Suites', 'Candlewood Suites'],
+}
+const SUFFIXES = ['Downtown', 'Convention Center', 'Riverside', 'Midtown', 'Arena District', 'Waterfront', 'Airport', 'Old Town']
+const AMEN_POOL = ['Free WiFi', 'Free Parking', 'Free Breakfast', 'Swimming Pool', 'Restaurant On-Site', 'Business Center', 'Bar / Lounge']
+const ROOM_POOL = ['King', 'Double', 'Queen', 'Suite']
+const STAR_POOL = [4, 3.5, 4.5, 3, 5, 4, 2.5]
+
+const HOTELS = (() => {
+  const out = []
+  let i = 0
+  for (const brand of Object.keys(BRAND_HOTELS)) {
+    const chains = BRAND_HOTELS[brand]
+    for (let k = 0; k < 14; k++) {
+      const amenities = AMEN_POOL.filter((_, a) => (i + a) % 3 === 0 || ((i >> a) & 1))
+      const roomTypes = ROOM_POOL.filter((_, r) => (i + r) % 2 === 0)
+      out.push({
+        name: `${chains[k % chains.length]} ${SUFFIXES[k % SUFFIXES.length]}`,
+        brand,
+        city: CITIES[i % CITIES.length],
+        stars: STAR_POOL[i % STAR_POOL.length],
+        distanceMi: Math.round((0.2 + ((i * 11) % 60) / 10) * 10) / 10, // 0.2 .. 6.1
+        nightly: 109 + ((i * 17) % 240),                                // 109 .. 348
+        amenities: amenities.length ? amenities : ['Free WiFi'],
+        roomTypes: roomTypes.length ? roomTypes : ['King'],
+        baseAvail: i % 12 === 11 ? 'unavailable' : i % 7 === 6 ? 'unmatched' : 'available',
+        preferred: i % 9 === 0,
+        roomsAvailable: (i % 12) + 1,
+        seed: i,
+      })
+      i++
+    }
+  }
+  return out
+})()
+
+// Active filter values relayed by FilterRail (property name, brands, amenities,
+// radius, budget, min stars, room types), applied live to the list below.
+const activeFilters = ref({})
+const onFilters = (f) => { activeFilters.value = f || {} }
+
+const matchesFilters = (h) => {
+  const f = activeFilters.value
+  if (f.propertyQuery && f.propertyQuery.trim() && !h.name.toLowerCase().includes(f.propertyQuery.toLowerCase().trim())) return false
+  if (f.minStars && (h.stars || 0) < f.minStars) return false
+  if (f.brands && f.brands.length && !f.brands.includes(h.brand)) return false
+  if (f.amenities && f.amenities.length && !f.amenities.every((a) => h.amenities.includes(a))) return false
+  if (f.roomTypes && f.roomTypes.length && !f.roomTypes.some((r) => h.roomTypes.includes(r))) return false
+  if (f.budget && f.budget.max !== '' && f.budget.max != null) {
+    const max = parseFloat(f.budget.max)
+    if (!isNaN(max) && h.nightly > max) return false
+  }
+  // Radius drives the map preview at its 0.25 default; once moved it also caps
+  // the list by distance.
+  if (f.radius != null && f.radius !== 0.25 && h.distanceMi > f.radius) return false
+  return true
+}
+
+const sortHotels = (list) => {
+  const arr = [...list]
+  if (sort.value === 'price_asc') arr.sort((a, b) => a.nightly - b.nightly)
+  else if (sort.value === 'price_desc') arr.sort((a, b) => b.nightly - a.nightly)
+  else if (sort.value === 'guest_rating') arr.sort((a, b) => (b.stars || 0) - (a.stars || 0))
+  else arr.sort((a, b) => a.distanceMi - b.distanceMi)
+  return arr
+}
+
+// Map a raw hotel to the card props both flows consume (the Group card renders
+// for both; reserve availability keys pass straight through).
+const toCard = (h) => ({
+  name: h.name, flow: props.flow, ctaLabel: isGroup.value ? 'Select Rooms' : 'Choose Your Room',
+  city: h.city, stars: h.stars, distance: `${h.distanceMi} mi from Main Arena`, preferred: h.preferred, seed: h.seed,
+  startingPrice: isGroup.value ? h.nightly + 40 : h.nightly,
+  fromNightly: h.nightly, total: h.nightly * 4,
+  availability: isGroup.value ? (h.baseAvail === 'available' ? 'matches' : h.baseAvail === 'unmatched' ? 'partial' : 'unavailable') : h.baseAvail,
+  roomsAvailable: h.roomsAvailable, roomsMax: 4, roomsRequested: 10,
+  refundable: h.seed % 3 !== 2, lowRateGuarantee: h.seed % 2 === 0, rooms: sampleRooms,
 })
-// Fallback (non-matching) blocks — hidden only in the empty state.
-const fallbackSections = computed(() => (isEmpty.value ? [] : displaySections.value.slice(1)))
+
+const availableHotels = HOTELS.filter((h) => h.baseAvail === 'available')
+const unmatchedHotels = HOTELS.filter((h) => h.baseAvail === 'unmatched')
+const unavailableHotels = HOTELS.filter((h) => h.baseAvail === 'unavailable')
+
+// Available matches (filtered + sorted) — the primary block.
+const matchedHotels = computed(() => sortHotels(availableHotels.filter(matchesFilters)))
+
+const mainHotels = computed(() => {
+  if (isEmpty.value) return []
+  const list = props.state === 'partial' ? matchedHotels.value.slice(0, 3) : matchedHotels.value
+  return list.map(toCard)
+})
+
+// Fallback blocks (do-not-match / no-availability) — hidden in the empty state
+// and when "Exact Matches Only" is on.
+const fallbackSections = computed(() => {
+  if (isEmpty.value || exactOnly.value) return []
+  const secs = []
+  if (unmatchedHotels.length) secs.push({ heading: 'The below hotels have availability for your selected dates but do not match your selected filters', hotels: sortHotels(unmatchedHotels).map(toCard) })
+  if (unavailableHotels.length) secs.push({ heading: 'The below hotels do not have availability for your selected dates', hotels: sortHotels(unavailableHotels).map(toCard) })
+  return secs
+})
 
 const resultCount = computed(() => {
-  if (isEmpty.value || exactOnly.value) return 0
-  return mainHotels.value.length + fallbackSections.value.reduce((n, s) => n + s.hotels.length, 0)
+  if (isEmpty.value) return 0
+  return matchedHotels.value.length + (exactOnly.value ? 0 : unmatchedHotels.length + unavailableHotels.length)
 })
+// No available hotels match the active filters → show the empty state.
+const noResults = computed(() => !isLoading.value && !isError.value && resultCount.value === 0)
 
 // Group Block searches for a set number of rooms — surfaced in the results
 // toolbar as "N properties available — searching for R rooms".
@@ -227,8 +238,8 @@ const sort = ref('distance')
              toolbar carries it there). -->
         <aside class="hlp__rail hlp__rail--left">
           <div class="hlp__filterbar">
-            <filter-rail class="hlp__filterbar-rail" :result-count="resultCount" v-model:exact-only="exactOnly" />
-            <sort-dropdown class="hlp__filterbar-sort" :model-value="sort" variant="box" label="Sort By" @update:model-value="sort = $event" />
+            <filter-rail class="hlp__filterbar-rail" :result-count="resultCount" v-model:exact-only="exactOnly" @update:filters="onFilters" />
+            <sort-dropdown class="hlp__filterbar-sort" :model-value="sort" variant="pill" label="Sort By" @update:model-value="sort = $event" />
           </div>
         </aside>
 
@@ -272,7 +283,7 @@ const sort = ref('distance')
           </div>
 
           <!-- EMPTY -->
-          <div v-else-if="isEmpty" class="hlp__state hlp__state--empty">
+          <div v-else-if="isEmpty || noResults" class="hlp__state hlp__state--empty">
             <q-icon name="search_off" size="52px" />
             <h3 class="hlp__state-title">No properties match your search</h3>
             <p class="hlp__state-text">Try adjusting your filters, widening your search radius, or changing your dates to see more hotels.</p>
@@ -425,28 +436,32 @@ const sort = ref('distance')
 
 @media (max-width: 600px) {
   .hlp__container { padding: 0 16px; }
-  .hlp__grid { gap: 12px; padding: 16px 0 32px; }
+  /* No grid padding above the sticky bar — its own 12px padding is the only top
+     spacing, so the chips sit with even space above and below. */
+  .hlp__grid { gap: 12px; padding: 0 0 32px; }
   .hlp__rail--right { display: none; }
   /* The Filters + Sort bar sticks below the app nav while the results scroll.
      --hlp-bar-top is the nav height the host sets (0 by default; the prototype
      sets 60px so it tucks under the sticky global nav). */
   .hlp__rail--left {
     position: sticky; top: var(--hlp-bar-top, 0px); z-index: 20;
-    background: var(--ds-color-surface-sunken); padding: 10px 0;
+    /* Bleed the background full-width (the chips stay inset via the padding) so
+       the sticky bar covers the whole viewport as results scroll under it. */
+    margin: 0 -16px; padding: 12px 16px;
+    background: var(--ds-color-surface-sunken);
     box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.18);
   }
-  /* Filters + Sort on one line — an even 2-col grid (exactly equal widths) with a
-     shared 56px height ("meeting in the middle" of the 48px trigger and 62px sort). */
-  .hlp__filterbar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
-  .hlp__filterbar-rail, .hlp__filterbar-sort { min-width: 0; }
+  /* Filters + Sort as compact chip pills on one line (left-aligned). */
+  .hlp__filterbar { display: flex; align-items: center; gap: 8px; }
   .hlp__filterbar-sort { display: block; }
-  /* Match the Sort box's neutral border so both controls read as a set. */
-  .hlp__filterbar-rail :deep(.fr__toggle) { height: 56px; width: 100%; min-width: 0; border-color: var(--ds-color-border-bold); color: var(--ds-color-text); }
-  .hlp__filterbar-sort { overflow: hidden; }
-  .hlp__filterbar-sort :deep(.srt) { width: 100%; min-width: 0; }
-  /* Override the box variant's min-width: 210px (it overflowed the column and
-     caused horizontal scroll on phones). */
-  .hlp__filterbar-sort :deep(.srt__btn) { height: 56px !important; min-height: 56px !important; width: 100% !important; min-width: 0 !important; }
+  /* Filters chip — pill, icon + label, sized to content (not a full-width box). */
+  .hlp__filterbar-rail :deep(.fr__toggle) {
+    height: 40px; width: auto; min-width: 0; padding: 0 14px; gap: 6px;
+    justify-content: center; border-radius: var(--ds-radius-pill);
+    border-color: var(--ds-color-border-bold); color: var(--ds-color-text); font-weight: 600;
+  }
+  /* Sort chip — the pill variant ("Sort By: <selection>"); shrink to chip height. */
+  .hlp__filterbar-sort :deep(.srt__btn) { height: 40px; min-height: 40px; padding: 0 14px; font-weight: 600; }
   /* Count centered below; the toolbar's own Sort is hidden (moved to the bar). */
   .hlp__toolbar { margin-bottom: 8px; }
   .hlp__toolbar :deep(.rtb) { justify-content: center; }

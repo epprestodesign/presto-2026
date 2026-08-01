@@ -159,8 +159,10 @@ onMounted(async () => {
 @media (max-width: 600px) {
   .hdp { padding: 16px; }
   /* Tabs stay sticky; the sticky offset is a var the host can set so they stick
-     BELOW an app nav (the prototype sets it to the nav height). */
-  .hdp__tabs { top: var(--hdp-tabs-top, 0); }
+     BELOW an app nav (the prototype sets it to the nav height). Bleed the bar's
+     background full-width (labels stay inset) so content scrolling under it is
+     fully covered edge-to-edge. */
+  .hdp__tabs { top: var(--hdp-tabs-top, 0); margin-inline: -16px; padding-inline: 16px; }
 }
 .hdp__section { padding-top: 28px; }
 .hdp__section--ruled { margin-top: 20px; border-top: 1px solid var(--ds-color-border); padding-top: 32px; }

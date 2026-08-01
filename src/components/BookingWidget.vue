@@ -97,6 +97,8 @@ const dstr = (offset) => {
 const range = ref({ from: dstr(7), to: dstr(10) })
 const flex = ref('Exact dates')
 const flexOptions = ['Exact dates', '± 1 day', '± 2 days', '± 3 days', '± 7 days']
+// Clear the selected date range (mobile dialog footer "Clear").
+const clearDates = () => { range.value = { from: null, to: null }; flex.value = 'Exact dates' }
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const fmt = (s) => { const [, m, d] = s.split('/'); return `${MON[+m - 1]} ${+d}` }
 const dateLabel = computed(() => {
@@ -115,6 +117,8 @@ const roomFields = [
 const stepRoom = (i, k, d, min = 0) => { rooms[i][k] = Math.max(min, rooms[i][k] + d) }
 const addRoom = () => rooms.push(newRoom())
 const removeRoom = (i) => rooms.splice(i, 1)
+// Reset to a single default room (mobile dialog footer "Clear").
+const clearTravelers = () => { rooms.splice(0, rooms.length, newRoom()) }
 const travelersTotal = computed(() => rooms.reduce((s, r) => s + r.adults + r.children, 0))
 const travelersLabel = computed(() => `${travelersTotal.value} traveler${travelersTotal.value !== 1 ? 's' : ''}, ${rooms.length} room${rooms.length !== 1 ? 's' : ''}`)
 
@@ -201,17 +205,22 @@ const roomsNeeded = ref(props.initialRooms ?? null)
           <template #prepend><q-icon name="calendar_month" /></template>
         </q-input>
         <q-menu class="bw-menu bw-menu--full" :offset="[0, 8]">
-          <div style="padding:20px 32px 24px">
+          <div class="bw-dialogwrap">
             <div class="bw-dialoghead">
               <span class="bw-dialoghead__title">Select dates</span>
               <button class="bw-dialoghead__close" type="button" v-close-popup aria-label="Close"><q-icon name="close" size="24px" /></button>
             </div>
-            <date-range-calendar v-model="range" />
-            <q-separator class="q-mt-md" />
-            <div class="row q-gutter-sm q-mt-md justify-start">
-              <q-btn v-for="f in flexOptions" :key="f" :outline="flex !== f" :color="flex === f ? 'primary' : 'grey-8'" rounded dense no-caps padding="6px 18px" :label="f" @click="flex = f" />
+            <div class="bw-dialogbody">
+              <date-range-calendar v-model="range" />
+              <q-separator class="q-mt-md" />
+              <div class="row q-gutter-sm q-mt-md justify-start">
+                <q-btn v-for="f in flexOptions" :key="f" :outline="flex !== f" :color="flex === f ? 'primary' : 'grey-8'" rounded dense no-caps padding="6px 18px" :label="f" @click="flex = f" />
+              </div>
             </div>
-            <div class="bw-dialogdone"><q-btn unelevated color="primary" label="Done" v-close-popup class="full-width" style="height:48px;border-radius:var(--ds-radius-button)" /></div>
+            <div class="bw-dialogfoot">
+              <button type="button" class="bw-dialogclear" @click="clearDates">Clear</button>
+              <q-btn unelevated color="primary" label="Done" v-close-popup class="bw-dialogdonebtn" />
+            </div>
           </div>
         </q-menu>
       </div>
@@ -230,28 +239,37 @@ const roomsNeeded = ref(props.initialRooms ?? null)
           <template #prepend><q-icon name="group" /></template>
         </q-input>
         <q-menu class="bw-menu bw-menu--full" :offset="[0, 8]">
-          <div style="width:380px;padding:20px 24px">
-            <div v-for="(room, i) in rooms" :key="i" :class="{ 'q-mt-lg': i > 0 }">
-              <div class="text-subtitle1 q-mb-xs" style="font-weight:700">Room {{ i + 1 }}</div>
-              <div v-for="f in roomFields" :key="f.key" class="row items-center justify-between q-py-sm">
-                <div>
-                  <div class="text-body1" style="font-weight:500">{{ f.label }}</div>
-                  <div v-if="f.caption" class="text-caption text-grey-7">{{ f.caption }}</div>
+          <div class="bw-dialogwrap" style="width:380px">
+            <div class="bw-dialoghead">
+              <span class="bw-dialoghead__title">Travelers</span>
+              <button class="bw-dialoghead__close" type="button" v-close-popup aria-label="Close"><q-icon name="close" size="24px" /></button>
+            </div>
+            <div class="bw-dialogbody">
+              <div v-for="(room, i) in rooms" :key="i" :class="{ 'q-mt-lg': i > 0 }">
+                <div class="text-subtitle1 q-mb-xs" style="font-weight:700">Room {{ i + 1 }}</div>
+                <div v-for="f in roomFields" :key="f.key" class="row items-center justify-between q-py-sm">
+                  <div>
+                    <div class="text-body1" style="font-weight:500">{{ f.label }}</div>
+                    <div v-if="f.caption" class="text-caption text-grey-7">{{ f.caption }}</div>
+                  </div>
+                  <div class="row items-center no-wrap q-gutter-sm">
+                    <q-btn round outline icon="remove" class="bw__step" :disable="room[f.key] <= f.min" @click="stepRoom(i, f.key, -1, f.min)" />
+                    <div style="width:28px;text-align:center;font-weight:500">{{ room[f.key] }}</div>
+                    <q-btn round outline icon="add" class="bw__step" @click="stepRoom(i, f.key, 1, f.min)" />
+                  </div>
                 </div>
-                <div class="row items-center no-wrap q-gutter-sm">
-                  <q-btn round outline icon="remove" class="bw__step" :disable="room[f.key] <= f.min" @click="stepRoom(i, f.key, -1, f.min)" />
-                  <div style="width:28px;text-align:center;font-weight:500">{{ room[f.key] }}</div>
-                  <q-btn round outline icon="add" class="bw__step" @click="stepRoom(i, f.key, 1, f.min)" />
+                <div v-if="rooms.length > 1" class="row justify-end q-mt-xs">
+                  <span class="bw__link" @click="removeRoom(i)">Remove room</span>
                 </div>
               </div>
-              <div v-if="rooms.length > 1" class="row justify-end q-mt-xs">
-                <span class="bw__link" @click="removeRoom(i)">Remove room</span>
+              <div class="row justify-end q-mt-md">
+                <span class="bw__link" @click="addRoom"><q-icon name="add_circle" size="20px" /><span>Add another room</span></span>
               </div>
             </div>
-            <div class="row justify-end q-mt-md">
-              <span class="bw__link" @click="addRoom"><q-icon name="add_circle" size="20px" /><span>Add another room</span></span>
+            <div class="bw-dialogfoot">
+              <button type="button" class="bw-dialogclear" @click="clearTravelers">Clear</button>
+              <q-btn unelevated color="primary" label="Done" v-close-popup class="bw-dialogdonebtn" />
             </div>
-            <div class="row justify-end q-mt-lg"><q-btn unelevated color="primary" label="Done" v-close-popup /></div>
           </div>
         </q-menu>
       </div>
@@ -319,7 +337,9 @@ const roomsNeeded = ref(props.initialRooms ?? null)
 .bw-menu { box-shadow: var(--ds-shadow-1) !important; border: 1px solid var(--ds-color-border); }
 .bw-dialog { box-shadow: var(--ds-shadow-2); }
 /* Full-window dialog header/footer — mobile only. */
-.bw-dialoghead, .bw-dialogdone { display: none; }
+.bw-dialoghead, .bw-dialogfoot { display: none; }
+/* Desktop popover padding (mobile turns this wrapper into a flex column). */
+.bw-dialogwrap { padding: 20px 32px 24px; }
 
 /* Phones: the popovers have fixed 360/380px inner widths — cap them to the
    viewport so they don't overflow a 360–390px screen (wide content scrolls). */
@@ -337,10 +357,23 @@ const roomsNeeded = ref(props.initialRooms ?? null)
     width: 100% !important; max-width: 100% !important; height: 100%;
     overflow-y: auto; box-sizing: border-box; padding: 20px 16px;
   }
-  .bw-menu--full .bw-dialoghead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  /* The dates dialog becomes a flex column: fixed header, scrollable body, fixed
+     footer — same shell convention as the Filters modal. */
+  .bw-menu--full > .bw-dialogwrap { padding: 0 !important; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+  .bw-menu--full .bw-dialogbody { flex: 1; min-height: 0; overflow-y: auto; padding: 16px; }
+  .bw-menu--full .bw-dialoghead { display: flex; align-items: center; justify-content: space-between; flex: none; margin: 0; padding: 14px 16px; border-bottom: 1px solid var(--ds-color-border); }
   .bw-menu--full .bw-dialoghead__title { font-size: 1.25rem; font-weight: 800; color: var(--ds-color-text); }
   .bw-menu--full .bw-dialoghead__close { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--ds-palette-slate-100); color: var(--ds-color-text); display: flex; align-items: center; justify-content: center; cursor: pointer; }
-  .bw-menu--full .bw-dialogdone { display: block; margin-top: 24px; }
+  /* Fixed footer: Clear (left, text) + Done (right, filled). */
+  .bw-menu--full .bw-dialogfoot {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: none;
+    padding: 12px 16px; background: var(--ds-color-surface); border-top: 1px solid var(--ds-color-border);
+  }
+  .bw-menu--full .bw-dialogclear {
+    background: none; border: 0; padding: 8px 4px; font-family: inherit; font-size: 1rem;
+    font-weight: 700; color: var(--ds-color-text); text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+  }
+  .bw-menu--full .bw-dialogdonebtn { height: 48px; padding: 0 28px; border-radius: var(--ds-radius-button); }
 }
 /* Quasar dashes the outline of readonly outlined fields; our triggers are
    readonly by design — keep the border solid. */
