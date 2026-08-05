@@ -1,0 +1,38 @@
+# Netlify hosts the clickable prototypes (Storybook lives on GitHub Pages —
+# see .github/workflows/deploy.yml). Both prototypes are published side by side
+# so the mobile showcase can iframe the booking journey as a sibling:
+#
+#   /prototype/  booking journey (desktop + responsive)
+#   /mobile/     device-frame showcase, embeds the above
+#
+# `/` redirects to /prototype/, which is what the site root served before the
+# mobile prototype was added.
+#
+# Requires "Base directory" to be blank (repo root) in the Netlify project's
+# build settings — that's where Netlify looks for this file. Settings here
+# override the ones in the UI.
+
+[build]
+  command = "bash scripts/netlify-build.sh"
+  publish = "dist-netlify"
+
+[build.environment]
+  NODE_VERSION = "24"
+  PNPM_VERSION = "9"
+
+[[redirects]]
+  from = "/"
+  to = "/prototype/"
+  status = 302
+
+# Neither app has a router, but a stray deep link should land on the app shell
+# rather than Netlify's 404. Real files (assets, index.html) still win first.
+[[redirects]]
+  from = "/prototype/*"
+  to = "/prototype/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/*"
+  to = "/mobile/index.html"
+  status = 200
