@@ -27,6 +27,10 @@ defineProps({
   // Hide the in-body "Clear All Filters" button (the mobile modal moves Clear all
   // into its footer, so it shouldn't also appear at the bottom of the fields).
   hideClear: { type: Boolean, default: false },
+  // Hide the View Map preview. The mobile filters sheet sets this: on phones the
+  // map is its own "Map" button next to "Filters" in the list toolbar, so the
+  // filters sheet must not carry one (DES-419 / DES-422).
+  hideMap: { type: Boolean, default: false },
 })
 const emit = defineEmits([
   'update:exactOnly', 'update:propertyQuery', 'update:brandSel', 'update:amenitySel',
@@ -37,7 +41,7 @@ const emit = defineEmits([
 <template>
   <div class="frf">
     <!-- VIEW MAP (radius drives both the map preview and the radius slider) -->
-    <div class="frf__section">
+    <div v-if="!hideMap" class="frf__section">
       <view-map-field :model-value="radius" @update:model-value="emit('update:radius', $event)" @view-map="emit('view-map')" />
     </div>
     <!-- EXACT MATCHES ONLY -->

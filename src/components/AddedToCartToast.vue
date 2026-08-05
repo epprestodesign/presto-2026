@@ -12,6 +12,11 @@ const props = defineProps({
   hotel: { type: String, default: '' },
   image: { type: String, default: '' },
   autoDismiss: { type: Number, default: 0 },
+  // Distance in px from the card's RIGHT edge to the notch. The host sets this
+  // from the cart button's real position so the arrow points at the cart — on
+  // phones the card is centred, so a fixed offset lands on the overflow menu
+  // instead (DES-423). Null keeps the default right-hand placement.
+  notchRight: { type: Number, default: null },
 })
 const emit = defineEmits(['view-cart', 'checkout', 'dismiss'])
 
@@ -22,7 +27,7 @@ onBeforeUnmount(() => clearTimeout(timer))
 
 <template>
   <div class="atc" role="status" aria-live="polite">
-    <span class="atc__notch" />
+    <span class="atc__notch" :style="notchRight != null ? { right: notchRight + 'px' } : null" />
     <h3 class="atc__title">{{ heading }}</h3>
     <div class="atc__item">
       <img v-if="image" :src="image" :alt="hotel" class="atc__thumb" />

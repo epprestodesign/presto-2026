@@ -26,6 +26,11 @@ const props = defineProps({
   lng: { type: Number, default: -81.3792 },
   showMap: { type: Boolean, default: true },
   mapHeight: { type: String, default: '220px' },
+  // Phones (DES-420 / DES-423): production's details page leads with just the
+  // name + star class, then the About copy, and only afterwards the amenities /
+  // check-in times / map. In compact mode this header renders the name block
+  // alone and PropertyFacts carries the rest, further down the page.
+  compact: { type: Boolean, default: false },
 })
 
 const starList = computed(() => Array.from({ length: 5 }, (_, i) => i < props.stars))
@@ -48,26 +53,28 @@ const metaLine = computed(() => [props.address, props.distance].filter(Boolean).
         </span>
       </div>
 
-      <div v-if="metaLine" class="dhead__addr">{{ metaLine }}</div>
+      <template v-if="!compact">
+        <div v-if="metaLine" class="dhead__addr">{{ metaLine }}</div>
 
-      <div v-if="score != null" class="dhead__rating">
-        <ds-rating :score="score" :max="scoreMax" :reviews="reviews" :label="ratingLabel" />
-      </div>
-
-      <div v-if="checkInTime || checkOutTime" class="dhead__times">
-        <span v-if="checkInTime"><q-icon name="login" size="18px" /> Check-in: <strong>{{ checkInTime }}</strong></span>
-        <span v-if="checkOutTime"><q-icon name="logout" size="18px" /> Check-out: <strong>{{ checkOutTime }}</strong></span>
-      </div>
-
-      <template v-if="amenities.length">
-        <div class="dhead__poplabel">Popular Amenities</div>
-        <div class="dhead__pop">
-          <amenity v-for="a in amenities" :key="a.key || a.label" :amenity="a" size="md" />
+        <div v-if="score != null" class="dhead__rating">
+          <ds-rating :score="score" :max="scoreMax" :reviews="reviews" :label="ratingLabel" />
         </div>
+
+        <div v-if="checkInTime || checkOutTime" class="dhead__times">
+          <span v-if="checkInTime"><q-icon name="login" size="18px" /> Check-in: <strong>{{ checkInTime }}</strong></span>
+          <span v-if="checkOutTime"><q-icon name="logout" size="18px" /> Check-out: <strong>{{ checkOutTime }}</strong></span>
+        </div>
+
+        <template v-if="amenities.length">
+          <div class="dhead__poplabel">Popular Amenities</div>
+          <div class="dhead__pop">
+            <amenity v-for="a in amenities" :key="a.key || a.label" :amenity="a" size="md" />
+          </div>
+        </template>
       </template>
     </div>
 
-    <div v-if="showMap" class="dhead__map">
+    <div v-if="showMap && !compact" class="dhead__map">
       <hotel-map :hotels="mapHotels" :center="{ lat, lng }" :zoom="14" :height="mapHeight" />
     </div>
   </header>

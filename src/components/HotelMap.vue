@@ -129,6 +129,15 @@ const pillCss = (selected) =>
   `border:3px solid ${BRAND};border-radius:999px;padding:5px 12px;` +
   'font:600 13px/1 PT Sans,system-ui,sans-serif;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer;white-space:nowrap;'
 
+// Single-property maps (e.g. the hotel-details mini map) pass no price. Those get
+// a plain dot marker — a price pill would read "$0".
+const hasPrice = (h) => h.price != null && h.price !== ''
+const dotCss = (selected) =>
+  `display:inline-block;width:${selected ? 20 : 16}px;height:${selected ? 20 : 16}px;` +
+  `background:${BRAND};border:3px solid #fff;border-radius:50%;` +
+  'box-shadow:0 1px 4px rgba(0,0,0,.35);cursor:pointer;'
+const markerCss = (h, selected) => (hasPrice(h) ? pillCss(selected) : dotCss(selected))
+
 function popupNode (h) {
   const el = document.createElement('div')
   el.style.cssText = 'width:240px;font-family:PT Sans,system-ui,sans-serif;'
@@ -143,13 +152,13 @@ function popupNode (h) {
       (h.rating != null ? `<span style="background:#18181B;color:#fff;font-weight:700;font-size:12px;padding:2px 7px;border-radius:4px">${h.rating.toFixed(1)}</span>` : '') +
       (h.reviews ? `<span style="color:#71717A;font-size:12px">${Number(h.reviews).toLocaleString()} reviews</span>` : '') +
     '</div>' +
-    `<div style="margin-top:8px;font-size:18px;font-weight:700;color:#18181B">${money(h.price)} <span style="font-size:12px;font-weight:500;color:#71717A">/ night</span></div>`
+    (hasPrice(h) ? `<div style="margin-top:8px;font-size:18px;font-weight:700;color:#18181B">${money(h.price)} <span style="font-size:12px;font-weight:500;color:#71717A">/ night</span></div>` : '')
   return el
 }
 
 function select (id) {
   selectedId.value = id
-  markers.forEach(({ hotel, pillEl }) => { pillEl.style.cssText = pillCss(hotel.id === id) })
+  markers.forEach(({ hotel, pillEl }) => { pillEl.style.cssText = markerCss(hotel, hotel.id === id) })
 }
 
 function eventPopupNode (ev) {
@@ -199,8 +208,8 @@ async function initMap (keyOverride) {
     const hotelMarkers = []
     props.hotels.forEach((h) => {
       const pillEl = document.createElement('div')
-      pillEl.style.cssText = pillCss(false)
-      pillEl.textContent = money(h.price)
+      pillEl.style.cssText = markerCss(h, false)
+      if (hasPrice(h)) pillEl.textContent = money(h.price)
       const marker = new g.marker.AdvancedMarkerElement({
         // When clustering, the clusterer controls map visibility (no `map` here).
         ...(props.cluster ? {} : { map }),

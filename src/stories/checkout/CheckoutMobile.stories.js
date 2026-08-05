@@ -1,6 +1,12 @@
 // CHECKOUT EXPERIENCE / Mobile — the mobile-optimized checkout, consolidated in
 // one folder. Reuses the REAL checkout stories (no duplication) at phone width:
 //   • single-column layout with 16px gutters (no horizontal scroll)
+//   • DES-421: the order summary (hotel preview + costs) LEADS the page for the
+//     individual flows so it can be reviewed before booking — it used to sit
+//     below the whole form, after the "Book Now" button
+//   • DES-424: the group block opens with a "Review order" step, so the duplicate
+//     order summary further down is dropped, and "View Additional Hotels" moves
+//     into the page header beside where the individual flow puts Edit / Start over
 //   • the hold-timer top bar bleeds to the page edge cleanly
 //   • "Protect your stay" reasons become a single-row swipeable carousel with
 //     smaller type; the Policies section type is reduced to match

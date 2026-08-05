@@ -4,10 +4,12 @@
 // nav that scrolls to each section, the HotelSummaryHeader, the RoomsCarousel
 // ("Select Your Room"), and the About / Amenities / Policies sections.
 import { ref, computed, onMounted } from 'vue'
+import { useQuasar } from 'quasar'
 import { loadImagery } from '../../lib/imagery'
 import GalleryHero from './GalleryHero.vue'
 import DetailTabs from './DetailTabs.vue'
 import HotelSummaryHeader from './HotelSummaryHeader.vue'
+import PropertyFacts from './PropertyFacts.vue'
 import RoomsCarousel from './RoomsCarousel.vue'
 import AboutProperty from './AboutProperty.vue'
 import AmenitiesSection from './AmenitiesSection.vue'
@@ -55,6 +57,12 @@ const props = defineProps({
 const emit = defineEmits(['back'])
 const widgetMode = computed(() => (props.roomsFlow === 'group' ? 'group' : 'reservations'))
 
+// Phones follow production's details order (DES-420 / DES-423): hero with an
+// overlaid circular back button → name + stars → About → PropertyFacts
+// (amenities · check-in/out · map · distance) → Select Your Room. No tab bar.
+const $q = useQuasar()
+const isPhone = computed(() => $q.screen.lt.sm)
+
 // About copy: array → paragraphs, string → single paragraph.
 const aboutText = computed(() => (Array.isArray(props.about) ? '' : props.about))
 const aboutParagraphs = computed(() => (Array.isArray(props.about) ? props.about : []))
@@ -99,17 +107,23 @@ onMounted(async () => {
       />
     </div>
 
-    <!-- Back to results -->
-    <button type="button" class="hdp__back" @click="emit('back')">
+    <!-- Back to results. On phones this is a circular arrow overlaid on the hero
+         (production), so it renders inside the gallery block instead. -->
+    <button v-if="!isPhone" type="button" class="hdp__back" @click="emit('back')">
       <q-icon name="chevron_left" size="22px" /> Back to Hotel listing
     </button>
 
     <template v-if="showDetailHeader">
       <!-- Photo hero gallery -->
-      <gallery-hero :images="gallery" :all-images="gallery" />
+      <div class="hdp__hero">
+        <gallery-hero :images="gallery" :all-images="gallery" />
+        <button v-if="isPhone" type="button" class="hdp__backfab" aria-label="Back to hotel listing" @click="emit('back')">
+          <q-icon name="arrow_back" size="22px" />
+        </button>
+      </div>
 
-      <!-- Section nav -->
-      <div class="hdp__tabs">
+      <!-- Section nav — production's phone page has no tab bar. -->
+      <div v-if="!isPhone" class="hdp__tabs">
         <detail-tabs v-model="activeTab" :tabs="tabs" @select="onTab" />
       </div>
 
@@ -120,12 +134,28 @@ onMounted(async () => {
         :preferred="preferred" :low-rate-guarantee="lowRateGuarantee"
         :check-in-time="checkInTime" :check-out-time="checkOutTime"
         :amenities="popularAmenities" :lat="lat" :lng="lng"
+        :compact="isPhone"
       />
     </template>
 
     <!-- Property / About — grouped with the summary's Popular Amenities -->
     <section id="hdp-property" class="hdp__section">
-      <about-property :text="aboutText" :paragraphs="aboutParagraphs" />
+      <about-property
+        :title="isPhone ? 'About this property' : 'More about the property'"
+        :text="aboutText"
+        :paragraphs="aboutParagraphs"
+      />
+    </section>
+
+    <!-- Phones: the facts the compact header dropped — amenities, check-in/out,
+         map + address, distance (DES-420 / DES-423). -->
+    <section v-if="isPhone && showDetailHeader" class="hdp__section hdp__section--facts">
+      <property-facts
+        :name="name" :amenities="popularAmenities"
+        :check-in-time="checkInTime" :check-out-time="checkOutTime"
+        :address="address" :distance="distance" :lat="lat" :lng="lng"
+        @see-all-amenities="onTab('amenities')"
+      />
     </section>
 
     <!-- Rooms -->
@@ -155,9 +185,20 @@ onMounted(async () => {
 .hdp__back:hover { color: var(--ds-color-text-brand); }
 .hdp__back .q-icon { color: inherit; }
 .hdp__tabs { position: sticky; top: 0; z-index: 5; background: var(--ds-color-surface); margin: 24px 0; }
+/* Hero wrapper — positioning context for the phone back button. */
+.hdp__hero { position: relative; }
+.hdp__backfab {
+  position: absolute; top: 12px; left: 12px; z-index: 3;
+  width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: 50%; background: #fff; color: var(--ds-color-text);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3); cursor: pointer;
+}
 /* Phones: near-edge-to-edge gutters. */
 @media (max-width: 600px) {
-  .hdp { padding: 16px; }
+  .hdp { padding: 0 16px 16px; }
+  /* The hero runs to the screen edges under the nav, like production. */
+  .hdp__hero { margin: 0 -16px; }
+  .hdp__section--facts { padding-top: 20px; }
   /* Tabs stay sticky; the sticky offset is a var the host can set so they stick
      BELOW an app nav (the prototype sets it to the nav height). Bleed the bar's
      background full-width (labels stay inset) so content scrolling under it is
