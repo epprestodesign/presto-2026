@@ -23,13 +23,6 @@ const mosaic = computed(() => props.images.slice(0, 5))
 const all = computed(() => (props.allImages.length ? props.allImages : props.images))
 const totalCount = computed(() => all.value.length)
 
-// Carousel (phones) — arrows scroll one photo at a time.
-const gridRef = ref(null)
-const scrollByOne = (dir) => {
-  const el = gridRef.value
-  if (el) el.scrollBy({ left: dir * el.clientWidth, behavior: 'smooth' })
-}
-
 const open = ref(false)
 const show = () => { open.value = true }
 const close = () => { open.value = false }
@@ -40,7 +33,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
 
 <template>
   <div class="gh">
-    <div ref="gridRef" class="gh__grid" :style="{ height }">
+    <div class="gh__grid" :style="{ height }">
       <div
         v-for="(img, i) in mosaic"
         :key="i"
@@ -61,10 +54,8 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
       </div>
     </div>
 
-    <!-- Phones: carousel controls overlaid on the viewport (not scrolling with a
-         photo) — prev/next arrows + a pinned "See all N photos" pill. -->
-    <button type="button" class="gh__arrow gh__arrow--prev" aria-label="Previous photo" @click="scrollByOne(-1)"><q-icon name="chevron_left" size="26px" /></button>
-    <button type="button" class="gh__arrow gh__arrow--next" aria-label="Next photo" @click="scrollByOne(1)"><q-icon name="chevron_right" size="26px" /></button>
+    <!-- Phones: a single static hero photo — no carousel. The pinned pill is the
+         only way to browse the set, and it opens the full-screen all-photos view. -->
     <button v-if="totalCount" type="button" class="gh__pill gh__pill--fixed" @click="show"><q-icon name="photo_library" size="16px" /> See all {{ totalCount }} photos</button>
 
     <!-- All-photos modal — grid reuses DsImageList -->
@@ -90,15 +81,11 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
 .gh__pill { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.6); color: #fff; border: 0; border-radius: var(--ds-radius-pill); padding: 6px 14px; font-family: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
 .gh__pill:hover { background: rgba(0,0,0,0.78); }
 
-/* Carousel controls — the .gh box is the positioning context; arrows + the pinned
-   pill are hidden on desktop (the mosaic shows its own in-cell pill). */
+/* The .gh box is the positioning context for the pinned pill, which is hidden on
+   desktop (the mosaic shows its own in-cell pill). */
 .gh { position: relative; }
-.gh__arrow { display: none; position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(255,255,255,0.92); color: var(--ds-color-text); align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 1px 5px rgba(0,0,0,0.3); }
-.gh__arrow:hover { background: #fff; }
-.gh__arrow--prev { left: 10px; }
-.gh__arrow--next { right: 10px; }
-/* The pinned pill reuses .gh__pill (dark, bottom-right) but anchors to .gh (the
-   whole carousel) instead of a single cell, so it stays put while photos scroll. */
+/* The pinned pill reuses .gh__pill (dark, bottom-right) but anchors to .gh rather
+   than a single cell, so it sits on the phone hero photo. */
 .gh__pill--fixed { display: none; z-index: 2; }
 
 /* Modal */
@@ -115,14 +102,17 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
   .gh__cell--lead { grid-row: auto; }
   .gh__cell { aspect-ratio: 4 / 3; }
 }
-/* Phones (<600px): swipeable horizontal carousel (one photo per view with
-   scroll-snap); full-screen "all photos" modal. */
+/* Phones (<600px): ONE static hero photo — no carousel, no swiping, no arrows.
+   Browsing happens only through "See all N photos", which opens the full-screen
+   modal. The photo runs square to the screen edges (no rounding), matching
+   production's details header. */
 @media (max-width: 600px) {
-  .gh__grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; gap: 4px; height: auto !important; }
-  .gh__cell { flex: 0 0 100%; scroll-snap-align: start; aspect-ratio: 4 / 3; }
-  .gh__cell--lead { grid-row: auto; aspect-ratio: 4 / 3; }
-  /* Show the carousel arrows + the pinned pill; hide the per-cell pill. */
-  .gh__arrow { display: flex; }
+  .gh__grid { display: block; border-radius: 0; height: auto !important; }
+  .gh__cell { aspect-ratio: 4 / 3; }
+  .gh__cell--lead { grid-row: auto; }
+  /* Only the lead photo shows; the rest live in the all-photos modal. */
+  .gh__cell:not(.gh__cell--lead) { display: none; }
+  /* Show the pinned pill; hide the per-cell one. */
   .gh__pill--fixed { display: inline-flex; }
   .gh__cell .gh__pill { display: none; }
   .gh__modal { padding: 0; }
