@@ -170,3 +170,16 @@ Storybook, builds the [`prototype/`](prototype/) app (nested at `/prototype/`), 
 `/prototype-mobile/`), and publishes `storybook-static/` to GitHub Pages on every
 push to `main`. Pages is
 already enabled (**Settings → Pages → Source: GitHub Actions**).
+
+The two prototypes are *also* published on Netlify
+([`ep-presto-2026`](https://app.netlify.com/projects/ep-presto-2026)) via
+[`netlify.toml`](netlify.toml) + [`scripts/netlify-build.sh`](scripts/netlify-build.sh),
+which builds both apps into `dist-netlify/`. Storybook is not part of that build.
+
+| | Netlify | GitHub Pages |
+| --- | --- | --- |
+| Booking journey | https://ep-presto-2026.netlify.app/prototype/ | https://epprestodesign.github.io/presto-2026/prototype/ |
+| Mobile showcase | https://ep-presto-2026.netlify.app/prototype-mobile/ | https://epprestodesign.github.io/presto-2026/prototype-mobile/ |
+
+The Netlify root (`/`) redirects to `/prototype/`, which is what it served before
+the mobile prototype was added.
