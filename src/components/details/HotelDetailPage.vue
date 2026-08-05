@@ -196,8 +196,10 @@ onMounted(async () => {
 /* Phones: near-edge-to-edge gutters. */
 @media (max-width: 600px) {
   .hdp { padding: 0 16px 16px; }
-  /* The hero runs to the screen edges under the nav, like production. */
-  .hdp__hero { margin: 0 -16px; }
+  /* The hero runs square to the screen edges under the nav, like production, with
+     breathing room before the header badges ("Preferred Hotel" / "Lowest Rate
+     Guarantee") and the name block beneath it. */
+  .hdp__hero { margin: 0 -16px 24px; }
   .hdp__section--facts { padding-top: 20px; }
   /* Tabs stay sticky; the sticky offset is a var the host can set so they stick
      BELOW an app nav (the prototype sets it to the nav height). Bleed the bar's
