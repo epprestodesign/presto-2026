@@ -179,7 +179,7 @@ which builds both apps into `dist-netlify/`. Storybook is not part of that build
 | | Netlify | GitHub Pages |
 | --- | --- | --- |
 | Booking journey | https://ep-presto-2026.netlify.app/prototype/ | https://epprestodesign.github.io/presto-2026/prototype/ |
-| Mobile showcase | https://ep-presto-2026.netlify.app/prototype-mobile/ | https://epprestodesign.github.io/presto-2026/prototype-mobile/ |
+| Mobile showcase | https://ep-presto-2026.netlify.app/mobile/ | https://epprestodesign.github.io/presto-2026/prototype-mobile/ |
 
 The Netlify root (`/`) redirects to `/prototype/`, which is what it served before
 the mobile prototype was added.

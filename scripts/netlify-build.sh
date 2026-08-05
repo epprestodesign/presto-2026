@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # Build both clickable prototypes into one publish directory for Netlify.
 #
-#   dist-netlify/prototype/         booking journey (desktop + responsive)
-#   dist-netlify/prototype-mobile/  device-frame showcase, embeds the above
+#   dist-netlify/prototype/  booking journey (desktop + responsive)
+#   dist-netlify/mobile/     device-frame showcase, embeds the above
 #
 # This mirrors the "Build prototype" steps in .github/workflows/deploy.yml —
-# the difference is the base path. GitHub Pages serves the repo under
-# /presto-2026/, Netlify serves it at the domain root, so the bases here are
-# /prototype/ and /prototype-mobile/. Storybook itself is NOT built here; it
-# stays on GitHub Pages.
+# the difference is the base paths. GitHub Pages serves the repo under
+# /presto-2026/ and names the mobile folder after the source dir; Netlify serves
+# at the domain root with the shorter /mobile/. Both keep the mobile app exactly
+# one level deep, so its `../prototype/` iframe resolves either way. Storybook
+# itself is NOT built here; it stays on GitHub Pages.
 #
 # The prototype folders have no dependencies of their own — vue/quasar/vite all
 # resolve up the tree to the repo's node_modules (installed by Netlify before
@@ -22,7 +23,7 @@ rm -rf dist-netlify
 mkdir -p dist-netlify
 
 (cd prototype && node "$VITE" build --base=/prototype/)
-(cd prototype-mobile && node "$VITE" build --base=/prototype-mobile/)
+(cd prototype-mobile && node "$VITE" build --base=/mobile/)
 
 cp -r prototype/dist dist-netlify/prototype
-cp -r prototype-mobile/dist dist-netlify/prototype-mobile
+cp -r prototype-mobile/dist dist-netlify/mobile
