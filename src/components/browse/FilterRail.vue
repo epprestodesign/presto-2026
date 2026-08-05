@@ -9,17 +9,27 @@
 import { ref, computed, watch } from 'vue'
 import DsModal from '../DsModal.vue'
 import FilterRailFields from './FilterRailFields.vue'
+import MapDialog from './MapDialog.vue'
 
 // `exactOnly` is lifted so the page can react to it (the filtered edge case).
 const props = defineProps({
   exactOnly: { type: Boolean, default: false },
   // Live result count — shown in the mobile dialog's "Show N results" CTA.
   resultCount: { type: Number, default: null },
+  // Opens the full-screen map. The rail owns `radius`, so it also owns the map
+  // dialog; the page's phone-only "Map" button drives this through v-model
+  // (DES-419 / DES-422).
+  mapOpen: { type: Boolean, default: false },
 })
-const emit = defineEmits(['view-map', 'update:exactOnly', 'update:filters'])
+const emit = defineEmits(['view-map', 'update:exactOnly', 'update:filters', 'update:mapOpen'])
 
 // Mobile dialog open state.
 const open = ref(false)
+
+const mapOpen = computed({
+  get: () => props.mapOpen,
+  set: (v) => emit('update:mapOpen', v),
+})
 
 const exactOnly = computed({
   get: () => props.exactOnly,
@@ -127,6 +137,7 @@ const activeCount = computed(() => {
     >
       <filter-rail-fields
         hide-clear
+        hide-map
         :exact-only="exactOnly"
         :property-query="propertyQuery"
         :brand-sel="brandSel"
@@ -151,6 +162,11 @@ const activeCount = computed(() => {
         <button type="button" class="fr__showresults" @click="close">{{ showLabel }}</button>
       </template>
     </ds-modal>
+
+    <!-- The full-screen map, driven by the page's phone-only "Map" button. Lives
+         here because the rail owns `radius`, so panning the radius in the map and
+         in the Search Radius filter stay one value. -->
+    <map-dialog v-model="mapOpen" v-model:radius="radius" />
   </div>
 </template>
 

@@ -24,6 +24,9 @@ const props = defineProps({
   roomsAvailable: { type: Number, default: 0 },
   ctaLabel: { type: String, default: '' },
   currency: { type: String, default: '$' },
+  // ISO code rendered after the amount ("$102.50 USD nightly"), matching
+  // production's price wording (DES-419 / DES-422).
+  currencyCode: { type: String, default: 'USD' },
   // Availability panel (shared with the vertical cards): [{ type, nightly, nights }]
   rooms: { type: Array, default: () => [] },
   openAvailability: { type: Boolean, default: false },
@@ -39,8 +42,10 @@ const status = computed(() => {
   const a = props.availability
   if (a === 'unavailable') return { tone: 'muted', label: 'No availability for selected dates' }
   if (isGroup.value) {
-    if (a === 'partial') return { tone: 'warning', label: `Only ${props.roomsAvailable} rooms available` }
-    return { tone: 'success', label: `${props.roomsAvailable} rooms available — matches request` }
+    const n = props.roomsAvailable
+    const rooms = `${n} ${n === 1 ? 'room' : 'rooms'} available`
+    if (a === 'partial') return { tone: 'warning', label: `Only ${rooms}` }
+    return { tone: 'success', label: `${rooms} — matches request` }
   }
   if (a === 'unmatched') return { tone: 'warning', label: 'Adjust your search parameters' }
   return { tone: 'success', label: 'Fully Available' }
@@ -103,19 +108,23 @@ const onCta = () => emit(isGroup.value ? 'select' : 'choose')
 
         <div v-if="distance" class="hch__distance"><q-icon name="place" size="18px" /> <span>{{ distance }}</span></div>
 
-        <button v-if="rooms.length" type="button" class="hch__availtoggle" :aria-expanded="open" @click="open = !open">
-          <span>Availability</span> <q-icon :name="open ? 'expand_less' : 'expand_more'" size="18px" />
-        </button>
-
+        <!-- Price block — production order: rate, total, taxes note, Availability,
+             then the CTA (DES-419 / DES-422). -->
         <div class="hch__price">
           <template v-if="isGroup">
             <div class="hch__starting">STARTING PRICE</div>
             <div class="hch__amount"><strong>{{ money(startingPrice) }}</strong> <span>/ night</span></div>
           </template>
           <template v-else>
-            <div class="hch__from">From {{ money(fromNightly) }} nightly</div>
-            <div class="hch__total">{{ money(total) }} total</div>
+            <div class="hch__from">From {{ money(fromNightly) }} {{ currencyCode }} nightly</div>
+            <div class="hch__total">{{ money(total) }} {{ currencyCode }} total</div>
+            <div class="hch__taxes">Total includes taxes &amp; fees</div>
           </template>
+
+          <button v-if="rooms.length" type="button" class="hch__availtoggle" :aria-expanded="open" @click="open = !open">
+            <span>Availability</span> <q-icon :name="open ? 'expand_less' : 'expand_more'" size="18px" />
+          </button>
+
           <button type="button" class="hch__cta" :class="{ 'hch__cta--muted': unavailable }" @click="onCta">{{ cta }}</button>
         </div>
       </div>
@@ -160,7 +169,8 @@ const onCta = () => emit(isGroup.value ? 'select' : 'choose')
 .hch__distance :deep(.q-icon) { color: var(--ds-color-text-brand); }
 .hch__availtoggle { align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 2px 0; color: var(--ds-color-link); font-family: inherit; font-size: 0.9375rem; font-weight: 700; text-decoration: underline; cursor: pointer; }
 
-.hch__price { margin-top: auto; padding-top: 8px; }
+.hch__price { margin-top: auto; padding-top: 8px; display: flex; flex-direction: column; align-items: flex-start; }
+.hch__taxes { color: var(--ds-color-text-subtle); font-size: 0.8125rem; }
 .hch__starting { color: var(--ds-color-text-subtle); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; }
 .hch__amount { color: var(--ds-color-text-brand); }
 .hch__amount strong { font-size: 1.375rem; font-weight: 700; }
@@ -178,7 +188,8 @@ const onCta = () => emit(isGroup.value ? 'select' : 'choose')
 @container (max-width: 600px) {
   .hch__media { flex: 0 0 30%; max-width: 116px; }
   .hch__body { padding: 12px; gap: 4px; }
-  .hch__name { font-size: 0.9375rem; }
+  /* Production renders the property name as an underlined link. */
+  .hch__name { font-size: 0.9375rem; text-decoration: underline; text-underline-offset: 2px; }
   .hch__loc { font-size: 0.8125rem; }
   .hch__stars :deep(.q-icon) { font-size: 15px !important; }
   .hch__unrated { font-size: 0.75rem; }
@@ -194,6 +205,11 @@ const onCta = () => emit(isGroup.value ? 'select' : 'choose')
   .hch__from { font-size: 0.8125rem; }
   .hch__total { font-size: 0.9375rem; }
   .hch__preferred { font-size: 0.625rem; padding: 3px 8px; }
-  .hch__cta { display: none; }
+  /* Production right-aligns the whole price block and keeps a real, content-width
+     "Choose Your Room" CTA on phones (DES-419 / DES-422). */
+  .hch__price { align-items: flex-end; text-align: right; padding-top: 14px; gap: 2px; }
+  .hch__taxes { font-size: 0.6875rem; }
+  .hch__availtoggle { align-self: flex-end; font-size: 0.8125rem; margin-top: 2px; }
+  .hch__cta { width: auto; align-self: flex-end; height: 40px; padding: 0 16px; margin-top: 8px; font-size: 0.875rem; }
 }
 </style>

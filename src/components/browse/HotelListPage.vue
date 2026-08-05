@@ -12,6 +12,7 @@ import epLogoWhite from '../../assets/eventpipe logos/eventpipe-logo-fff.svg'
 import BookingWidget from '../BookingWidget.vue'
 import FilterRail from './FilterRail.vue'
 import SortDropdown from './SortDropdown.vue'
+import SearchSummaryBar from './SearchSummaryBar.vue'
 import HotelCardGroup from './HotelCardGroup.vue'
 import HotelCardHorizontal from './HotelCardHorizontal.vue'
 import DisplayAd from '../DisplayAd.vue'
@@ -209,6 +210,23 @@ const priceHistogram = [8, 14, 11, 24, 38, 52, 47, 61, 44, 70, 56, 66, 51, 43, 4
 
 // Sort control — Browse Hotels defaults to sorting by Distance.
 const sort = ref('distance')
+
+// --- Phone header (DES-419 / DES-422) -----------------------------------------
+// Production collapses the search parameters into a one-line summary card with a
+// pencil, and puts Filters + Map side by side above a full-width "Sort By" select.
+// The full BookingWidget stays mounted but hidden until the pencil is tapped, so
+// editing still uses the real widget rather than a mobile-only copy of it.
+const editingSearch = ref(false)
+const mapOpen = ref(false)
+
+// Summary values mirror the hero's event + the widget's defaults.
+const SEARCH_LOCATION = 'Kansas City'
+const SEARCH_DATES = 'Jun 16 - Jun 19'
+const searchGuests = computed(() =>
+  isGroup.value
+    ? `${roomsRequested} ${roomsRequested === 1 ? 'Room' : 'Rooms'}`
+    : '1 Traveler, 1 Room'
+)
 </script>
 
 <template>
@@ -222,9 +240,18 @@ const sort = ref('distance')
       </div>
     </section>
 
-    <!-- SEARCH BAR — tucked up onto the hero -->
+    <!-- SEARCH BAR — tucked up onto the hero. On phones this collapses to the
+         SearchSummaryBar; the pencil reveals the real widget below it. -->
     <div class="hlp__searchwrap">
-      <div class="hlp__search">
+      <search-summary-bar
+        class="hlp__summary"
+        :location="SEARCH_LOCATION"
+        :dates="SEARCH_DATES"
+        :guests="searchGuests"
+        :expanded="editingSearch"
+        @edit="editingSearch = !editingSearch"
+      />
+      <div class="hlp__search" :class="{ 'hlp__search--editing': editingSearch }">
         <booking-widget :mode="isGroup ? 'group' : 'reservations'" :tabs="false" :show-mode="false" :show-teams="showTeams" :show-dates="true" />
       </div>
     </div>
@@ -238,9 +265,20 @@ const sort = ref('distance')
              toolbar carries it there). -->
         <aside class="hlp__rail hlp__rail--left">
           <div class="hlp__filterbar">
-            <filter-rail class="hlp__filterbar-rail" :result-count="resultCount" v-model:exact-only="exactOnly" @update:filters="onFilters" />
-            <sort-dropdown class="hlp__filterbar-sort" :model-value="sort" variant="pill" label="Sort By" @update:model-value="sort = $event" />
+            <filter-rail
+              class="hlp__filterbar-rail"
+              :result-count="resultCount"
+              v-model:exact-only="exactOnly"
+              v-model:map-open="mapOpen"
+              @update:filters="onFilters"
+            />
+            <!-- Phone-only "Map" button — the map moved out of the filters sheet
+                 and sits beside Filters (DES-419 / DES-422). -->
+            <button type="button" class="hlp__mapbtn" @click="mapOpen = true">
+              <q-icon name="map" size="18px" /> Map
+            </button>
           </div>
+          <sort-dropdown class="hlp__filterbar-sort" :model-value="sort" variant="box" label="Sort By" @update:model-value="sort = $event" />
         </aside>
 
         <!-- MIDDLE: results toolbar + state-driven results -->
@@ -430,9 +468,12 @@ const sort = ref('distance')
 }
 
 /* Phones (<600px): tighten paddings, drop the ad rail, stack the skeletons. */
-/* Desktop: the filter bar is just the FilterRail column; its inline Sort is
-   hidden (the results toolbar carries Sort on desktop). */
+/* Desktop: the filter bar is just the FilterRail column; its inline Sort, the
+   phone "Map" button and the collapsed search summary are all hidden (desktop
+   carries Sort in the results toolbar and the map inside the filter rail). */
 .hlp__filterbar-sort { display: none; }
+.hlp__mapbtn { display: none; }
+.hlp__summary { display: none; }
 
 @media (max-width: 600px) {
   .hlp__container { padding: 0 16px; }
@@ -451,17 +492,38 @@ const sort = ref('distance')
     background: var(--ds-color-surface-sunken);
     box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.18);
   }
-  /* Filters + Sort as compact chip pills on one line (left-aligned). */
-  .hlp__filterbar { display: flex; align-items: center; gap: 8px; }
-  .hlp__filterbar-sort { display: block; }
-  /* Filters chip — pill, icon + label, sized to content (not a full-width box). */
+  /* Collapsed search summary replaces the full widget; the pencil reveals the
+     widget again (DES-419 / DES-422). */
+  .hlp__summary { display: flex; margin: 12px 16px; }
+  .hlp__search { display: none; }
+  .hlp__search--editing { display: block; border-top: 1px solid var(--ds-color-border); }
+
+  /* Filters + Map as two equal buttons on one line, matching production. */
+  .hlp__filterbar { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 12px; }
   .hlp__filterbar-rail :deep(.fr__toggle) {
-    height: 40px; width: auto; min-width: 0; padding: 0 14px; gap: 6px;
-    justify-content: center; border-radius: var(--ds-radius-pill);
-    border-color: var(--ds-color-border-bold); color: var(--ds-color-text); font-weight: 600;
+    height: 44px; width: 100%; min-width: 0; padding: 0 14px; gap: 8px;
+    justify-content: center; border-radius: var(--ds-radius-md);
+    border-color: var(--ds-color-border); color: var(--ds-color-text); font-weight: 600;
+    box-shadow: var(--ds-shadow-1);
   }
-  /* Sort chip — the pill variant ("Sort By: <selection>"); shrink to chip height. */
-  .hlp__filterbar-sort :deep(.srt__btn) { height: 40px; min-height: 40px; padding: 0 14px; font-weight: 600; }
+  /* The rail's trigger carries a trailing chevron on desktop; production's button
+     is just [icon] Filters, so drop it here. */
+  .hlp__filterbar-rail :deep(.fr__toggle > .q-icon) { display: none; }
+  .hlp__mapbtn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    height: 44px; width: 100%; padding: 0 14px;
+    border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md);
+    background: var(--ds-color-surface); color: var(--ds-color-text);
+    font-family: inherit; font-weight: 600; font-size: 0.9375rem; cursor: pointer;
+    box-shadow: var(--ds-shadow-1);
+  }
+  /* Sort By — full-width floating-label select beneath the two buttons. */
+  .hlp__filterbar-sort { display: block; margin-top: 12px; }
+  .hlp__filterbar-sort :deep(.srt) { display: block; }
+  .hlp__filterbar-sort :deep(.srt__btn) {
+    width: 100%; min-height: 56px; padding: 8px 14px;
+    border-color: var(--ds-color-border); background: var(--ds-color-surface);
+  }
   /* Count centered below; the toolbar's own Sort is hidden (moved to the bar). */
   .hlp__toolbar { margin-bottom: 8px; }
   .hlp__toolbar :deep(.rtb) { justify-content: center; }

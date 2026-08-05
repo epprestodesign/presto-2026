@@ -13,7 +13,7 @@ import HoldTimerPill from '@lib/components/HoldTimerPill.vue'
 import AddedToCartToast from '@lib/components/AddedToCartToast.vue'
 
 // "Added to cart" toast — drops from the nav cart icon after a room is added.
-const added = reactive({ show: false, key: 0, roomType: '', hotel: '', image: '', style: {} })
+const added = reactive({ show: false, key: 0, roomType: '', hotel: '', image: '', style: {}, notchRight: null })
 async function resolveHotelImage(name) {
   const h = getHotelByName(name)
   if (!h) return ''
@@ -35,6 +35,19 @@ function showAddedToast(roomType, hotelName) {
     : r
       ? { position: 'fixed', top: `${top}px`, right: `${Math.round(window.innerWidth - r.right - 2)}px`, zIndex: 4000 }
       : { position: 'fixed', top: '76px', right: '24px', zIndex: 4000 }
+
+  // DES-423: point the notch at the cart button rather than a fixed inset — the
+  // centred phone card would otherwise aim it at the overflow (hamburger) menu.
+  // `notchRight` is measured from the card's right edge back to the cart centre,
+  // less half the 16px notch so the arrow is centred on the icon.
+  if (r) {
+    const width = mobile ? Math.min(360, window.innerWidth - 24) : 360
+    const cardRight = mobile ? (window.innerWidth + width) / 2 : r.right + 2
+    const cartCenter = r.left + r.width / 2
+    added.notchRight = Math.round(Math.min(Math.max(cardRight - cartCenter - 8, 14), width - 30))
+  } else {
+    added.notchRight = null
+  }
   added.key++
   added.show = true
   resolveHotelImage(hotelName).then((url) => { if (url) added.image = url })
@@ -289,6 +302,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickCapture, true
     <!-- "Added to cart" toast — drops from the nav cart icon on each room add. -->
     <added-to-cart-toast v-if="added.show" :key="added.key" :style="added.style"
       :room-type="added.roomType" :hotel="added.hotel" :image="added.image" :auto-dismiss="4500"
+      :notch-right="added.notchRight"
       @view-cart="onToastViewCart" @checkout="onToastCheckout" @dismiss="added.show = false" />
   </div>
 </template>

@@ -114,6 +114,16 @@ const contactSummary = computed(() => {
   return lead ? `${lead}${n > 1 ? ` · ${n} guests` : ''}` : 'Contact details'
 })
 
+// DES-421: on phones the single column used to strand the hotel preview + costs
+// below the whole form, so the order rail now leads the page for the individual
+// flows. DES-424: the group flow opens with a "Review order" STEP, so repeating
+// the order summary further down is redundant — drop it on phones there.
+const isPhone = computed(() => $q.screen.lt.sm)
+const showRailOrder = computed(() => !(isGroup.value && isPhone.value))
+// The rail also carries the countdown when it isn't shown as the top strip; keep
+// the aside mounted in that case even when its order summary is hidden.
+const showRail = computed(() => showRailOrder.value || !props.timerTop)
+
 const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirmation has been emailed.', icon: 'check_circle', color: 'grey-9', position: 'bottom', timeout: 3000 })
 </script>
 
@@ -134,10 +144,15 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
     <div class="ck__header">
       <h1 class="ck__h1">Confirm and pay</h1>
       <!-- DES-410: reservation actions moved to the top of the page so the user
-           can jump back to earlier workflow steps easily. -->
-      <div v-if="!isGroup" class="ck__headeractions">
-        <button type="button" class="ck__railbtn"><q-icon name="edit" size="18px" /> Edit reservation</button>
-        <button type="button" class="ck__railbtn ck__railbtn--ghost"><q-icon name="restart_alt" size="18px" /> Start over</button>
+           can jump back to earlier workflow steps easily.
+           DES-424: the group block's "View Additional Hotels" joins them here,
+           matching where the individual flow puts its workflow actions. -->
+      <div class="ck__headeractions">
+        <template v-if="!isGroup">
+          <button type="button" class="ck__railbtn"><q-icon name="edit" size="18px" /> Edit reservation</button>
+          <button type="button" class="ck__railbtn ck__railbtn--ghost"><q-icon name="restart_alt" size="18px" /> Start over</button>
+        </template>
+        <button v-else type="button" class="ck__railbtn"><q-icon name="add" size="18px" /> View Additional Hotels</button>
       </div>
     </div>
 
@@ -170,11 +185,8 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 
       <!-- RIGHT: sticky order summary — recycles the cart body; price details
            split into its own card. The order is always fully expanded. -->
-      <aside class="ck__railwrap">
-        <!-- DES-411: group block → jump back to the hotel list to add more
-             properties to the block. (Individual flows use the header actions.) -->
-        <button v-if="isGroup" type="button" class="ck__viewhotels"><q-icon name="add" size="18px" /> View Additional Hotels</button>
-        <cart-review :mode="cartMode" :cart="liveCart" :currency="currency" readonly bind :show-requests="false" cards :order-title="(isGroup || isMulti) ? 'Review your order' : ''" />
+      <aside v-if="showRail" class="ck__railwrap" :class="{ 'ck__railwrap--lead': !isGroup }">
+        <cart-review v-if="showRailOrder" :mode="cartMode" :cart="liveCart" :currency="currency" readonly bind :show-requests="false" cards :order-title="(isGroup || isMulti) ? 'Review your order' : ''" />
 
         <!-- Time left to book — the held-rooms countdown, under the price details
              (hidden when the timer is shown as the top strip instead). -->
@@ -231,8 +243,6 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 .ck__railbtn--ghost { border-color: var(--ds-color-border-bold); color: var(--ds-color-text); }
 .ck__railbtn--ghost:hover { background: var(--ds-palette-slate-100); }
 /* DES-411: group-block "View Additional Hotels" — sits above the order rail. */
-.ck__viewhotels { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 48px; margin-bottom: 12px; border: 1px solid var(--ds-color-border-brand); border-radius: var(--ds-radius-button); background: var(--ds-color-surface); color: var(--ds-color-text-brand); font-family: inherit; font-weight: 700; font-size: 0.9375rem; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
-.ck__viewhotels:hover { background: var(--ds-palette-navy-50); }
 .ck__rail { position: sticky; top: 20px; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); overflow: hidden; box-shadow: var(--ds-shadow-1); background: var(--ds-color-surface); }
 .ck__railwrap { position: sticky; top: 20px; }
 
@@ -256,6 +266,11 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 @media (max-width: 600px) {
   .ck { padding: 12px 16px 32px; }
   .ck__railwrap { position: static; }
+  /* DES-421: the order summary leads the page so the hotel preview and costs can
+     be reviewed before the form rather than after the submit button. */
+  .ck__railwrap--lead { order: -1; }
+  .ck__headeractions { width: 100%; }
+  .ck__headeractions .ck__railbtn { flex: 1; }
   .ck__step { padding: 16px; }
   .ck__grid { gap: 20px; }
   /* The timer top bar bleeds to the page edge; match the 16px mobile gutter so
