@@ -147,9 +147,15 @@ const heroStyle = { backgroundImage: `${scrim}, url(${defaultBg})` }
   color: var(--ds-color-text);
 }
 
-/* Hero */
+/* Hero.
+   The booking widget below is pulled up 48px (.lp__widget margin-top), so it
+   covers the bottom 48px of this band. Centring on the full box therefore reads
+   as 24px too low. The padding-bottom shrinks the box `align-items: center`
+   works on to the part that stays visible, which optically centres the logo,
+   event name and dates together. Keep it in sync with the widget's offset. */
 .lp__hero {
   min-height: 300px;
+  padding-bottom: 48px;
   background-color: #000;
   background-size: cover;
   background-position: center;
@@ -161,8 +167,10 @@ const heroStyle = { backgroundImage: `${scrim}, url(${defaultBg})` }
 }
 .lp__hero-inner { padding: 0 24px; max-width: 820px; }
 .lp__hero-logo { height: 30px; width: auto; margin: 0 auto 12px; display: block; }
-.lp__event { font-weight: 700; line-height: 1.15; margin: 0; text-wrap: balance; }
-.lp__dates { font-weight: 400; margin: 6px 0 0; }
+/* Desktop hero scale. Phones override both sizes in the media query at the end
+   of this block, so these are desktop-only. */
+.lp__event { font-size: 2.5rem; font-weight: 700; line-height: 1.15; margin: 0; text-wrap: balance; }
+.lp__dates { font-size: 1.25rem; font-weight: 400; margin: 8px 0 0; }
 
 /* Booking widget — tucked up onto the hero. */
 .lp__widget {
