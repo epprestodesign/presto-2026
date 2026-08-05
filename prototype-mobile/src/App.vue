@@ -6,7 +6,10 @@
 // phone the frame drops away and the app fills the viewport.
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
-const PROTO_URL = import.meta.env.DEV ? 'http://localhost:5173/' : '../prototype/'
+// In dev this must match the port `pnpm dev` starts the booking prototype on —
+// see prototype/package.json ("vite --port 6100"). In a build it's the sibling
+// deploy nested under the Storybook site.
+const PROTO_URL = import.meta.env.DEV ? 'http://localhost:6100/' : '../prototype/'
 
 const widths = [
   { w: 360, label: '360' },

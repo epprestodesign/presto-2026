@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "comment": "This folder has no dependencies of its own — vue/quasar/vite all resolve up the tree to the repo's node_modules. A bare `vite` isn't on PATH here, so the scripts invoke the root binary directly (the deploy workflow does the same).",
   "scripts": {
-    "dev": "vite --port 6100 --host",
-    "build": "vite build",
-    "preview": "vite preview --port 6100"
+    "dev": "node ../node_modules/vite/bin/vite.js --port 6100 --host",
+    "build": "node ../node_modules/vite/bin/vite.js build",
+    "preview": "node ../node_modules/vite/bin/vite.js preview --port 6100"
   }
 }
