@@ -168,7 +168,7 @@ export default {
   component: ConfirmationPage,
   // holdData is shared with the Group Block story file — not a story itself.
   excludeStories: ['holdData'],
-  tags: ['autodocs'],
+  tags: ['autodocs', 'updated'],
   parameters: {
     layout: 'fullscreen',
     docs: { description: { component: `

@@ -15,7 +15,7 @@ const useHero = (category, seed) => {
 export default {
   title: 'Checkout Experience/Book Reservation',
   component: CheckoutPage,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'updated'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `
 The **Checkout Page** (Book Reservation) is the Airbnb-style "Confirm and pay"
 flow: a left stepped accordion (Review order → Contact info → Payment → Review

@@ -55,7 +55,7 @@ const cartWith = (fees) => {
 export default {
   title: 'Checkout Experience/Components/Reservation Summary',
   component: CartReview,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'new'],
   parameters: { docs: { description: { component: `
 ## Reservation Summary
 

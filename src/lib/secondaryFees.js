@@ -12,7 +12,7 @@
 //
 //   { name, basis, amount, total, description }
 //
-//   name        custom label; blank falls back to "Secondary Custom Fee N"
+//   name        custom label; blank falls back to "Custom Fee N"
 //   basis       'night' (per room night) | 'reservation' (flat, once)
 //   amount      the configured rate — $5/night, or $15 per reservation
 //   total       the calculated charge the guest actually sees
@@ -44,7 +44,9 @@ export function feeTotal(fee, { nights = 1, rooms = 1 } = {}) {
 export function normalizeSecondaryFees(fees, ctx = {}) {
   if (!Array.isArray(fees)) return []
   return fees.slice(0, MAX_SECONDARY_FEES).map((f, i) => ({
-    name: (f?.name || '').trim() || `Secondary Custom Fee ${i + 1}`,
+    // Blank custom name → the positional label. "Custom Fee N" is the agreed
+    // terminology across design, Linear, and the booking site — keep it exact.
+    name: (f?.name || '').trim() || `Custom Fee ${i + 1}`,
     basis: f?.basis === 'reservation' ? 'reservation' : 'night',
     amount: Number(f?.amount ?? 0),
     total: feeTotal(f, ctx),

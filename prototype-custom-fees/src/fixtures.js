@@ -27,27 +27,32 @@ const addressFor = (city) => `123 Main St, ${city}`
 // Shape and the three-fee cap live in @lib/lib/secondaryFees.js.
 const NIGHTS_COUNT = DETAIL_NIGHTS.length // 3-night stay throughout
 
+// Named literally — **Custom Fee 1 / 2 / 3**, the agreed terminology from the
+// design request. Real organizers type their own labels; the prototype stays
+// positional so a reviewer can tell which fee slot they're looking at on every
+// screen. One flat per-reservation fee sits between the two nightly ones so both
+// bases are visible in the same breakdown.
 export const SECONDARY_FEES = [
   {
-    name: 'Resort Fee',
+    name: 'Custom Fee 1',
     basis: 'night',
     amount: 5,
     total: 5 * NIGHTS_COUNT,
-    description: 'Covers pool and fitness centre access, in-room WiFi, and daily housekeeping. Charged per room, per night, and collected at the time of booking.',
+    description: 'Custom description for Custom Fee 1 — the organizer’s own copy explaining what this fee covers. Charged per room, per night, and collected at the time of booking.',
   },
   {
-    name: 'Event Parking',
+    name: 'Custom Fee 2',
     basis: 'reservation',
     amount: 15,
     total: 15,
-    description: 'One tournament parking permit per reservation, valid for the length of your stay. Oversized vehicles should contact the front desk.',
+    description: 'Custom description for Custom Fee 2. Charged once per reservation, regardless of the length of stay.',
   },
   {
-    name: 'Facility Fee',
+    name: 'Custom Fee 3',
     basis: 'night',
     amount: 2,
     total: 2 * NIGHTS_COUNT,
-    description: 'Supports the venue shuttle and on-site event staffing. Charged per room, per night.',
+    description: 'Custom description for Custom Fee 3. Charged per room, per night.',
   },
 ]
 

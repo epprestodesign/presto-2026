@@ -22,7 +22,7 @@ const room = {
 export default {
   title: 'Hotel Details/Components/Book Reservation/Price Details',
   component: PriceDetailsDialog,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'new'],
   parameters: {
     layout: 'fullscreen',
     docs: { description: { component: `
@@ -69,5 +69,5 @@ export const ThreeFees = { name: 'Three Fees (Max)', render: render(THREE_FEES) 
 /** Four configured: the cap holds and only the first three render. */
 export const FourConfigured = { name: 'Four Configured (Capped at 3)', render: render(FOUR_FEES) }
 
-/** Blank custom name → the "Secondary Custom Fee N" fallback label. */
+/** Blank custom name → the "Custom Fee N" fallback label. */
 export const UnnamedFee = { name: 'Unnamed Fee (Fallback Label)', render: render(UNNAMED_FEES) }
