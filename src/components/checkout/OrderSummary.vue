@@ -2,12 +2,25 @@
 // OrderSummary — the sticky right-rail card on the checkout page (Airbnb-style):
 // hero image, title, editable rows (dates / guests / rooms), price details,
 // total, and an optional scarcity note.
-defineProps({
+//
+// DES-456: `summary.secondaryFees` renders up to three named custom fees below
+// the price lines. Amounts only — the rate and the organizer's description are
+// on the ⓘ. `summary.total` is caller-owned and must already include them.
+import { computed } from 'vue'
+import { normalizeSecondaryFees, feeTooltip } from '../../lib/secondaryFees'
+
+const props = defineProps({
   summary: { type: Object, default: () => ({}) },
   currency: { type: String, default: '$' },
 })
 const emit = defineEmits(['change'])
 const money = (n, c = '$') => c + Number(n ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+const fees = computed(() => normalizeSecondaryFees(props.summary?.secondaryFees, {
+  nights: props.summary?.nights ?? 1,
+  rooms: props.summary?.rooms ?? 1,
+}))
+const feeTip = (f) => feeTooltip(f, { currency: props.currency })
 </script>
 
 <template>
@@ -33,6 +46,13 @@ const money = (n, c = '$') => c + Number(n ?? 0).toLocaleString('en-US', { minim
 
     <div class="os__priceh">Price details</div>
     <div v-for="(p, i) in summary.priceLines" :key="i" class="os__price"><span>{{ p.label }}</span><span>{{ money(p.value, currency) }}</span></div>
+    <!-- DES-456: secondary custom fees, max 3 -->
+    <div v-for="(f, i) in fees" :key="'fee' + i" class="os__price">
+      <span class="os__feelabel">{{ f.name }}
+        <button v-if="feeTip(f)" type="button" class="os__info" :aria-label="`About ${f.name}`"><q-icon name="info" size="15px" /><q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 8]" max-width="320px">{{ feeTip(f) }}</q-tooltip></button>
+      </span>
+      <span>{{ money(f.total, currency) }}</span>
+    </div>
 
     <div class="os__rule" />
     <div class="os__total"><span>Total <small>{{ currency === '$' ? 'USD' : currency }}</small></span><span>{{ money(summary.total, currency) }}</span></div>
@@ -62,6 +82,9 @@ const money = (n, c = '$') => c + Number(n ?? 0).toLocaleString('en-US', { minim
 .os__priceh { font-weight: 700; color: var(--ds-color-text); margin-bottom: 8px; }
 .os__price { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; color: var(--ds-color-text); font-size: 0.9375rem; }
 .os__price > span:first-child { color: var(--ds-color-text-subtle); }
+.os__feelabel { display: inline-flex; align-items: center; gap: 5px; }
+.os__info { display: inline-flex; align-items: center; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+.os__info:hover { color: var(--ds-color-text); }
 .os__total { display: flex; justify-content: space-between; gap: 12px; font-weight: 700; font-size: 1.0625rem; color: var(--ds-color-text); }
 .os__total small { font-weight: 600; font-size: 0.8125rem; color: var(--ds-color-text-subtle); }
 .os__breakdown { background: none; border: 0; padding: 6px 0 0; color: var(--ds-color-text); font-weight: 600; text-decoration: underline; cursor: pointer; font-size: 0.875rem; }

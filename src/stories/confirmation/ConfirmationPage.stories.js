@@ -6,6 +6,7 @@
 // Block variant lives in ConfirmationPageGroup.stories.js and reuses holdData.
 import ConfirmationPage from '../../components/confirmation/ConfirmationPage.vue'
 import PageFrame from '../../components/PageFrame.vue'
+import { THREE_FEES, THREE_FEES_TOTAL } from '../secondaryFeesFixture'
 
 const AMENITIES_NOTICE = 'Kindly note that amenities like laundry, pools, parking rates, breakfast and restaurants are not guaranteed. For the latest updates on available amenities, please visit the hotel website.'
 
@@ -27,6 +28,17 @@ const reserveData = {
           { date: 'Tue, 07/02/2027', qty: 1, price: 128 },
         ] },
       ],
+      // DES-455: totals — taxes, the three secondary custom fees, then what was
+      // charged at booking vs. owed at the property. Fees are collected now, so
+      // they make up Amount Paid; the room cost stays as Balance due.
+      totals: {
+        taxes: 0,
+        rooms: 1,
+        secondaryFees: THREE_FEES,
+        roomCost: 256,
+        amountPaid: THREE_FEES_TOTAL,
+        balanceDue: 256,
+      },
     },
   ],
   policies: [
@@ -156,7 +168,7 @@ export default {
   component: ConfirmationPage,
   // holdData is shared with the Group Block story file — not a story itself.
   excludeStories: ['holdData'],
-  tags: ['autodocs'],
+  tags: ['autodocs', 'updated'],
   parameters: {
     layout: 'fullscreen',
     docs: { description: { component: `

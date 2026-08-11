@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Build both clickable prototypes into one publish directory for Netlify.
 #
-#   dist-netlify/prototype/  booking journey (desktop + responsive)
-#   dist-netlify/mobile/     device-frame showcase, embeds the above
+#   dist-netlify/prototype/    booking journey (desktop + responsive)
+#   dist-netlify/mobile/       device-frame showcase, embeds the above
+#   dist-netlify/custom-fees/  Custom Fees Request (fork of the booking journey)
 #
 # This mirrors the "Build prototype" steps in .github/workflows/deploy.yml —
 # the difference is the base paths. GitHub Pages serves the repo under
@@ -24,6 +25,8 @@ mkdir -p dist-netlify
 
 (cd prototype && node "$VITE" build --base=/prototype/)
 (cd prototype-mobile && node "$VITE" build --base=/mobile/)
+(cd prototype-custom-fees && node "$VITE" build --base=/custom-fees/)
 
 cp -r prototype/dist dist-netlify/prototype
 cp -r prototype-mobile/dist dist-netlify/mobile
+cp -r prototype-custom-fees/dist dist-netlify/custom-fees

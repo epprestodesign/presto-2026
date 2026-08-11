@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 import { loadImagery } from '../../lib/imagery'
 import CheckoutPage from '../../components/checkout/CheckoutPage.vue'
 import PageFrame from '../../components/PageFrame.vue'
+import { THREE_FEES } from '../secondaryFeesFixture'
 
 const useHero = (category, seed) => {
   const img = ref('')
@@ -14,7 +15,7 @@ const useHero = (category, seed) => {
 export default {
   title: 'Checkout Experience/Book Reservation',
   component: CheckoutPage,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'updated'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `
 The **Checkout Page** (Book Reservation) is the Airbnb-style "Confirm and pay"
 flow: a left stepped accordion (Review order → Contact info → Payment → Review
@@ -50,13 +51,15 @@ export const Page = {
             { label: 'Fri, 04/02/2027', value: 120 },
             { label: 'Booking Fee', value: 10 },
             { label: 'Taxes', value: 15 },
-            { label: 'Secondary Fee', value: 2 },
             { label: 'Guest Fees', value: 15 },
-            { label: 'Resort Fees', value: 45 },
           ],
+          // DES-456: the three secondary custom fees, replacing the single
+          // ad-hoc "Secondary Fee" line this demo used to carry. They're charged
+          // at booking, so their $43 sits inside Due Today (115 + 43 = 158).
+          secondaryFees: THREE_FEES,
           subtotals: [
-            { label: 'Room Cost', value: 432 },
-            { label: 'Due Today', value: 162 },
+            { label: 'Room Cost', value: 385 },
+            { label: 'Due Today', value: 158 },
           ],
           balanceDue: 270,
         },
@@ -78,7 +81,8 @@ export const Page = {
           { label: 'Taxes', value: 47.53 },
           { label: 'Property fee', value: 110 },
         ],
-        total: 322.31,
+        secondaryFees: THREE_FEES,
+        total: 365.31, // 322.31 + $43 in secondary fees
         note: 'Rare find! This room is usually booked',
       }))
       return { cart, summary }
@@ -98,6 +102,9 @@ export const MultipleRoomReservations = {
       const img = useHero('suites', 0)
       const cart = {
         heldSeconds: 895, taxRate: 0.12, feePerNight: 0,
+        // DES-456: multiple reservations carry the fees at cart level — the rail
+        // has no single priceDetails to hang them off.
+        secondaryFees: THREE_FEES,
         hotels: [
           { name: 'Hilton Orlando Lake Buena Vista', imageCategories: ['suites', 'rooms'], seed: 0, rooms: [
             { type: 'King Bedroom', summary: '1 King Bed · Sleeps 2', price: 301, adults: 2, children: 0, nights: [

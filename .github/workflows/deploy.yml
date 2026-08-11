@@ -65,6 +65,19 @@ jobs:
       - name: Nest mobile prototype under Storybook
         run: cp -r prototype-mobile/dist storybook-static/prototype-mobile
 
+      # Custom Fees Request — a fork of the booking journey above, kept as its own
+      # app so fee-request explorations can diverge without touching the shipped
+      # journey. Same zero-deps setup; served at /presto-2026/prototype-custom-fees/.
+      - name: Build prototype (Custom Fees Request)
+        working-directory: prototype-custom-fees
+        run: node ../node_modules/vite/bin/vite.js build --base=/presto-2026/prototype-custom-fees/
+        env:
+          VITE_IMAGERY_URL: "https://epprestodesign.github.io/presto-ds-imagery"
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+
+      - name: Nest Custom Fees Request under Storybook
+        run: cp -r prototype-custom-fees/dist storybook-static/prototype-custom-fees
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: storybook-static
