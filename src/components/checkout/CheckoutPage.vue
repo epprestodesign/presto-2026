@@ -71,9 +71,14 @@ const contactReservations = computed(() => (liveCart.hotels || []).map((h) => ({
 // Policies step: group/multi → per-hotel accordion; single reservation → one
 // generic card. Group flow → "Hold Group Block Now"; else "Book Now".
 const policyFlow = computed(() => (isGroup.value ? 'group' : 'reserve'))
+// DES-454: carry each hotel's secondary custom fees through so their descriptions
+// land in the policies list. Single reservations keep their fees on
+// `cart.priceDetails`, multi-hotel carts on each hotel.
 const policyHotels = computed(() => {
   const hs = liveCart.hotels
-  return (hs && hs.length) ? hs.map((h) => ({ name: h.name })) : [{}]
+  return (hs && hs.length)
+    ? hs.map((h) => ({ name: h.name, secondaryFees: h.secondaryFees ?? liveCart.secondaryFees }))
+    : [{ secondaryFees: liveCart.priceDetails?.secondaryFees ?? liveCart.secondaryFees }]
 })
 
 // Group blocks are held, not charged — no payment step. Reservation flows keep

@@ -13,6 +13,7 @@
 // Controls are presentational (visual states only). Accents use the DS primary.
 import { computed, onMounted, ref } from 'vue'
 import { loadImagery } from '../../lib/imagery'
+import { normalizeSecondaryFees, feeTooltip } from '../../lib/secondaryFees'
 
 const props = defineProps({
   mode: { type: String, default: 'reserve' }, // reserve | hold | reservations
@@ -78,6 +79,23 @@ const policies = computed(() => d.value.policies || [])
 
 const money = (n) => '$' + Number(n ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const print = () => { if (typeof window !== 'undefined') window.print() }
+
+// --- Totals (DES-455) --------------------------------------------------------
+// The live confirmation page closes the summary with Taxes → each secondary
+// custom fee → Room Cost / Amount Paid / Balance due. Group blocks are held
+// rather than charged, so they get no totals block at all.
+//
+// Per-hotel shape, all optional — omit `totals` and the block doesn't render:
+//   totals: { taxes, secondaryFees: [...], roomCost, amountPaid, balanceDue }
+//
+// Secondary fees are charged at booking, so they are already inside
+// `amountPaid`; the component never re-adds them.
+const feesFor = (h) => normalizeSecondaryFees(h?.totals?.secondaryFees, {
+  nights: (h?.rooms?.[0]?.nights || []).length || 1,
+  rooms: h?.totals?.rooms ?? 1,
+})
+const feeTip = (f) => feeTooltip(f)
+const showTotals = (h) => !isHold.value && !!h?.totals
 </script>
 
 <template>
@@ -155,6 +173,34 @@ const print = () => { if (typeof window !== 'undefined') window.print() }
               </li>
             </ul>
           </div>
+
+          <!-- DES-455: totals — Taxes, up to three secondary custom fees, then
+               what was charged now vs. owed at the property. -->
+          <dl v-if="showTotals(h)" class="conf__totals">
+            <div v-if="h.totals.taxes != null" class="conf__totalrow">
+              <dt>Taxes</dt><dd>{{ money(h.totals.taxes) }}</dd>
+            </div>
+            <div v-for="(f, fi) in feesFor(h)" :key="'fee' + fi" class="conf__totalrow">
+              <dt>
+                {{ f.name }}
+                <button v-if="feeTip(f)" type="button" class="conf__info" :aria-label="`About ${f.name}`">
+                  <q-icon name="info" size="15px" />
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 8]" max-width="320px">{{ feeTip(f) }}</q-tooltip>
+                </button>
+              </dt>
+              <dd>{{ money(f.total) }}</dd>
+            </div>
+
+            <div v-if="h.totals.roomCost != null" class="conf__totalrow conf__totalrow--strong conf__totalrow--ruled">
+              <dt>Room Cost</dt><dd>{{ money(h.totals.roomCost) }}</dd>
+            </div>
+            <div v-if="h.totals.amountPaid != null" class="conf__totalrow conf__totalrow--strong">
+              <dt>Amount Paid (at time of booking)</dt><dd>{{ money(h.totals.amountPaid) }}</dd>
+            </div>
+            <div v-if="h.totals.balanceDue != null" class="conf__totalrow conf__totalrow--strong conf__totalrow--ruled">
+              <dt>Balance due</dt><dd>{{ money(h.totals.balanceDue) }}</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
@@ -231,6 +277,17 @@ const print = () => { if (typeof window !== 'undefined') window.print() }
 .conf__nightdate { color: var(--ds-color-text); }
 .conf__nightheld { color: var(--ds-color-text); font-weight: 700; text-align: right; }
 .conf__nightprice { color: var(--ds-color-text-success); font-weight: 700; min-width: 84px; text-align: right; }
+
+/* totals (DES-455) — taxes + secondary custom fees, then the charged/owed rows.
+   Same two-column rhythm as the nights list so the amounts stay right-aligned. */
+.conf__totals { margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.conf__totalrow { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; font-size: 0.9375rem; }
+.conf__totalrow dt { margin: 0; display: inline-flex; align-items: center; gap: 5px; color: var(--ds-color-text-subtle); }
+.conf__totalrow dd { margin: 0; color: var(--ds-color-text); font-variant-numeric: tabular-nums; }
+.conf__totalrow--strong dt, .conf__totalrow--strong dd { color: var(--ds-color-text); font-weight: 700; }
+.conf__totalrow--ruled { border-top: 1px solid var(--ds-color-border); padding-top: 12px; margin-top: 6px; }
+.conf__info { display: inline-flex; align-items: center; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+.conf__info:hover { color: var(--ds-color-text); }
 
 /* policies */
 .conf__policyhotel + .conf__policyhotel { margin-top: 24px; }

@@ -48,6 +48,9 @@ const props = defineProps({
   roomsFlow: { type: String, default: 'reserve' }, // 'reserve' | 'group'
   roomsTitle: { type: String, default: 'Select Your Room' },
   roomsSubtitle: { type: String, default: '' },
+  // DES-453: up to three secondary custom fees for this hotel — surfaced in the
+  // room cards' Price Details modal.
+  secondaryFees: { type: Array, default: null },
 
   // Sections. `about` accepts a string (one paragraph) or an array of paragraphs.
   about: { type: [String, Array], default: '' },
@@ -160,7 +163,7 @@ onMounted(async () => {
 
     <!-- Rooms -->
     <section id="hdp-rooms" class="hdp__section hdp__section--ruled">
-      <rooms-carousel :rooms="rooms" :flow="roomsFlow" :title="roomsTitle" :subtitle="roomsSubtitle" />
+      <rooms-carousel :rooms="rooms" :flow="roomsFlow" :title="roomsTitle" :subtitle="roomsSubtitle" :secondary-fees="secondaryFees" />
     </section>
 
     <!-- Amenities -->

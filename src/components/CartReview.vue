@@ -11,6 +11,7 @@
 // Emits live `update:count` / `update:total`; exposes clear() for "Clear Cart".
 import { ref, computed, watch, onMounted } from 'vue'
 import { loadImagery } from '../lib/imagery'
+import { normalizeSecondaryFees, secondaryFeesTotal, feeTooltip } from '../lib/secondaryFees'
 import QuantityStepper from './QuantityStepper.vue'
 
 const props = defineProps({
@@ -42,6 +43,20 @@ const isReservations = computed(() => props.mode === 'reservations')
 // each room just shows its nightly cost. So the aggregated Price details card is
 // omitted for hold (kept for reservations, which are booked/charged).
 const isHold = computed(() => props.mode === 'hold')
+
+// DES-456: up to three secondary custom fees, shown on every surface that reuses
+// this summary (checkout rail, cart fly-out, review-order step). Fees are charged
+// at booking, so they roll into Due Today — see `feesTotal` consumers below.
+const feeCtx = computed(() => ({
+  nights: props.cart.priceDetails?.nights ?? 1,
+  rooms: props.cart.priceDetails?.rooms ?? 1,
+}))
+// `priceDetails.secondaryFees` for a single reservation; `cart.secondaryFees` for
+// the multi-hotel modes, where there is no single priceDetails object.
+const feeSource = computed(() => props.cart.priceDetails?.secondaryFees ?? props.cart.secondaryFees)
+const secondaryFees = computed(() => normalizeSecondaryFees(feeSource.value, feeCtx.value))
+const feesTotal = computed(() => secondaryFeesTotal(feeSource.value, feeCtx.value))
+const feeTip = (f) => feeTooltip(f, { currency: props.currency })
 
 // --- Imagery (reserve carousel + per-hotel thumbnails) ---
 const lib = ref(null)
@@ -199,6 +214,15 @@ defineExpose({ clear })
              / Balance due); otherwise the simple nights × rooms × rate card. -->
         <template v-if="cart.priceDetails.lines">
           <div v-for="(l, i) in cart.priceDetails.lines" :key="i" class="cr__kv"><span>{{ l.label }}</span><span>{{ l.text ? l.value : money(l.value) }}</span></div>
+          <!-- DES-456: secondary custom fees (max 3), after the nightly/tax lines.
+               Calculated charge only; rate + description on the ⓘ. Callers own
+               the arithmetic — `subtotals` must already include `feesTotal`. -->
+          <div v-for="(f, i) in secondaryFees" :key="'fee' + i" class="cr__kv">
+            <span class="cr__taxlabel">{{ f.name }}
+              <button v-if="feeTip(f)" type="button" class="cr__info" :aria-label="`About ${f.name}`"><q-icon name="info" size="16px" /><q-tooltip class="cr__tooltip" anchor="top middle" self="bottom middle" :offset="[0, 8]" max-width="320px">{{ feeTip(f) }}</q-tooltip></button>
+            </span>
+            <span>{{ money(f.total) }}</span>
+          </div>
           <div class="cr__rule" />
           <div v-for="(s, i) in cart.priceDetails.subtotals" :key="'sub' + i" class="cr__kv cr__kv--total"><span>{{ s.label }}</span><span>{{ money(s.value) }}</span></div>
           <template v-if="cart.priceDetails.balanceDue != null">
@@ -218,6 +242,14 @@ defineExpose({ clear })
         </div>
         <div v-if="cart.priceDetails.discount" class="cr__discount">{{ cart.priceDetails.discount }}</div>
         <div class="cr__kv"><span class="cr__taxlabel">Taxes &amp; Fees <button type="button" class="cr__info" aria-label="About taxes and fees"><q-icon name="info" size="16px" /><q-tooltip class="cr__tooltip" anchor="top middle" self="bottom middle" :offset="[0, 8]" max-width="360px">{{ TAX_DISCLAIMER }}</q-tooltip></button></span><span>{{ money((cart.priceDetails.taxes || 0) + (cart.priceDetails.propertyFee || 0)) }}</span></div>
+        <!-- DES-456: secondary custom fees (max 3) sit below Taxes & Fees, each
+             named so the guest can tell them apart. -->
+        <div v-for="(f, i) in secondaryFees" :key="'sfee' + i" class="cr__kv">
+          <span class="cr__taxlabel">{{ f.name }}
+            <button v-if="feeTip(f)" type="button" class="cr__info" :aria-label="`About ${f.name}`"><q-icon name="info" size="16px" /><q-tooltip class="cr__tooltip" anchor="top middle" self="bottom middle" :offset="[0, 8]" max-width="320px">{{ feeTip(f) }}</q-tooltip></button>
+          </span>
+          <span>{{ money(f.total) }}</span>
+        </div>
         <div class="cr__rule" />
         <div class="cr__kv cr__kv--total"><span>Total</span><span>{{ money(cart.priceDetails.total) }}</span></div>
         <div class="cr__quoted">Rates are quoted in USD ($).</div>
@@ -282,6 +314,21 @@ defineExpose({ clear })
         <button v-if="!readonly && showAddHotel" class="cr__addhotel"><q-icon name="add" size="18px" /> {{ isReservations ? 'Add another reservation' : 'Add another hotel' }}</button>
         </div>
 
+        <!-- DES-456 (group block): a held block isn't charged, so fees can't be
+             totalled here — but attendees will be charged them when they book
+             into the block, so the block organizer still needs to see which fees
+             apply. Names + terms only, no amounts. -->
+        <div v-if="isHold && showPrice && secondaryFees.length" class="cr__pricecard cr__feenote">
+          <h4 class="cr__price-h">Additional fees</h4>
+          <p class="cr__feenote-lead">Charged to each attendee when they book a room in this block.</p>
+          <div v-for="(f, i) in secondaryFees" :key="'hfee' + i" class="cr__kv">
+            <span class="cr__taxlabel">{{ f.name }}
+              <button v-if="feeTip(f)" type="button" class="cr__info" :aria-label="`About ${f.name}`"><q-icon name="info" size="16px" /><q-tooltip class="cr__tooltip" anchor="top middle" self="bottom middle" :offset="[0, 8]" max-width="320px">{{ feeTip(f) }}</q-tooltip></button>
+            </span>
+            <span class="cr__feebasis">{{ f.basis === 'night' ? 'per room night' : 'per reservation' }}</span>
+          </div>
+        </div>
+
         <!-- Reservations are booked/charged → full price breakdown. Group blocks
              (hold) are held, not charged → no totals/taxes/fees (each room shows
              its nightly cost above). -->
@@ -290,8 +337,15 @@ defineExpose({ clear })
           <div v-for="(l, i) in roomLines" :key="i" class="cr__kv"><span>{{ l.label }} · {{ l.nights }} night{{ l.nights === 1 ? '' : 's' }}</span><span>{{ money(l.subtotal) }}</span></div>
           <div class="cr__rule" />
           <div class="cr__kv"><span class="cr__taxlabel">Taxes &amp; Fees <button type="button" class="cr__info" aria-label="About taxes and fees"><q-icon name="info" size="16px" /><q-tooltip class="cr__tooltip" anchor="top middle" self="bottom middle" :offset="[0, 8]" max-width="360px">{{ TAX_DISCLAIMER }}</q-tooltip></button></span><span>{{ money(holdTaxes + holdFee) }}</span></div>
+          <!-- DES-456: secondary custom fees across the whole multi-hotel order. -->
+          <div v-for="(f, i) in secondaryFees" :key="'mfee' + i" class="cr__kv">
+            <span class="cr__taxlabel">{{ f.name }}
+              <button v-if="feeTip(f)" type="button" class="cr__info" :aria-label="`About ${f.name}`"><q-icon name="info" size="16px" /><q-tooltip class="cr__tooltip" anchor="top middle" self="bottom middle" :offset="[0, 8]" max-width="320px">{{ feeTip(f) }}</q-tooltip></button>
+            </span>
+            <span>{{ money(f.total) }}</span>
+          </div>
           <div class="cr__rule" />
-          <div class="cr__kv cr__kv--total"><span>Total</span><span>{{ money(holdTotal) }}</span></div>
+          <div class="cr__kv cr__kv--total"><span>Total</span><span>{{ money(holdTotal + feesTotal) }}</span></div>
           <div class="cr__quoted">Rates are quoted in USD ($).</div>
         </div>
       </div>
@@ -401,6 +455,10 @@ defineExpose({ clear })
 .cr__price-sub { color: var(--ds-color-text-subtle); font-size: 0.8125rem; margin-top: 2px; }
 .cr__discount { display: inline-block; background: var(--ds-palette-green-600); color: #fff; font-weight: 600; font-size: 0.8125rem; padding: 3px 10px; border-radius: var(--ds-radius-sm); margin-top: 10px; }
 .cr__quoted { color: var(--ds-color-text-subtlest); font-size: 0.75rem; margin-top: 12px; }
+
+/* Group-block "Additional fees" note — names + terms, never amounts. */
+.cr__feenote-lead { color: var(--ds-color-text-subtle); font-size: 0.8125rem; margin: -4px 0 12px; }
+.cr__feebasis { color: var(--ds-color-text-subtle); font-size: 0.8125rem; }
 .cr__heldnote { display: flex; align-items: center; gap: 7px; margin-top: 12px; background: var(--ds-color-background-warning); color: var(--ds-palette-amber-800); border: 1px solid var(--ds-palette-amber-200); border-radius: var(--ds-radius-md); padding: 9px 12px; font-size: 0.8125rem; }
 </style>
 

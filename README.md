@@ -39,6 +39,19 @@ cp .env.example .env          # add your Google Maps key (optional; map degrades
 node ../node_modules/vite/bin/vite.js --port 6100 --host   # → http://localhost:6100
 ```
 
+### Custom Fees Request
+A **fork of the booking journey** kept as its own app, so fee-request explorations
+can diverge without touching the shipped journey. Source in
+[`prototype-custom-fees/`](prototype-custom-fees/); it starts life as an exact
+duplicate of `prototype/`.
+
+**▶ Launch: https://epprestodesign.github.io/presto-2026/prototype-custom-fees/**
+
+```bash
+cd prototype-custom-fees
+node ../node_modules/vite/bin/vite.js --port 6200 --host   # → http://localhost:6200
+```
+
 ## Local development
 ```bash
 pnpm install
@@ -167,19 +180,21 @@ required by the Unsplash API Guidelines.
 Handled by [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): builds
 Storybook, builds the [`prototype/`](prototype/) app (nested at `/prototype/`), the
 [`prototype-mobile/`](prototype-mobile/) device-frame showcase (nested at
-`/prototype-mobile/`), and publishes `storybook-static/` to GitHub Pages on every
-push to `main`. Pages is
+`/prototype-mobile/`), the [`prototype-custom-fees/`](prototype-custom-fees/) app
+(nested at `/prototype-custom-fees/`), and publishes `storybook-static/` to GitHub
+Pages on every push to `main`. Pages is
 already enabled (**Settings → Pages → Source: GitHub Actions**).
 
-The two prototypes are *also* published on Netlify
+The prototypes are *also* published on Netlify
 ([`ep-presto-2026`](https://app.netlify.com/projects/ep-presto-2026)) via
 [`netlify.toml`](netlify.toml) + [`scripts/netlify-build.sh`](scripts/netlify-build.sh),
-which builds both apps into `dist-netlify/`. Storybook is not part of that build.
+which builds all three apps into `dist-netlify/`. Storybook is not part of that build.
 
 | | Netlify | GitHub Pages |
 | --- | --- | --- |
 | Booking journey | https://ep-presto-2026.netlify.app/prototype/ | https://epprestodesign.github.io/presto-2026/prototype/ |
 | Mobile showcase | https://ep-presto-2026.netlify.app/mobile/ | https://epprestodesign.github.io/presto-2026/prototype-mobile/ |
+| Custom Fees Request | https://ep-presto-2026.netlify.app/custom-fees/ | https://epprestodesign.github.io/presto-2026/prototype-custom-fees/ |
 
 The Netlify root (`/`) redirects to `/prototype/`, which is what it served before
 the mobile prototype was added.

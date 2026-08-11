@@ -2,8 +2,9 @@
 # see .github/workflows/deploy.yml). Both prototypes are published side by side
 # so the mobile showcase can iframe the booking journey as a sibling:
 #
-#   /prototype/  booking journey (desktop + responsive)
-#   /mobile/     device-frame showcase, embeds the above
+#   /prototype/    booking journey (desktop + responsive)
+#   /mobile/       device-frame showcase, embeds the above
+#   /custom-fees/  Custom Fees Request (fork of the booking journey)
 #
 # `/` redirects to /prototype/, which is what the site root served before the
 # mobile prototype was added.
@@ -35,4 +36,9 @@
 [[redirects]]
   from = "/mobile/*"
   to = "/mobile/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/custom-fees/*"
+  to = "/custom-fees/index.html"
   status = 200

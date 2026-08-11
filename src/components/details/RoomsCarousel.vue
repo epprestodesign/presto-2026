@@ -7,7 +7,7 @@
 // Reservations), 'group' → RoomCardGroup (Group Block). Sold-out rooms are
 // rendered inline (the cards handle their own sold-out state), so availability
 // never removes a room from the list — it just disables it.
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import RoomCardReserve from './RoomCardReserve.vue'
 import RoomCardGroup from './RoomCardGroup.vue'
 import PriceDetailsDialog from './PriceDetailsDialog.vue'
@@ -17,12 +17,21 @@ const props = defineProps({
   flow: { type: String, default: 'reserve' }, // 'reserve' | 'group'
   title: { type: String, default: 'Select Your Room' },
   subtitle: { type: String, default: '' },
+  // DES-453: up to three secondary custom fees for this hotel, forwarded to the
+  // Price Details modal. A room may also carry its own `secondaryFees`, which
+  // wins — event hotel level overrides event level, same as the admin config.
+  secondaryFees: { type: Array, default: null },
 })
 
 // Price Details modal (reserve flow) — opened from a room card's "Price Details".
 const priceOpen = ref(false)
 const activeRoom = ref(null)
 const openPrice = (room) => { activeRoom.value = room; priceOpen.value = true }
+const activeFees = computed(() => activeRoom.value?.secondaryFees ?? props.secondaryFees)
+
+// `secondaryFees` is breakdown data, not a card prop — keep it off the room card
+// so it doesn't fall through onto the DOM as an attribute.
+const cardProps = (room) => { const { secondaryFees, ...rest } = room || {}; return rest }
 </script>
 
 <template>
@@ -37,13 +46,13 @@ const openPrice = (room) => { activeRoom.value = room; priceOpen.value = true }
     <!-- Up to 3 room cards per row; additional room types wrap to new rows. -->
     <div class="rcar__grid">
       <div v-for="(room, i) in rooms" :key="i" class="rcar__item">
-        <room-card-group v-if="flow === 'group'" v-bind="room" />
-        <room-card-reserve v-else v-bind="room" @price-details="openPrice(room)" />
+        <room-card-group v-if="flow === 'group'" v-bind="cardProps(room)" />
+        <room-card-reserve v-else v-bind="cardProps(room)" @price-details="openPrice(room)" />
       </div>
     </div>
 
     <!-- Price Details breakdown modal (reserve flow) -->
-    <price-details-dialog v-model="priceOpen" :room="activeRoom" />
+    <price-details-dialog v-model="priceOpen" :room="activeRoom" :secondary-fees="activeFees" />
   </section>
 </template>
 

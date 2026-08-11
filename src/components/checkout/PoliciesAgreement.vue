@@ -6,6 +6,7 @@
 //     with its OWN agreement checkbox; the CTA enables only once ALL are checked.
 // `flow` ('reserve' | 'group') drives the default CTA label and agreement copy.
 import { ref, computed } from 'vue'
+import { feePolicyItems } from '../../lib/secondaryFees'
 
 // Default GrandStay + hotel policy set (shared across properties).
 const DEFAULT_POLICIES = [
@@ -40,7 +41,14 @@ const cta = computed(() => props.ctaLabel || (isGroup.value ? 'Hold Group Block 
 const singleAgreement = computed(() => props.agreementText || (isGroup.value
   ? 'By clicking this checkbox, I acknowledge that I have read and agree to the Hotel and HoCo Book Reservation Policies.'
   : 'By clicking this checkbox, I acknowledge that I have read and agree to the Reservation Policies and I authorize HoCoBook to charge the above credit card.'))
-const policiesFor = (h) => (h && h.policies) || DEFAULT_POLICIES
+// DES-454: a hotel's secondary custom fees each contribute a policy entry
+// (custom name → custom description), appended after the standard set — which is
+// where the live booking site surfaces them today.
+const policiesFor = (h) => {
+  const base = (h && h.policies) || DEFAULT_POLICIES
+  const fees = feePolicyItems(h?.secondaryFees)
+  return fees.length ? [...base, ...fees] : base
+}
 
 // Agreement state — one flag for the group single-checkbox, else one per hotel.
 const agreed = ref(props.flow === 'group' ? [false] : props.hotels.map(() => false))
