@@ -426,14 +426,16 @@ const searchGuests = computed(() =>
 
 /* middle — results list */
 .hlp__results { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
-.hlp__section { margin-top: 8px; }
-.hlp__section-rule { border: 0; border-top: 1px solid var(--ds-color-border); margin: 0 0 16px; }
+/* DES-459 — section breaks made more prominent: a strong 2px navy rule above a
+   larger, bold navy heading (more separation between result groups). */
+.hlp__section { margin-top: 20px; }
+.hlp__section-rule { border: 0; border-top: 2px solid var(--ds-color-border-brand); margin: 0 0 14px; }
 .hlp__section-heading {
   margin: 0;
-  font-size: 1.0625rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--ds-color-text);
-  line-height: 1.35;
+  color: var(--ds-color-text-brand);
+  line-height: 1.3;
 }
 .hlp__card { width: 100%; }
 
