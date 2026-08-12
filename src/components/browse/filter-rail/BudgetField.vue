@@ -2,21 +2,27 @@
 // BudgetField — title + Per Night / Total Stay segmented toggle + "$ Max" input +
 // apply button. `v-model` is an object `{ basis, max }` where basis is
 // 'night' | 'total' and max is the entered amount string.
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const props = defineProps({
   modelValue: { type: Object, default: () => ({ basis: 'night', max: '' }) },
 })
 const emit = defineEmits(['update:modelValue'])
 
+// DES-457: basis + max are staged locally and only committed to the parent
+// (which filters results) when "Apply Budget Filter" is pressed.
+const draft = ref({ ...props.modelValue })
+watch(() => props.modelValue, (v) => { draft.value = { ...v } })
 const budgetBasis = computed({
-  get: () => props.modelValue.basis,
-  set: (v) => emit('update:modelValue', { ...props.modelValue, basis: v }),
+  get: () => draft.value.basis,
+  set: (v) => { draft.value = { ...draft.value, basis: v } },
 })
 const budgetMax = computed({
-  get: () => props.modelValue.max,
-  set: (v) => emit('update:modelValue', { ...props.modelValue, max: v }),
+  get: () => draft.value.max,
+  set: (v) => { draft.value = { ...draft.value, max: v } },
 })
+const applied = computed(() => draft.value.basis === props.modelValue.basis && draft.value.max === props.modelValue.max)
+const apply = () => emit('update:modelValue', { ...draft.value })
 </script>
 
 <template>
@@ -26,8 +32,8 @@ const budgetMax = computed({
       <button type="button" :class="['fr__seg-btn', { 'is-on': budgetBasis === 'night' }]" @click="budgetBasis = 'night'">Per Night</button>
       <button type="button" :class="['fr__seg-btn', { 'is-on': budgetBasis === 'total' }]" @click="budgetBasis = 'total'">Total Stay</button>
     </div>
-    <q-input v-model="budgetMax" outlined dense :placeholder="budgetBasis === 'night' ? 'Max per night' : 'Max total'" prefix="$" class="fr__budget" />
-    <button type="button" class="fr__apply">Apply Budget Filter</button>
+    <q-input v-model="budgetMax" outlined dense :placeholder="budgetBasis === 'night' ? 'Max per night' : 'Max total'" prefix="$" class="fr__budget" @keyup.enter="apply" />
+    <button type="button" class="fr__apply" :class="{ 'fr__apply--done': applied }" @click="apply">Apply Budget Filter</button>
   </div>
 </template>
 
@@ -48,6 +54,8 @@ const budgetMax = computed({
   background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem;
 }
 .fr__apply:hover { background: var(--ds-palette-navy-800, #0a1f4d); }
+/* Muted once applied (no pending changes); solid navy invites you to apply. */
+.fr__apply--done, .fr__apply--done:hover { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtle); }
 
 /* Budget segmented control */
 .fr__seg { display: flex; border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); overflow: hidden; margin-bottom: 12px; }

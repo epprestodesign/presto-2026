@@ -1,16 +1,22 @@
 <script setup>
 // SearchRadiusField — title + slider (0–25) + read-only "Any / miles" input +
 // apply button. `v-model` is the radius number.
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const props = defineProps({ modelValue: { type: Number, default: 0 } })
 const emit = defineEmits(['update:modelValue'])
 
+// DES-457: the slider is staged locally and only committed to the parent (which
+// filters results and drives the map) when "Apply Radius Filter" is pressed.
+const draft = ref(props.modelValue)
+watch(() => props.modelValue, (v) => { draft.value = v })
 const radius = computed({
-  get: () => props.modelValue,
-  set: (v) => emit('update:modelValue', v),
+  get: () => draft.value,
+  set: (v) => { draft.value = v },
 })
 const radiusLabel = computed(() => (radius.value ? radius.value : ''))
+const applied = computed(() => draft.value === props.modelValue)
+const apply = () => emit('update:modelValue', draft.value)
 </script>
 
 <template>
@@ -21,7 +27,7 @@ const radiusLabel = computed(() => (radius.value ? radius.value : ''))
       <q-input v-model="radiusLabel" outlined dense readonly placeholder="Any" class="fr__radius-input" />
       <span class="fr__radius-unit">miles</span>
     </div>
-    <button type="button" class="fr__apply">Apply Radius Filter</button>
+    <button type="button" class="fr__apply" :class="{ 'fr__apply--done': applied }" @click="apply">Apply Radius Filter</button>
   </div>
 </template>
 
@@ -42,6 +48,8 @@ const radiusLabel = computed(() => (radius.value ? radius.value : ''))
   background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem;
 }
 .fr__apply:hover { background: var(--ds-palette-navy-800, #0a1f4d); }
+/* Muted once applied (no pending changes); solid navy invites you to apply. */
+.fr__apply--done, .fr__apply--done:hover { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtle); }
 
 /* Radius */
 .fr__slider { margin: 4px 4px 12px; }

@@ -24,6 +24,12 @@ const props = defineProps({
   lowRateGuarantee: { type: Boolean, default: true },
   currency: { type: String, default: '$' },
   startingPrice: { type: Number, default: null },
+  // Book Reservation flow (DES-458): per-night "From" price + stay total shown
+  // instead of the group "STARTING PRICE / night".
+  fromNightly: { type: Number, default: null },
+  total: { type: Number, default: null },
+  // ISO code rendered after the amount ("$436.00 USD total").
+  currencyCode: { type: String, default: 'USD' },
   availability: { type: String, default: 'matches' }, // matches | partial | unavailable
   roomsAvailable: { type: Number, default: 0 },   // matches → "N rooms available"
   roomsMax: { type: Number, default: 0 },         // partial → "N rooms max"
@@ -115,10 +121,18 @@ const money2 = (n) => props.currency + Number(n ?? 0).toLocaleString('en-US', { 
           </button>
 
           <div class="hc__price">
-            <div class="hc__pricelabel">STARTING PRICE</div>
-            <div class="hc__amount"><strong>{{ money2(startingPrice) }}</strong> <span>/ night</span></div>
-            <!-- Book Reservation flow omits the Low Rate Guarantee pill. -->
-            <div v-if="lowRateGuarantee && flow !== 'reserve'" class="hc__lrg"><q-icon name="check" size="15px" /> Low Rate Guarantee</div>
+            <!-- Book Reservation shows the individual reservation total incl. taxes
+                 & fees (DES-458); Group Block keeps the per-night starting price. -->
+            <template v-if="flow === 'reserve'">
+              <div class="hc__from">From {{ money2(fromNightly) }} {{ currencyCode }} nightly</div>
+              <div class="hc__total">{{ money2(total) }} {{ currencyCode }} total</div>
+              <div class="hc__taxes">Total includes taxes &amp; fees</div>
+            </template>
+            <template v-else>
+              <div class="hc__pricelabel">STARTING PRICE</div>
+              <div class="hc__amount"><strong>{{ money2(startingPrice) }}</strong> <span>/ night</span></div>
+              <div v-if="lowRateGuarantee" class="hc__lrg"><q-icon name="check" size="15px" /> Low Rate Guarantee</div>
+            </template>
             <button type="button" class="hc__cta" :class="{ 'hc__cta--muted': unavailable }" @click="emit('select')">{{ ctaLabel }}</button>
           </div>
         </div>
@@ -181,6 +195,10 @@ const money2 = (n) => props.currency + Number(n ?? 0).toLocaleString('en-US', { 
 .hc__amount { color: var(--ds-color-text-brand); }
 .hc__amount strong { font-size: 1.5rem; font-weight: 700; }
 .hc__amount span { color: var(--ds-color-text-subtle); font-size: 0.9375rem; }
+/* Book Reservation total pricing (DES-458). */
+.hc__from { color: var(--ds-color-text); font-size: 1rem; }
+.hc__total { color: var(--ds-color-text-brand); font-weight: 700; font-size: 1.5rem; }
+.hc__taxes { color: var(--ds-color-text-subtle); font-size: 0.8125rem; margin-bottom: 6px; }
 .hc__lrg { display: inline-flex; align-items: center; gap: 4px; color: var(--ds-color-text-success); border: 1px solid var(--ds-color-text-success); border-radius: var(--ds-radius-pill); padding: 3px 12px; font-size: 0.8125rem; font-weight: 600; margin: 6px 0 10px; }
 .hc__cta { height: 52px; padding: 0 24px; border: 0; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background var(--ds-duration-fast) var(--ds-ease-standard); }
 .hc__cta:hover { background: var(--ds-palette-navy-800); }
