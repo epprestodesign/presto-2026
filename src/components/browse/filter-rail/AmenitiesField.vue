@@ -2,16 +2,18 @@
 // AmenitiesField — title + amenity checkboxes + more/fewer toggle + apply button.
 // `v-model` is an array of selected amenity labels. Amenity catalog comes from
 // the shared amenities lib.
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { filterAmenities } from '../../../lib/amenities.js'
 
 const props = defineProps({ modelValue: { type: Array, default: () => [] } })
 const emit = defineEmits(['update:modelValue'])
 
-const amenitySel = computed({
-  get: () => props.modelValue,
-  set: (v) => emit('update:modelValue', v),
-})
+// DES-457: selections are staged locally and only committed to the parent
+// (which filters results) when "Apply Amenity Filters" is pressed.
+const amenitySel = ref([...props.modelValue])
+watch(() => props.modelValue, (v) => { amenitySel.value = [...v] })
+const applied = computed(() => JSON.stringify([...amenitySel.value].sort()) === JSON.stringify([...props.modelValue].sort()))
+const apply = () => emit('update:modelValue', [...amenitySel.value])
 
 const AMENITIES = filterAmenities().map((a) => a.label)
 const amenitiesShown = ref(15)
@@ -28,7 +30,7 @@ const toggleMore = () => { amenitiesShown.value = moreCount.value > 0 ? AMENITIE
       <q-icon :name="moreCount > 0 ? 'expand_more' : 'expand_less'" size="18px" />
       <span>{{ moreCount > 0 ? `More amenity options` : 'Fewer amenity options' }}</span>
     </button>
-    <button type="button" class="fr__apply">Apply Amenity Filters</button>
+    <button type="button" class="fr__apply" :class="{ 'fr__apply--done': applied }" @click="apply">Apply Amenity Filters</button>
   </div>
 </template>
 
@@ -59,4 +61,6 @@ const toggleMore = () => { amenitiesShown.value = moreCount.value > 0 ? AMENITIE
   background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem;
 }
 .fr__apply:hover { background: var(--ds-palette-navy-800, #0a1f4d); }
+/* Muted once applied (no pending changes); solid navy invites you to apply. */
+.fr__apply--done, .fr__apply--done:hover { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtle); }
 </style>

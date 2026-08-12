@@ -1,15 +1,17 @@
 <script setup>
 // ParentBrandField — title + parent-brand checkboxes + apply button.
 // `v-model` is an array of selected brand labels.
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const props = defineProps({ modelValue: { type: Array, default: () => [] } })
 const emit = defineEmits(['update:modelValue'])
 
-const brandSel = computed({
-  get: () => props.modelValue,
-  set: (v) => emit('update:modelValue', v),
-})
+// DES-457: selections are staged locally and only committed to the parent
+// (which filters results) when "Apply Brand Filter" is pressed.
+const brandSel = ref([...props.modelValue])
+watch(() => props.modelValue, (v) => { brandSel.value = [...v] })
+const applied = computed(() => JSON.stringify([...brandSel.value].sort()) === JSON.stringify([...props.modelValue].sort()))
+const apply = () => emit('update:modelValue', [...brandSel.value])
 
 const PARENT_BRANDS = ['Marriott International', 'Hilton Worldwide', 'Hyatt Hotels', 'IHG Hotels & Resorts']
 </script>
@@ -18,7 +20,7 @@ const PARENT_BRANDS = ['Marriott International', 'Hilton Worldwide', 'Hyatt Hote
   <div>
     <h3 class="fr__title">Parent Brand</h3>
     <q-checkbox v-for="b in PARENT_BRANDS" :key="b" v-model="brandSel" :val="b" :label="b" color="primary" dense class="fr__check" />
-    <button type="button" class="fr__apply">Apply Brand Filter</button>
+    <button type="button" class="fr__apply" :class="{ 'fr__apply--done': applied }" @click="apply">Apply Brand Filter</button>
   </div>
 </template>
 
@@ -42,4 +44,6 @@ const PARENT_BRANDS = ['Marriott International', 'Hilton Worldwide', 'Hyatt Hote
   background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 700; font-size: 0.9375rem;
 }
 .fr__apply:hover { background: var(--ds-palette-navy-800, #0a1f4d); }
+/* Muted once applied (no pending changes); solid navy invites you to apply. */
+.fr__apply--done, .fr__apply--done:hover { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtle); }
 </style>
