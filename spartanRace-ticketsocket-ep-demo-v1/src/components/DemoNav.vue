@@ -1,11 +1,14 @@
 <script setup>
 // Presenter-only jump menu (bottom-left). Not part of the Spartan UI —
 // hidden until hovered so it never shows up in screenshots.
-import { state, go, resetDemo } from '../store.js'
+import { state, go, resetDemo, CONCEPTS } from '../store.js'
 const STEPS = [
+  ['home', 'Prototype home'],
   ['event', 'Event page'],
   ['login', 'Sign in'],
   ['details', 'Order details'],
+  ['addons', 'Add-ons (Eventpipe)'],
+  ['hotels', 'Add-ons · hotel finder open'],
   ['extras', 'Extras'],
   ['payment', 'Payment'],
   ['location', 'Location picker'],
@@ -17,6 +20,10 @@ const STEPS = [
     <span class="demo__tab">Demo</span>
     <div class="demo__menu">
       <button v-for="[r, l] in STEPS" :key="r" :class="{ on: state.route === r }" @click="go(r)">{{ l }}</button>
+      <div class="demo__variant">
+        <span>Concept</span>
+        <button v-for="(c, id) in CONCEPTS" :key="id" :class="{ on: state.variant === c.variant && state.skin === c.skin }" @click="Object.assign(state, c)">{{ id.toUpperCase() }}</button>
+      </div>
       <button class="demo__reset" @click="resetDemo">Reset demo</button>
     </div>
   </nav>
@@ -49,5 +56,9 @@ const STEPS = [
 .demo__menu button { display: block; width: 100%; padding: 7px 10px; border-radius: 5px; color: #ddd; font-size: 13px; text-align: left; }
 .demo__menu button:hover { background: #333; }
 .demo__menu button.on { color: #fff; font-weight: 600; }
+.demo__variant { display: flex; align-items: center; gap: 4px; margin-top: 4px; padding: 6px 4px 2px; border-top: 1px solid #333; }
+.demo__variant span { color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+.demo__variant button { width: auto !important; padding: 5px 8px !important; font-size: 12px !important; }
+.demo__variant button.on { background: #333; }
 .demo__reset { margin-top: 4px; border-top: 1px solid #333 !important; color: #ff8a80 !important; }
 </style>

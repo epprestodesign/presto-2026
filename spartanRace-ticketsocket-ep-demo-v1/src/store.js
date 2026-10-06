@@ -4,21 +4,50 @@ import { reactive, computed, watch } from 'vue'
 import { RACES, CHECKOUT_ADDONS } from './data.js'
 
 export const ROUTES = {
-  event: '/',
+  home: '/',
+  event: '/event',
   login: '/account',
   location: '/location',
   details: '/checkout/details',
+  addons: '/checkout/addons',
+  hotels: '/checkout/addons/hotels', // Add-ons with the hotel finder open (A: expanded · B: modal)
   extras: '/checkout/extras',
   payment: '/checkout/payment',
 }
 
-const pathToRoute = (hash) => {
-  const path = hash.replace(/^#/, '') || '/'
-  return Object.keys(ROUTES).find((k) => ROUTES[k] === path) || 'event'
+// Every screen is deep-linkable per version so feedback can point at a URL:
+//   #/a/… A · Inline (Presto colors)     #/b/… B · Modal (Presto colors)
+//   #/c/… C · Inline (Spartan colors)    #/d/… D · Modal (Spartan colors)
+//   e.g. #/a/event · #/d/checkout/addons · #/b/checkout/addons/hotels
+export const CONCEPTS = {
+  a: { variant: 'inline', skin: 'presto' },
+  b: { variant: 'modal', skin: 'presto' },
+  c: { variant: 'inline', skin: 'spartan' },
+  d: { variant: 'modal', skin: 'spartan' },
 }
+export const conceptOf = (variant, skin) =>
+  Object.keys(CONCEPTS).find((k) => CONCEPTS[k].variant === variant && CONCEPTS[k].skin === skin) || 'a'
+
+function parseHash (hash) {
+  let path = hash.replace(/^#/, '') || '/'
+  let variant = null
+  let skin = null
+  const m = path.match(/^\/([a-d])(\/.*)?$/)
+  if (m) {
+    ;({ variant, skin } = CONCEPTS[m[1]])
+    path = m[2] || '/event'
+  }
+  const route = Object.keys(ROUTES).find((k) => ROUTES[k] === path) || 'home'
+  return { route, variant, skin }
+}
+const boot = parseHash(location.hash)
+// A refresh restarts the add-ons step, so a reload of ".../addons/hotels" lands on
+// the plain step. Opening a /hotels deep link fresh (pasted, new tab) still opens it.
+const isReload = (performance.getEntriesByType?.('navigation')[0]?.type) === 'reload'
+if (isReload && boot.route === 'hotels') boot.route = 'addons'
 
 export const state = reactive({
-  route: pathToRoute(location.hash),
+  route: boot.route,
   signedIn: false,
   cartOpen: false,
   // { [ticketId]: qty }
@@ -34,16 +63,47 @@ export const state = reactive({
   refundable: null, // true | false | null
   paymentMethod: 'card',
   termsAgreed: false,
+  // ── Eventpipe/Presto add-ons (embedded widget) ──
+  variant: boot.variant || 'inline', // UX: inline (toggle expands in place) | modal (900px modal)
+  skin: boot.skin || 'presto', // widget colors: presto (native) | spartan (host-matched)
+  parking: false,
+  photo: false, // Eventpipe photo package ($25 per racer)
+  hotelOn: false,
+  hotel: null, // priced quote from the widget — see src/presto/hotels.js quote()
+  overlayOpen: false,
 })
 
+export const PARKING_PRICE = 20
+export const PHOTO_PRICE = 25 // per racer
+export const partySize = computed(() => Object.values(state.tickets).reduce((a, b) => a + b, 0) || 1)
+
+export const hrefFor = (route, variant = state.variant, skin = state.skin) =>
+  route === 'home' ? '#/' : `#/${conceptOf(variant, skin)}${ROUTES[route]}`
+
+// Keep the address bar canonical (always version-prefixed) without a navigation.
+const canonicalize = () => {
+  const want = hrefFor(state.route)
+  if (location.hash !== want) history.replaceState(null, '', want)
+}
+
 window.addEventListener('hashchange', () => {
-  state.route = pathToRoute(location.hash)
+  const { route, variant, skin } = parseHash(location.hash)
+  if (variant) Object.assign(state, { variant, skin })
+  const sameView = (route === 'hotels' && state.route === 'addons') || (route === 'addons' && state.route === 'hotels')
+  state.route = route
   state.cartOpen = false
-  window.scrollTo(0, 0)
+  if (!sameView) window.scrollTo(0, 0)
+  canonicalize()
 })
 
 export function go(route) {
-  location.hash = ROUTES[route]
+  location.hash = hrefFor(route)
+}
+
+/** Update the URL for in-page state (e.g. hotel finder open) without a navigation. */
+export function setRouteSilently(route) {
+  state.route = route
+  canonicalize()
 }
 
 // ── Catalogue lookups ──
@@ -148,11 +208,21 @@ export const pricing = computed(() => {
   const service = PER_TICKET.service * ticketQty + addonFees
   const tax = PER_TICKET.tax * ticketQty
 
+  // Refundable Booking covers the Spartan registration only — the hotel has its
+  // own cancellation terms and parking is non-refundable.
   const beforeRefund = round(registration + addonTotal + insurance + service + tax - discount)
   const refundFee = round(beforeRefund * REFUND_RATE)
   const refund = state.refundable ? refundFee : 0
+  const parking = state.parking ? PARKING_PRICE : 0
+  const photo = state.photo ? PHOTO_PRICE * ticketQty : 0
+  const hotelToday = state.hotel ? state.hotel.dueToday : 0
+  const hotelAtHotel = state.hotel ? state.hotel.dueAtHotel : 0
 
   return {
+    parking,
+    photo,
+    hotelToday,
+    hotelAtHotel,
     registration,
     addons,
     discount,
@@ -161,7 +231,7 @@ export const pricing = computed(() => {
     tax: round(tax),
     refundFee,
     refund,
-    total: round(beforeRefund + refund),
+    total: round(beforeRefund + refund + parking + photo + hotelToday),
   }
 })
 
@@ -176,10 +246,25 @@ const KEY = 'spartan-ts-demo-v1'
 try {
   const saved = JSON.parse(localStorage.getItem(KEY) || 'null')
   // the signature canvas can't be restored, so the waiver always starts unsigned
-  if (saved) Object.assign(state, saved, { route: state.route, cartOpen: false, signature: false, waiverAgreed: false })
+  // A reload always restarts the Eventpipe add-ons step (no parking, photo or
+  // hotel carried over); everything else in the demo order survives.
+  if (saved) Object.assign(state, saved, {
+    route: state.route,
+    variant: boot.variant || saved.variant || 'inline',
+    skin: boot.skin || saved.skin || 'presto',
+    cartOpen: false,
+    overlayOpen: false,
+    signature: false,
+    waiverAgreed: false,
+    parking: false,
+    photo: false,
+    hotelOn: false,
+    hotel: null,
+  })
+  if (state.variant === 'overlay') state.variant = 'modal' // older saved demos
 } catch {}
 watch(
-  () => ({ ...state, route: undefined, cartOpen: undefined }),
+  () => ({ ...state, route: undefined, cartOpen: undefined, overlayOpen: undefined }),
   (v) => {
     try { localStorage.setItem(KEY, JSON.stringify(v)) } catch {}
   },
@@ -191,3 +276,7 @@ export function resetDemo() {
   location.hash = ''
   location.reload()
 }
+
+canonicalize()
+// switching version from the demo menu rewrites the URL in place
+watch(() => [state.variant, state.skin], canonicalize)

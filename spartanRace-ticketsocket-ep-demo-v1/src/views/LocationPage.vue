@@ -14,7 +14,7 @@ import SiteHeader from '../components/SiteHeader.vue'
         <ul class="grid">
           <li v-for="[country, langs] in r.countries" :key="country">
             <p class="country">{{ country }}</p>
-            <a v-for="l in langs" :key="l" class="lang" href="#/" @click.prevent="go('event')">{{ l }}</a>
+            <a v-for="l in langs" :key="l" class="lang" href="#/event" @click.prevent="go('event')">{{ l }}</a>
           </li>
         </ul>
       </section>

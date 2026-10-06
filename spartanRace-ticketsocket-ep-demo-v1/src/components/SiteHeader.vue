@@ -45,7 +45,7 @@ const toggleCart = () => (state.cartOpen = !state.cartOpen)
     </div>
 
     <div class="nav">
-      <a class="nav__logo" href="#/" aria-label="Spartan Race home">
+      <a class="nav__logo" href="#/event" aria-label="Spartan Race home">
         <img :src="asset('icons/spartan-logo.svg')" alt="" />
       </a>
       <nav class="nav__main" aria-label="Main">
@@ -59,7 +59,7 @@ const toggleCart = () => (state.cartOpen = !state.cartOpen)
           </button>
           <CartPopover v-if="state.cartOpen" />
         </div>
-        <a class="pill pill--red nav__find" href="#/" >Find a race</a>
+        <a class="pill pill--red nav__find" href="#/event" >Find a race</a>
         <button v-if="variant === 'event'" class="nav__profile" aria-label="Account" @click="go('login')">
           <img :src="asset('icons/profile.svg')" alt="" />
         </button>

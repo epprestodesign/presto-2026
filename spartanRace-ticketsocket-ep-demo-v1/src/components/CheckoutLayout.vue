@@ -4,7 +4,7 @@ import { state, pricing, money, PROMO_CODES, go } from '../store.js'
 import { asset } from '../data.js'
 
 const props = defineProps({
-  step: { type: String, required: true }, // details | extras | payment
+  step: { type: String, required: true }, // details | addons | extras | payment
   title: { type: Array, required: true }, // wide-display title lines
   cta: { type: String, required: true },
   busy: { type: Boolean, default: false },
@@ -13,13 +13,15 @@ const emit = defineEmits(['submit'])
 
 const STEPS = [
   ['details', 'Details'],
+  ['addons', 'Add-ons'],
   ['extras', 'Extras'],
   ['payment', 'Payment'],
 ]
-const order = { details: 0, extras: 1, payment: 2 }
+const order = { details: 0, addons: 1, extras: 2, payment: 3 }
 const canJump = (s) => order[s] < order[props.step]
 
-const breakdown = ref(false)
+// open by default so the order lines (incl. hotel + parking) are visible at a glance
+const breakdown = ref(true)
 const code = ref(state.promo?.code || '')
 const promoMsg = ref(state.promo ? `${state.promo.code} applied` : '')
 const promoErr = ref(false)
@@ -45,7 +47,7 @@ function clearPromo() {
 <template>
   <div class="co">
     <header class="co__bar">
-      <a href="#/" class="co__logo" aria-label="Back to the event page">
+      <a href="#/event" class="co__logo" aria-label="Back to the event page">
         <img :src="asset('icons/spartan-logo.svg')" alt="" />
       </a>
       <nav class="crumbs" aria-label="Checkout steps">
@@ -88,7 +90,30 @@ function clearPromo() {
             <div><dt>Service fee</dt><dd>{{ money(pricing.service) }}</dd></div>
             <div><dt>Taxes</dt><dd>{{ money(pricing.tax) }}</dd></div>
             <div v-if="pricing.refund"><dt>Refundable booking</dt><dd>{{ money(pricing.refund) }}</dd></div>
+            <div v-if="pricing.parking"><dt>Parking pass</dt><dd>{{ money(pricing.parking) }}</dd></div>
+            <div v-if="pricing.photo"><dt>Photo package</dt><dd>{{ money(pricing.photo) }}</dd></div>
+            <div v-if="state.hotel"><dt>Hotel — due today</dt><dd>{{ money(pricing.hotelToday) }}</dd></div>
+            <div v-if="pricing.hotelAtHotel" class="sum__later"><dt>Due at the hotel (not charged now)</dt><dd>{{ money(pricing.hotelAtHotel) }}</dd></div>
           </dl>
+
+          <div v-if="state.hotel || state.parking || state.photo" class="sum__extras">
+            <p v-if="state.hotel" class="sum__hotel">
+              <svg class="sum__ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5M7 11.5a1.5 1.5 0 1 0 0-.01" fill="none" stroke="#555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><strong>{{ state.hotel.name }}</strong><br />{{ state.hotel.stayShort }} · {{ state.hotel.nights }} {{ state.hotel.nights === 1 ? 'night' : 'nights' }} · {{ state.hotel.roomLabel }}</span>
+              <b>{{ money(state.hotel.dueToday) }}</b>
+            </p>
+            <p v-if="state.parking" class="sum__hotel">
+              <svg class="sum__ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3" fill="none" stroke="#555" stroke-width="1.7"/><path d="M10 16.5v-9h3a2.6 2.6 0 0 1 0 5.2h-3" fill="none" stroke="#555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><strong>Parking pass</strong><br />On-site lot, both days</span>
+              <b>{{ money(pricing.parking) }}</b>
+            </p>
+            <p v-if="state.photo" class="sum__hotel">
+              <svg class="sum__ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4Z" fill="none" stroke="#555" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="#555" stroke-width="1.7"/></svg>
+              <span><strong>Photo package</strong><br />Digital race photos, per racer</span>
+              <b>{{ money(pricing.photo) }}</b>
+            </p>
+            <p v-if="pricing.hotelAtHotel" class="sum__athotel">+ {{ money(pricing.hotelAtHotel) }} due at check-in</p>
+          </div>
 
           <form class="sum__promo" @submit.prevent="applyPromo">
             <label class="sr-only" for="promo">Promocode</label>
@@ -159,6 +184,17 @@ function clearPromo() {
 .sum__lines { margin: -18px 0 16px; padding: 4px 0 14px; border-bottom: 1px solid #eee; }
 .sum__lines div { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; color: #444; }
 .sum__lines dd { margin: 0; font-weight: 600; color: #000; }
+.sum__lines .sum__later { color: #8a8a8a; font-style: italic; }
+.sum__lines .sum__later dd { color: #8a8a8a; font-weight: 500; }
+
+/* hotel / parking added by the embedded Eventpipe widget */
+.sum__extras { margin: -22px 0 26px; padding: 12px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+.sum__hotel { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.4; color: #555; }
+.sum__hotel + .sum__hotel { margin-top: 10px; }
+.sum__hotel strong { color: #000; }
+.sum__hotel b { margin-left: auto; color: #000; white-space: nowrap; }
+.sum__ico { flex: none; margin-top: 1px; }
+.sum__athotel { margin-top: 8px; font-size: 12px; color: #8a8a8a; text-align: right; }
 
 .sum__promo { display: flex; align-items: center; justify-content: space-between; margin-top: -7px; }
 .sum__promo input {

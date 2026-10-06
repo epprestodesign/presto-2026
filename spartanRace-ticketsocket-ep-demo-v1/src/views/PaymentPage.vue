@@ -90,6 +90,28 @@ function pay() {
       </label>
     </div>
 
+    <section v-if="state.hotel" class="stay">
+      <h3 class="stay__h">Hotel reservation</h3>
+      <div class="stay__card">
+        <div class="stay__top">
+          <div>
+            <p class="stay__name">{{ state.hotel.name }}</p>
+            <p class="stay__meta">{{ '★'.repeat(state.hotel.stars) }} · {{ state.hotel.miles }} mi from Sandy Oaks Ranch</p>
+          </div>
+          <span class="stay__by">Booked by Eventpipe</span>
+        </div>
+        <dl class="stay__grid">
+          <div><dt>Dates</dt><dd>{{ state.hotel.stayLabel }}</dd></div>
+          <div><dt>Room</dt><dd>{{ state.hotel.rooms }} × {{ state.hotel.roomLabel }}</dd></div>
+          <div><dt>Stay total</dt><dd>{{ money(state.hotel.total) }} <small>({{ state.hotel.nights }} {{ state.hotel.nights === 1 ? 'night' : 'nights' }} incl. taxes)</small></dd></div>
+          <div><dt>Charged today</dt><dd>{{ money(state.hotel.dueToday) }}</dd></div>
+          <div><dt>Due at the hotel</dt><dd>{{ state.hotel.dueAtHotel ? money(state.hotel.dueAtHotel) : 'Nothing — paid in full' }}</dd></div>
+          <div><dt>Cancellation</dt><dd>Free until Nov 13</dd></div>
+        </dl>
+        <p v-if="state.hotel.shuttle" class="stay__note">Includes a free shuttle to Sandy Oaks Ranch on race mornings.</p>
+      </div>
+    </section>
+
     <p v-if="done" class="demo-note" role="status">
       Prototype stop — no payment was processed. Total that would be charged: {{ money(pricing.total) }}.
     </p>
@@ -175,6 +197,18 @@ function pay() {
 .link__form div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .link__form input { height: 40px; padding: 0 12px; border: 1px solid #ddd; border-radius: 8px; font: inherit; font-size: 15px; }
 
+.stay { margin-top: 40px; }
+.stay__h { font-size: 20px; font-weight: 700; color: #000; }
+.stay__card { margin-top: 16px; padding: 18px 20px; border: 1px solid #e2e2e2; border-radius: 10px; }
+.stay__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.stay__name { font-size: 17px; font-weight: 700; color: #000; }
+.stay__meta { margin-top: 2px; font-size: 13px; color: #6b6b6b; }
+.stay__by { flex: none; padding: 4px 8px; border-radius: 4px; background: #f3f3f3; font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.04em; }
+.stay__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; margin: 16px 0 0; }
+.stay__grid dt { font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #8a8a8a; }
+.stay__grid dd { margin: 2px 0 0; font-size: 14px; font-weight: 600; color: #000; }
+.stay__grid small { font-weight: 500; color: #8a8a8a; }
+.stay__note { margin-top: 14px; font-size: 13px; color: #555; }
 .demo-note { margin-top: 24px; padding: 12px 14px; border-radius: 8px; background: #f3f3f3; font-size: 13px; color: #444; }
 
 .terms { position: relative; display: flex; gap: 20px; margin-top: 52px; font-size: 11.8px; font-weight: 500; line-height: 18px; color: #000; cursor: pointer; }

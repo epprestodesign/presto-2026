@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const props = defineProps({ error: Boolean })
+const props = defineProps({ error: Boolean, prefilled: Boolean })
 const emit = defineEmits(['change'])
 const canvas = ref(null)
 const strokes = []
@@ -19,6 +19,17 @@ onMounted(() => {
   ctx.lineJoin = 'round'
   ctx.lineWidth = 2.6
   ctx.strokeStyle = '#000'
+  if (props.prefilled) {
+    // demo default: a scripted signature so Checkout goes straight through
+    const w = r.width, h = r.height
+    const pts = []
+    for (let t = 0; t <= 1; t += 0.02) {
+      pts.push([w * (0.24 + 0.5 * t), h * (0.58 - 0.18 * Math.sin(t * Math.PI * 3) * (1 - t)) + 8 * Math.sin(t * 22)])
+    }
+    strokes.push(pts, [[w * 0.3, h * 0.72], [w * 0.62, h * 0.66]])
+    redraw()
+    emit('change', true)
+  }
 })
 
 const pt = (e) => {

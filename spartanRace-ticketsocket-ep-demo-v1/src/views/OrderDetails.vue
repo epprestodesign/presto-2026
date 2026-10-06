@@ -7,7 +7,16 @@ import {
 import CheckoutLayout from '../components/CheckoutLayout.vue'
 import SignaturePad from '../components/SignaturePad.vue'
 
-onBeforeMount(ensureOrder)
+// Demo default: the step arrives filled in (first wave, signed waiver), so
+// Checkout goes straight to the next step. Clearing any of it re-enables validation.
+onBeforeMount(() => {
+  ensureOrder()
+  const t = primaryTicket.value
+  const w = t ? WAVES[t.day.key] || [] : []
+  if (!state.wave && w.length) state.wave = w[0].id
+  state.signature = true
+  state.waiverAgreed = true
+})
 
 const t = computed(() => primaryTicket.value)
 const waves = computed(() => (t.value ? WAVES[t.value.day.key] || [] : []))
@@ -35,7 +44,7 @@ function submit() {
     document.querySelector(first)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     return
   }
-  go('extras')
+  go('addons')
 }
 </script>
 
@@ -129,7 +138,7 @@ function submit() {
           <p>I acknowledge that obstacle course racing is an extreme test of a person’s physical and mental limits and carries with it the potential for death, serious injury and property loss. The risks include, but are not limited to, those caused by terrain, facilities, temperature, weather, condition of athletes, equipment, vehicular traffic, actions of other people including, but not limited to, participants, volunteers, spectators, coaches, event officials and event monitors, and/or producers of the event, and lack of hydration.</p>
           <p>I hereby assume all of the risks of participating and/or volunteering in this event, and I certify that I am physically fit, have sufficiently trained for participation in the event, and have not been advised otherwise by a qualified medical person.</p>
         </div>
-        <SignaturePad class="waiver__pad" :error="tried && errs.signature" @change="(v) => (state.signature = v)" />
+        <SignaturePad class="waiver__pad" prefilled :error="tried && errs.signature" @change="(v) => (state.signature = v)" />
         <label class="agree" :class="{ 'is-err': tried && errs.agree }">
           <input v-model="state.waiverAgreed" type="checkbox" />
           <span class="agree__box" aria-hidden="true" />

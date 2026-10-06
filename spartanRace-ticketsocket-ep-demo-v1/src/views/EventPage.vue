@@ -1,11 +1,20 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { state, cartCount, setTicketQty } from '../store.js'
 import {
   EVENT, ABOUT, DISTANCE_TABS, OBSTACLES, EARN, RACE_DAY_INFO, TESTIMONIALS, NEARBY, asset,
 } from '../data.js'
 import SiteHeader from '../components/SiteHeader.vue'
 import SiteFooter from '../components/SiteFooter.vue'
 import TicketWidget from '../components/TicketWidget.vue'
+
+// Default demo state (both versions): a Sprint OPEN (Saturday) ticket is already
+// in the cart and the Ticket Cart is open, so "Commit now" is the obvious next
+// step. Removing the ticket isn't undone until the page is opened again.
+onMounted(() => {
+  if (!cartCount.value) setTicketQty('sat-open', 1)
+  state.cartOpen = true
+})
 
 // gallery — 1 large + 4 thumbs, arrows page through the set
 const active = ref(0)
