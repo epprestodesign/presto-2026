@@ -9,7 +9,7 @@ anything from `../src` / Storybook. Like `../prototype/`, it has no dependencies
 
 ```bash
 cd spartanRace-ticketsocket-ep-demo-v1
-npm run dev        # http://localhost:6200
+npm run dev        # http://localhost:6201
 npm run build      # → dist/
 ```
 
