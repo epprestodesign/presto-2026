@@ -4,6 +4,7 @@ import conceptA from './assets/concept-a.jpg'
 import conceptB from './assets/concept-b.jpg'
 import conceptC from './assets/concept-c.jpg'
 import conceptD from './assets/concept-d.jpg'
+import confirmationImg from './assets/confirmation.jpg'
 
 <Meta title="Widgets & Embeds/R&D Overview" />
 
@@ -24,6 +25,8 @@ export const CONCEPTS = [
 ]
 
 # Widgets & Embeds — R&D
+
+<p style={{ margin: '-4px 0 0', fontSize: '13px', fontWeight: 600, color: '#64748b' }}>Last updated Oct 6, 2026 · see the Changelog at the bottom of this page</p>
 
 Eventpipe hotel booking today lives on its own site. This track explores the
 other direction: **putting Eventpipe inside a partner’s checkout** as an embedded
@@ -86,6 +89,15 @@ Every screen of every concept has its own link (`#/a/…` through `#/d/…`), so
 feedback can point at an exact URL. The prototype banner switches concepts in
 place, keeping you on the same screen.
 
+### After Pay: confirmation
+
+Every concept ends on an Eventpipe confirmation (Spartan logo centered, *Manage booking* at the right),
+built from the library's **Confirmation / Single Reservation** with the full hotel stay and the race order.
+
+<a href={`${BASE}#/d/checkout/confirmed`} target="_blank" rel="noopener" style={{ display: 'block', maxWidth: '760px', margin: '12px 0 28px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+  <img src={confirmationImg} alt="Confirmation page after Pay, concept D" style={{ display: 'block', width: '100%' }} />
+</a>
+
 ## How the embed works
 
 <table style={{ width: '100%', borderCollapse: 'collapse', margin: '12px 0 20px' }}>
@@ -125,6 +137,21 @@ These are worked around inside the prototype with no library edits, and are wort
 - **Presto vs. Spartan colors:** host-matched feels seamless but hides that Eventpipe is the hotel provider. Is a **“Powered by Eventpipe”** mark enough?
 - **Duplicate add-ons:** Spartan’s checkout already sells its own photo package; the Eventpipe card adds another. Who owns which add-ons?
 - **Payment:** the hotel is collected inside the host’s payment step. How does TicketSocket settle the hotel portion with Eventpipe?
+
+## Changelog
+
+**Oct 6, 2026**
+- **Itemized order summary:** the Spartan checkout's right rail now reads top-down like Spartan's receipt (Tickets, Add-ons, then a new *Hotel & weekend add-ons by Eventpipe* section with the stay fully itemized: dates and times, nights, room, rate × nights, taxes, stay total, charged today vs. due at check-in, cancellation), then Subtotal, fees and the Total at the bottom, with the pre-promo total struck through.
+- **Confirmation page:** Pay now leads to a confirmation step in every concept. A black bar with the Spartan logo centered and *Manage booking* at the right, over the library's Single Reservation confirmation with full hotel details (address, room, nightly rates, taxes, room cost, amount paid, balance due, policies) and a race-order card.
+- **Auto-fill forms toggle + Fill form button** in the prototype bar. On: each form step fills itself, and *Fill form* refills the current step on demand. Off: you type everything.
+- **Hosted maps:** the Google Maps key is now set for GitHub Pages, so the hotel maps load on the live prototypes.
+
+**Oct 5, 2026**
+- Spartan host page and TicketSocket checkout recreated from captures.
+- Eventpipe **Add-ons** step: parking, photo package and hotel finder (filters, map with the race venue, sort, pagination, hotel details, order summary, Edit reservation / Start over).
+- Concepts **A** (inline) and **B** (900px modal with a review step), then **C** and **D** in Spartan colors.
+- **Your Details** step: library checkout steps 1–4.
+- Prototype hub with deep links, prototype banner, and this R&D page.
 
 ## Where it lives
 

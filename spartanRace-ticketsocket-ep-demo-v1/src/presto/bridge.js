@@ -13,7 +13,7 @@
 import { reactive } from 'vue'
 
 const params = new URLSearchParams(location.search)
-export const VIEW = params.get('view') || 'addons' // addons | modal | details
+export const VIEW = params.get('view') || 'addons' // addons | modal | details | confirm
 export const VARIANT = params.get('variant') || 'inline' // inline | modal
 export const SKIN = params.get('skin') === 'spartan' ? 'spartan' : 'presto' // widget color skin
 document.documentElement.classList.add(`skin-${SKIN}`)
@@ -28,6 +28,8 @@ export const store = reactive({
   hotel: initial.hotel || null,
   party: initial.party || 1,
   total: initial.total || 0, // host order total (shown in Review your reservation)
+  receipt: initial.receipt || null, // race order lines (confirmation page)
+  autofill: initial.autofill !== false, // prototype Auto-fill (fills Your Details forms)
 })
 
 const embedded = window.parent && window.parent !== window
@@ -41,6 +43,7 @@ window.addEventListener('message', (e) => {
   if (!m || m.source !== 'spartan') return
   if (m.type === 'sync') Object.assign(store, m.payload)
   else if (m.type === 'scroll') window.scrollTo(0, m.payload.y)
+  else if (m.type === 'fill') window.dispatchEvent(new CustomEvent('ew:fill', { detail: m.payload || {} }))
 })
 
 // Inline embed: the iframe is always exactly as tall as the widget, so the

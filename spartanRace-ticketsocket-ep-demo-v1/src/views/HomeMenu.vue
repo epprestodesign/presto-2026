@@ -26,6 +26,7 @@ const LINKS = [
   ['extras', 'Extras'],
   ['guest', 'Your Details'],
   ['payment', 'Payment'],
+  ['confirmed', 'Confirmation'],
 ]
 const origin = location.origin + location.pathname
 const full = (route, c) => origin + hrefFor(route, c.variant, c.skin)
@@ -54,7 +55,7 @@ function start (c, jump = false) {
         <span>×</span>
         <strong>Eventpipe</strong>
       </div>
-      <p class="hm__eyebrow">Prototype · Hotel add-ons</p>
+      <p class="hm__eyebrow">Prototype · Hotel add-ons · Updated Oct 6, 2026</p>
       <h1 class="hm__title">2026 San Antonio Spartan Trifecta Weekend</h1>
       <p class="hm__lead">
         Spartan’s TicketSocket checkout with an Eventpipe “Make a weekend of it” step. The hotel finder is built from the
@@ -127,7 +128,27 @@ function start (c, jump = false) {
 
     <section class="hm__flow" aria-label="Flow">
       <span>Event page</span><i>›</i><span>Ticket cart</span><i>›</i><span>Sign in</span><i>›</i><span>Details</span><i>›</i>
-      <span class="is-new">Add-ons</span><i>›</i><span>Extras</span><i>›</i><span class="is-new">Your Details</span><i>›</i><span>Payment</span>
+      <span class="is-new">Add-ons</span><i>›</i><span>Extras</span><i>›</i><span class="is-new">Your Details</span><i>›</i><span>Payment</span><i>›</i><span class="is-new">Confirmation</span>
+    </section>
+
+    <section class="hm__log" aria-label="Changelog">
+      <p class="hm__next-h">Changelog</p>
+      <div class="hm__logentry">
+        <p class="hm__logdate">Oct 6, 2026</p>
+        <ul>
+          <li>Itemized order summary: tickets, add-ons and the hotel stay broken out line by line, with the Total at the bottom.</li>
+          <li>Confirmation page after Pay: Spartan logo centered, Manage booking, full hotel details plus the race order.</li>
+          <li>Auto-fill forms toggle and Fill form button in the prototype bar.</li>
+          <li>Hotel maps now load on the hosted site.</li>
+        </ul>
+      </div>
+      <div class="hm__logentry">
+        <p class="hm__logdate">Oct 5, 2026</p>
+        <ul>
+          <li>Spartan event page + TicketSocket checkout; Eventpipe Add-ons step with the hotel finder.</li>
+          <li>Concepts A–D (inline / modal × Presto / Spartan colors); Your Details step; deep links.</li>
+        </ul>
+      </div>
     </section>
 
     <section class="hm__next">
@@ -215,6 +236,10 @@ function start (c, jump = false) {
 .hm__flow span.is-new { border-color: #ff5a5f; color: #fff; }
 .hm__flow i { font-style: normal; opacity: 0.5; }
 .hm__next { margin-top: 30px; }
+.hm__log { margin-top: 30px; max-width: 860px; }
+.hm__logentry { display: grid; grid-template-columns: 110px 1fr; gap: 16px; margin-top: 12px; }
+.hm__logdate { font-size: 13px; font-weight: 700; color: #fff; padding-top: 1px; }
+.hm__logentry ul { margin: 0; padding-left: 18px; list-style: disc; font-size: 14px; line-height: 1.55; color: rgba(255, 255, 255, 0.72); }
 .hm__next-h { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); }
 .hm__chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
 .hm__chips a { padding: 6px 12px; border-radius: 6px; background: rgba(255, 255, 255, 0.08); color: #fff; font-size: 13px; text-decoration: none; }
