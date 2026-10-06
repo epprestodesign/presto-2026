@@ -5,6 +5,7 @@
 #   /prototype/    booking journey (desktop + responsive)
 #   /mobile/       device-frame showcase, embeds the above
 #   /custom-fees/  Custom Fees Request (fork of the booking journey)
+#   /spartan-widgets/  Widgets & Embeds R&D — Spartan × Eventpipe hotel add-ons
 #
 # `/` redirects to /prototype/, which is what the site root served before the
 # mobile prototype was added.

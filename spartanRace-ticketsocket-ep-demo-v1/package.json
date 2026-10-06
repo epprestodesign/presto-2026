@@ -1,0 +1,12 @@
+{
+  "name": "spartanrace-ticketsocket-ep-demo-v1",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "comment": "Standalone Spartan Race x TicketSocket desktop demo. Plain Vue 3 + Vite — no Quasar, no presto design system. Has no deps of its own: vue/vite resolve up the tree to the repo's node_modules, so scripts call the root vite binary directly.",
+  "scripts": {
+    "dev": "node ../node_modules/vite/bin/vite.js --port 6201",
+    "build": "node ../node_modules/vite/bin/vite.js build",
+    "preview": "node ../node_modules/vite/bin/vite.js preview --port 6201"
+  }
+}

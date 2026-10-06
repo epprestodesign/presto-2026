@@ -78,6 +78,20 @@ jobs:
       - name: Nest Custom Fees Request under Storybook
         run: cp -r prototype-custom-fees/dist storybook-static/prototype-custom-fees
 
+      # Widgets & Embeds R&D — Spartan × Eventpipe hotel add-ons (4 concepts).
+      # A Spartan host page + an embedded Presto widget page (presto.html) that
+      # uses the real library. Relative base ('./' in its vite.config), so it runs
+      # from any sub-path; served at /presto-2026/spartanRace-ticketsocket-ep-demo-v1/.
+      - name: Build Widgets & Embeds prototype (Spartan × Eventpipe)
+        working-directory: spartanRace-ticketsocket-ep-demo-v1
+        run: node ../node_modules/vite/bin/vite.js build
+        env:
+          VITE_IMAGERY_URL: "https://epprestodesign.github.io/presto-ds-imagery"
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+
+      - name: Nest Widgets & Embeds prototype under Storybook
+        run: cp -r spartanRace-ticketsocket-ep-demo-v1/dist storybook-static/spartanRace-ticketsocket-ep-demo-v1
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: storybook-static

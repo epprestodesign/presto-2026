@@ -1,0 +1,125 @@
+/* Spartan Race × TicketSocket demo — base tokens + resets.
+   Every value here was sampled from the reference captures in
+   references/100526/SpartanRace (1440px desktop @2x). */
+
+:root {
+  /* type */
+  --font-body: 'Montserrat', system-ui, sans-serif;
+  --font-wide: 'Archivo', 'Montserrat', sans-serif;      /* use with .t-wide */
+  --font-cond: 'Anton', 'Archivo', 'Impact', sans-serif; /* use with .t-cond */
+
+  /* brand reds — the marketing site and the checkout app use different reds */
+  --red: #cf111a;          /* event page buttons, FIND A RACE */
+  --red-badge: #cc0b2f;    /* cart badge, CHALLENGE A FRIEND */
+  --red-banner: #d33046;   /* promo banner */
+  --red-checkout: #be2d27; /* checkout CTAs, COMMIT NOW, chat bubble */
+  --red-error: #ea3526;
+
+  /* neutrals */
+  --ink: #222222;
+  --black: #000000;
+  --grey-900: #121212;
+  --grey-login: #191818;
+  --grey-600: #808080;
+  --grey-500: #8c8c8c;
+  --grey-450: #9a9a9a;
+  --grey-400: #b1b1b1;
+  --grey-300: #d6d6d6;
+  --grey-200: #e2e2e2;
+  --grey-150: #eaeaea;
+  --grey-100: #f3f3f3;
+  --grey-50: #fafafa;
+
+  /* accents */
+  --green-rating: #1f9e61;
+  --purple-stock: #9049d8;
+  --green-refund: #7aa972;
+  --blue-link: #4191dd;
+
+  /* race-card ribbons */
+  --rib-teams: #0047bb;   --rib-teams-bg: #e5eaf6;
+  --rib-mind: #84bd01;    --rib-mind-bg: #f0f5e7;
+  --rib-family: #ee7624;  --rib-family-bg: #fcf0e9;
+  --rib-friend: #cc0b2f;  --rib-friend-bg: #fae8ea;
+  --rib-cheer: #000000;   --rib-cheer-bg: #e3e3e3;
+  --rib-hh4: #013b5c;
+  --rib-hh12: #4a4f53;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-width: 1280px; /* desktop-only prototype */
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+h1, h2, h3, h4, p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+
+/* display faces */
+.t-wide {
+  font-family: var(--font-wide);
+  font-weight: 900;
+  font-stretch: 125%;
+  font-variation-settings: 'wdth' 125;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.92;
+}
+/* Spartan's condensed face is narrower than any free font. Anton has the
+   right weight; squeezing it to 84% width matches the reference's
+   width-to-cap-height ratio within ~2%. Anton's cap height = 0.86em, so
+   font-size = (reference cap height) / 0.86. */
+.t-cond,
+.t-cond-italic {
+  display: inline-block;
+  font-family: var(--font-cond);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  transform: scaleX(0.84);
+  transform-origin: left center;
+  white-space: nowrap;
+}
+.t-cond-italic { transform: scaleX(0.82) skewX(-11deg); word-spacing: -0.12em; }
+.t-cond--r { transform-origin: right center; }
+
+/* pill buttons */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: filter 0.15s ease, background-color 0.15s ease;
+}
+.pill:hover { filter: brightness(0.92); }
+.pill--red { background: var(--red); color: #fff; }
+.pill--checkout { background: var(--red-checkout); color: #fff; }
+.pill--black { background: #000; color: #fff; }
+.pill--outline { border: 1px solid #000; color: #000; background: #fff; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+:focus-visible { outline: 2px solid #4191dd; outline-offset: 2px; }
