@@ -6,17 +6,19 @@ import HotelBrowser from './HotelBrowser.vue'
 import ModalShell from './ModalShell.vue'
 import YourDetails from './YourDetails.vue'
 import Confirmation from './Confirmation.vue'
+import StayJourney from './StayJourney.vue'
 
 // Variant A: the inline browser writes straight into the order as you choose.
 const onQuote = (q) => { store.hotel = q; pushState() }
 const root = ref(null)
-onMounted(() => { if (VIEW === 'addons' || VIEW === 'details' || VIEW === 'confirm') autoResize(root.value) })
+onMounted(() => { if (['addons', 'details', 'confirm', 'journey'].includes(VIEW)) autoResize(root.value) })
 </script>
 
 <template>
   <modal-shell v-if="VIEW === 'modal'" />
   <div v-else-if="VIEW === 'details'" ref="root" class="pa"><your-details /></div>
   <div v-else-if="VIEW === 'confirm'" ref="root" class="pa"><confirmation /></div>
+  <div v-else-if="VIEW === 'journey'" ref="root" class="pa pa--flush"><stay-journey /></div>
   <div v-else ref="root" class="pa">
     <weekend-card />
     <transition name="pa-slide">
@@ -109,6 +111,10 @@ html.skin-spartan .hb__legend-dot { box-shadow: 0 0 0 4px rgba(190, 45, 39, 0.18
 html.skin-spartan .hb-venue { background: #000; }
 html.skin-spartan .hb-venue::after { border-top-color: #000; }
 
+/* E/F hotel checkout: the library's floating countdown pill (HoldTimerPill)
+   would sit at the bottom of the auto-height frame; the top strip shows it. */
+.htp { display: none !important; }
+
 /* Version B review step: the pinned Confirm footer is phones-only (desktop has it inline). */
 @media (min-width: 761px) { .dsm__foot:has(.mf__phonebar) { display: none; } }
 
@@ -142,6 +148,7 @@ html.skin-spartan .hb-venue::after { border-top-color: #000; }
 </style>
 <style scoped>
 .pa { padding: 2px; }
+.pa--flush { padding: 0; }
 .pa__browser { margin-top: 16px; }
 .pa-slide-enter-active { transition: opacity 0.2s ease, transform 0.2s ease; }
 .pa-slide-enter-from { opacity: 0; transform: translateY(-6px); }

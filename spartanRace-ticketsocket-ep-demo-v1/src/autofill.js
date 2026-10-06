@@ -8,7 +8,7 @@ import { state, primaryTicket } from './store.js'
 import { WAVES } from './data.js'
 
 // Steps that have a form to fill (the prototype bar shows "Fill form" on these).
-export const FORM_ROUTES = ['details', 'extras', 'guest', 'payment']
+export const FORM_ROUTES = ['details', 'extras', 'guest', 'payment', 'stay']
 
 function fill (route, force = false) {
   if (route === 'details') {
@@ -21,7 +21,7 @@ function fill (route, force = false) {
     window.dispatchEvent(new CustomEvent('ew:sign')) // draw on the signature pad if blank
   } else if (route === 'extras') {
     if (force || state.refundable === null) state.refundable = false
-  } else if (route === 'guest') {
+  } else if (route === 'guest' || route === 'stay') {
     // Your Details is inside the Eventpipe iframe — ask it to fill itself
     document.querySelector('iframe.pf')?.contentWindow?.postMessage({ source: 'spartan', type: 'fill', payload: { force } }, '*')
   } else if (route === 'payment') {

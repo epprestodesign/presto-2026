@@ -15,6 +15,8 @@ export const ROUTES = {
   guest: '/checkout/your-details', // Your Details — library checkout steps 1–4 (embedded)
   payment: '/checkout/payment',
   confirmed: '/checkout/confirmed', // Eventpipe confirmation (library ConfirmationPage)
+  ticketconf: '/checkout/order-confirmed', // E/F: Spartan ticket receipt + "book your hotel" card
+  stay: '/hotels', // E/F: separate hotel booking page (full Presto journey)
 }
 
 // Every screen is deep-linkable per version so feedback can point at a URL:
@@ -26,6 +28,10 @@ export const CONCEPTS = {
   b: { variant: 'modal', skin: 'presto' },
   c: { variant: 'inline', skin: 'spartan' },
   d: { variant: 'modal', skin: 'spartan' },
+  // E/F: hotel booked as its own page AFTER the ticket purchase, linked from
+  // the ticket confirmation (no hotel in the checkout)
+  e: { variant: 'separate', skin: 'presto' },
+  f: { variant: 'separate', skin: 'spartan' },
 }
 export const conceptOf = (variant, skin) =>
   Object.keys(CONCEPTS).find((k) => CONCEPTS[k].variant === variant && CONCEPTS[k].skin === skin) || 'a'
@@ -34,12 +40,14 @@ function parseHash (hash) {
   let path = hash.replace(/^#/, '') || '/'
   let variant = null
   let skin = null
-  const m = path.match(/^\/([a-d])(\/.*)?$/)
+  const m = path.match(/^\/([a-f])(\/.*)?$/)
   if (m) {
     ;({ variant, skin } = CONCEPTS[m[1]])
     path = m[2] || '/event'
   }
-  const route = Object.keys(ROUTES).find((k) => ROUTES[k] === path) || 'home'
+  let route = Object.keys(ROUTES).find((k) => ROUTES[k] === path) || 'home'
+  // a step that doesn't exist in this pattern maps to its equivalent
+  if (variant) route = routeFor(route, variant)
   return { route, variant, skin }
 }
 const boot = parseHash(location.hash)
@@ -80,6 +88,7 @@ export const state = reactive({
   hotelOn: false,
   hotel: null, // priced quote from the widget — see src/presto/hotels.js quote()
   overlayOpen: false,
+  stayHotel: null, // E/F: hotel booked on the separate page (own payment)
   autofill: readAutofill(), // prototype Auto-fill: form steps fill themselves (toggle in the prototype bar)
 })
 
@@ -87,8 +96,15 @@ export const PARKING_PRICE = 20
 export const PHOTO_PRICE = 25 // per racer
 export const partySize = computed(() => Object.values(state.tickets).reduce((a, b) => a + b, 0) || 1)
 
+// Each pattern has its own steps; switching concepts maps to the equivalent one.
+export const isSeparate = (variant = state.variant) => variant === 'separate'
+// (function declaration: hoisted, so parseHash can use it at boot)
+export function routeFor (route, variant) {
+  if (variant === 'separate') return { guest: 'payment', hotels: 'addons', confirmed: 'ticketconf' }[route] || route
+  return { ticketconf: 'confirmed', stay: 'confirmed' }[route] || route
+}
 export const hrefFor = (route, variant = state.variant, skin = state.skin) =>
-  route === 'home' ? '#/' : `#/${conceptOf(variant, skin)}${ROUTES[route]}`
+  route === 'home' ? '#/' : `#/${conceptOf(variant, skin)}${ROUTES[routeFor(route, variant)]}`
 
 // Keep the address bar canonical (always version-prefixed) without a navigation.
 const canonicalize = () => {
@@ -272,7 +288,7 @@ try {
   // A reload always restarts the Eventpipe add-ons step (no parking, photo or
   // hotel carried over); everything else in the demo order survives.
   // (The confirmation page keeps the completed order so it can be re-viewed.)
-  const keepOrder = boot.route === 'confirmed'
+  const keepOrder = ['confirmed', 'ticketconf', 'stay'].includes(boot.route)
   if (saved) Object.assign(state, saved, {
     route: state.route,
     variant: boot.variant || saved.variant || 'inline',

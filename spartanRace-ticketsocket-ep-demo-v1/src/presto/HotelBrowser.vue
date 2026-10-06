@@ -19,6 +19,7 @@ import SearchSummaryBar from '@lib/components/browse/SearchSummaryBar.vue'
 import FilterRail from '@lib/components/browse/FilterRail.vue'
 import SortDropdown from '@lib/components/browse/SortDropdown.vue'
 import HotelCardHorizontal from '@lib/components/browse/HotelCardHorizontal.vue'
+import HotelCardGroup from '@lib/components/browse/HotelCardGroup.vue'
 import HotelMap from '@lib/components/HotelMap.vue'
 import DsModal from '@lib/components/DsModal.vue'
 import { HOTELS, STAYS, ROOM_TYPES, NIGHTS, EVENT_LOCATION, PAGE_SIZE, quote, money } from './hotels.js'
@@ -26,7 +27,7 @@ import { HOTELS, STAYS, ROOM_TYPES, NIGHTS, EVENT_LOCATION, PAGE_SIZE, quote, mo
 const props = defineProps({
   party: { type: Number, default: 1 },
   initial: { type: Object, default: null }, // an existing quote to restore
-  layout: { type: String, default: 'inline' }, // inline | modal
+  layout: { type: String, default: 'inline' }, // inline | modal | page (E/F full booking page)
   showPay: { type: Boolean, default: true }, // modal: payment moves to the review step
 })
 const emit = defineEmits(['update:quote', 'selected'])
@@ -255,7 +256,26 @@ async function pick (h) {
 
           <div class="hb__list" @click="onListClick">
             <div v-for="h in paged" :key="h.id" :data-hotel="h.id" class="hb__item" :class="{ 'is-selected': h.id === selectedId }">
+              <!-- page (E/F): the desktop listing card; its CTA opens Hotel Details, like the booking site -->
+              <hotel-card-group
+                v-if="layout === 'page'"
+                flow="group"
+                :name="h.name"
+                :city="h.city"
+                :stars="h.stars"
+                :distance="`${h.miles} mi from Sandy Oaks Ranch · ${h.airportMiles} mi from SAT`"
+                :availability="minLeft(h) <= 3 ? 'partial' : 'matches'"
+                :rooms-available="minLeft(h)"
+                :rooms-max="minLeft(h)"
+                :starting-price="h.rates[roomType]"
+                :rooms="roomsFor(h)"
+                :seed="h.seed"
+                :preferred="h.id === 'hill-country-lodge'"
+                cta-label="Select Rooms"
+                @select="openDetail(h.id)"
+              />
               <hotel-card-horizontal
+                v-else
                 flow="group"
                 :name="h.name"
                 :city="h.city"
@@ -325,6 +345,8 @@ async function pick (h) {
 
 /* layout grid */
 .hb__grid { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 24px; margin-top: 20px; }
+.hb--page .hb__grid { grid-template-columns: 280px minmax(0, 1fr); gap: 32px; margin-top: 24px; }
+.hb--page .hb__fields { grid-template-columns: 1.6fr 0.8fr 1.1fr; }
 .hb__side { min-width: 0; }
 .hb__rail :deep(.fr__inline > .frf__section:first-child) { display: none; } /* rail's mini-map shows library sample data — the Map button covers it */
 .hb__mapbtn--phone, .hb__sort-phone { display: none; }

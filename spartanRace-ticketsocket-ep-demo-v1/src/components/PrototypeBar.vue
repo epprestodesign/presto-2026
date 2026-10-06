@@ -5,7 +5,7 @@ import { ref, computed } from 'vue'
 import { fillNow, FORM_ROUTES } from '../autofill.js'
 import { state, hrefFor, CONCEPTS, conceptOf } from '../store.js'
 
-const LABEL = { inline: 'Inline', modal: 'Modal' }
+const LABEL = { inline: 'Inline', modal: 'Modal', separate: 'Separate page' }
 const SKIN = { presto: 'Presto colors', spartan: 'Spartan colors' }
 const current = computed(() => conceptOf(state.variant, state.skin))
 const list = Object.entries(CONCEPTS).map(([id, c]) => ({ id, ...c }))

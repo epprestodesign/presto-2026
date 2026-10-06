@@ -61,13 +61,16 @@ case study is the 2026 San Antonio Spartan Trifecta Weekend, sold on TicketSocke
   Presto library. It adds an **Add-ons** step (parking, photo package, hotel finder
   with filters / map / details / order summary) and a **Your Details** step
   (checkout steps 1–4) to the checkout.
+- **Separate page (E/F):** tickets only in the checkout; the ticket confirmation links to a
+  separate hotel booking page with the full Presto journey (browse → details → checkout →
+  confirmation), paid on its own.
 
-Four concepts, deep-linked as `#/a/…` to `#/d/…`:
+Six concepts, deep-linked as `#/a/…` to `#/f/…`:
 
-| | Inline | Modal (900px) |
-| --- | --- | --- |
-| **Presto colors** | A | B |
-| **Spartan colors** | C | D |
+| | Inline | Modal (900px) | Separate hotel page |
+| --- | --- | --- | --- |
+| **Presto colors** | A | B | E |
+| **Spartan colors** | C | D | F |
 
 Write-up: Storybook **Widgets & Embeds → R&D Overview**. Source in
 [`spartanRace-ticketsocket-ep-demo-v1/`](spartanRace-ticketsocket-ep-demo-v1/)
@@ -75,8 +78,9 @@ Write-up: Storybook **Widgets & Embeds → R&D Overview**. Source in
 
 **▶ Launch: https://epprestodesign.github.io/presto-2026/spartanRace-ticketsocket-ep-demo-v1/**
 
-**Updated Oct 6, 2026:** itemized order summary (hotel stay broken out), a confirmation page
-after Pay, and an Auto-fill forms toggle with a Fill form button. Full changelog on the Storybook
+**Updated Oct 6, 2026:** concepts E/F (hotel booked on a separate page after the ticket
+purchase, linked from the ticket confirmation), itemized order summary (hotel stay broken out),
+a confirmation page after Pay, and an Auto-fill forms toggle with a Fill form button. Full changelog on the Storybook
 R&D Overview page and in the prototype README.
 
 ```bash

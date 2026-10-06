@@ -11,13 +11,15 @@ const props = defineProps({
 })
 const emit = defineEmits(['submit'])
 
-const STEPS = [
+const ALL_STEPS = [
   ['details', 'Details'],
   ['addons', 'Add-ons'],
   ['extras', 'Extras'],
   ['guest', 'Your Details'],
   ['payment', 'Payment'],
 ]
+// E/F book the hotel on its own page after checkout, so no Your Details step
+const STEPS = computed(() => (state.variant === 'separate' ? ALL_STEPS.filter(([k]) => k !== 'guest') : ALL_STEPS))
 const order = { details: 0, addons: 1, extras: 2, guest: 3, payment: 4 }
 const canJump = (s) => order[s] < order[props.step]
 

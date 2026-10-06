@@ -18,7 +18,7 @@ function pay() {
   busy.value = true
   setTimeout(() => {
     busy.value = false
-    go('confirmed')
+    go(state.variant === 'separate' ? 'ticketconf' : 'confirmed')
   }, 1800)
 }
 </script>

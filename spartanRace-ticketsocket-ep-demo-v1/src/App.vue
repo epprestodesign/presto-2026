@@ -6,6 +6,8 @@ import EventPage from './views/EventPage.vue'
 import AddonsPage from './views/AddonsPage.vue'
 import YourDetailsPage from './views/YourDetailsPage.vue'
 import ConfirmedPage from './views/ConfirmedPage.vue'
+import TicketConfirmPage from './views/TicketConfirmPage.vue'
+import StayPage from './views/StayPage.vue'
 import LoginPage from './views/LoginPage.vue'
 import LocationPage from './views/LocationPage.vue'
 import OrderDetails from './views/OrderDetails.vue'
@@ -25,6 +27,8 @@ const VIEWS = {
   hotels: AddonsPage,
   guest: YourDetailsPage,
   confirmed: ConfirmedPage,
+  ticketconf: TicketConfirmPage,
+  stay: StayPage,
   extras: ExtrasPage,
   payment: PaymentPage,
 }

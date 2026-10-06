@@ -6,11 +6,14 @@ import { asset } from '../data.js'
 
 const INLINE = 'Turn on “Hotel room” and the hotel finder expands right inside the Spartan checkout. Picking a hotel updates the order total as you go.'
 const MODAL = 'Turn on “Hotel room” to open the hotel finder in a 900px modal over the checkout (full-screen on phones). Pick a hotel, review how to pay beside the stay summary, then confirm it into the Spartan order.'
+const SEPARATE = 'Checkout is tickets only (plus parking and photos). The ticket confirmation features a “Book your hotel” card that opens a separate hotel booking page: the full Presto journey (browse, details, checkout, confirmation), paid on its own.'
 const CONCEPTS = [
   { id: 'a', tag: 'A', variant: 'inline', skin: 'presto', name: 'Inline', body: INLINE },
   { id: 'b', tag: 'B', variant: 'modal', skin: 'presto', name: 'Modal', body: MODAL },
   { id: 'c', tag: 'C', variant: 'inline', skin: 'spartan', name: 'Inline', body: INLINE },
   { id: 'd', tag: 'D', variant: 'modal', skin: 'spartan', name: 'Modal', body: MODAL },
+  { id: 'e', tag: 'E', variant: 'separate', skin: 'presto', name: 'Separate hotel page', body: SEPARATE },
+  { id: 'f', tag: 'F', variant: 'separate', skin: 'spartan', name: 'Separate hotel page', body: SEPARATE },
 ]
 const SKINS = [
   { id: 'presto', name: 'Presto colors', note: 'The widget in the Presto design system’s native navy — clearly an embedded Eventpipe experience.', acc: '#01113e' },
@@ -28,6 +31,16 @@ const LINKS = [
   ['payment', 'Payment'],
   ['confirmed', 'Confirmation'],
 ]
+const LINKS_SEPARATE = [
+  ['event', 'Event page'],
+  ['details', 'Order details'],
+  ['addons', 'Add-ons (parking + photo)'],
+  ['extras', 'Extras'],
+  ['payment', 'Payment'],
+  ['ticketconf', 'Ticket confirmation'],
+  ['stay', 'Hotel booking page'],
+]
+const linksFor = (c) => (c.variant === 'separate' ? LINKS_SEPARATE : LINKS)
 const origin = location.origin + location.pathname
 const full = (route, c) => origin + hrefFor(route, c.variant, c.skin)
 const copied = ref('')
@@ -42,7 +55,7 @@ function start (c, jump = false) {
   if (jump) {
     ensureOrder()
     state.signedIn = true
-    go('addons')
+    go(c.variant === 'separate' ? 'ticketconf' : 'addons')
   } else go('event')
 }
 </script>
@@ -59,7 +72,7 @@ function start (c, jump = false) {
       <h1 class="hm__title">2026 San Antonio Spartan Trifecta Weekend</h1>
       <p class="hm__lead">
         Spartan’s TicketSocket checkout with an Eventpipe “Make a weekend of it” step. The hotel finder is built from the
-        Presto design system. Two UX patterns (inline vs. modal) × two color treatments (Presto vs. Spartan) = four concepts.
+        Presto design system. Three UX patterns (inline, modal, or a separate hotel page after the ticket purchase) × two color treatments (Presto vs. Spartan) = six concepts.
       </p>
     </header>
 
@@ -75,7 +88,20 @@ function start (c, jump = false) {
           <!-- schematic: Spartan checkout page + where the hotel finder appears -->
           <div class="sk">
             <div class="sk__bar" />
-            <div class="sk__body">
+            <!-- E/F: ticket receipt with a hotel card → separate hotel page -->
+            <div v-if="v.variant === 'separate'" class="sk__sep">
+              <div class="sk__receipt">
+                <div class="sk__h" />
+                <div class="sk__lines"><i /><i /><i /><i class="sk__tot" /></div>
+                <div class="sk__hcard"><i /><i /><span class="sk__cta" /></div>
+              </div>
+              <svg class="sk__arrow" viewBox="0 0 40 16" width="40" height="16"><path d="M2 8h32M28 3l6 5-6 5" fill="none" stroke="#9aa3b5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              <div class="sk__page">
+                <div class="sk__hero" />
+                <div class="sk__pbody"><div class="sk__rail" /><div class="sk__mlist"><div class="sk__hotel" /><div class="sk__hotel sk__hotel--sel" /><div class="sk__hotel" /></div></div>
+              </div>
+            </div>
+            <div v-else class="sk__body">
               <div class="sk__main">
                 <div class="sk__h" />
                 <div class="sk__card">
@@ -106,12 +132,12 @@ function start (c, jump = false) {
           <p class="card__text">{{ v.body }}</p>
           <div class="card__actions">
             <button class="btn btn--primary" @click="start(v)">Start from the event page</button>
-            <button class="btn btn--ghost" @click="start(v, true)">Jump to Add-ons</button>
+            <button class="btn btn--ghost" @click="start(v, true)">{{ v.variant === 'separate' ? 'Jump to ticket confirmation' : 'Jump to Add-ons' }}</button>
           </div>
           <div class="links">
             <p class="links__h">Deep links · Concept {{ v.tag }}</p>
             <ul>
-              <li v-for="[r, label] in LINKS" :key="r">
+              <li v-for="[r, label] in linksFor(v)" :key="r">
                 <a :href="hrefFor(r, v.variant, v.skin)">
                   <span class="links__label">{{ label }}</span>
                   <code>{{ hrefFor(r, v.variant, v.skin) }}</code>
@@ -136,6 +162,7 @@ function start (c, jump = false) {
       <div class="hm__logentry">
         <p class="hm__logdate">Oct 6, 2026</p>
         <ul>
+          <li>Concepts E and F: the hotel booked on a separate page after the ticket purchase, linked from the ticket confirmation.</li>
           <li>Itemized order summary: tickets, add-ons and the hotel stay broken out line by line, with the Total at the bottom.</li>
           <li>Confirmation page after Pay: Spartan logo centered, Manage booking, full hotel details plus the race order.</li>
           <li>Auto-fill forms toggle and Fill form button in the prototype bar.</li>
@@ -152,7 +179,7 @@ function start (c, jump = false) {
     </section>
 
     <section class="hm__next">
-      <p class="hm__next-h">All four concepts</p>
+      <p class="hm__next-h">All six concepts</p>
       <div class="hm__chips">
         <a v-for="c in CONCEPTS" :key="c.id" :href="hrefFor('event', c.variant, c.skin)">{{ c.tag }} · {{ c.name }} · {{ c.skin === 'presto' ? 'Presto colors' : 'Spartan colors' }}</a>
       </div>
@@ -180,7 +207,8 @@ function start (c, jump = false) {
 .hm__skinhead h2 { font-size: 20px; font-weight: 700; }
 .hm__skinhead p { flex-basis: 100%; margin-top: 2px; padding-left: 26px; font-size: 14px; color: rgba(255, 255, 255, 0.6); }
 .hm__swatch { width: 14px; height: 14px; border-radius: 4px; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25); transform: translateY(1px); }
-.hm__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 16px; }
+.hm__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 16px; }
+@media (max-width: 1360px) { .hm__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .card { overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; background: #18181c; }
 .card__art { height: 250px; padding: 28px 36px 0; background: linear-gradient(180deg, #232329, #1a1a1f); }
 .card__body { padding: 26px 32px 30px; }
@@ -209,6 +237,19 @@ function start (c, jump = false) {
 .sk__hotel { height: 22px; border-radius: 4px; background: #eef1f6; }
 .sk__hotel--sel { outline: 2px solid var(--acc); }
 .sk__aside { width: 30%; height: 90px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12); }
+.sk__sep { display: flex; align-items: center; gap: 8px; height: calc(100% - 18px); padding: 12px 14px; }
+.sk__receipt { flex: 1; align-self: stretch; padding: 8px; border-radius: 6px; background: #f3f3f3; }
+.sk__lines { display: grid; gap: 5px; margin-top: 8px; }
+.sk__lines i { height: 5px; border-radius: 3px; background: #cfd5e1; }
+.sk__lines .sk__tot { width: 55%; margin-left: auto; height: 7px; background: #111; }
+.sk__hcard { display: grid; gap: 5px; margin-top: 10px; padding: 7px; border-top: 4px solid var(--acc); border-radius: 5px; background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); }
+.sk__hcard i { height: 5px; border-radius: 3px; background: #cfd5e1; }
+.sk__hcard .sk__cta { height: 12px; margin-top: 3px; }
+.sk__arrow { flex: none; }
+.sk__page { flex: 1.3; align-self: stretch; overflow: hidden; border: 1px solid #e3e6ee; border-radius: 6px; background: #fff; }
+.sk__hero { height: 30px; background: var(--acc); }
+.sk__pbody { display: flex; gap: 6px; padding: 6px; }
+.sk__pbody .sk__rail { min-height: 90px; }
 .sk__scrim { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0, 0, 0, 0.55); }
 .sk__modal { position: relative; top: 8px; width: 74%; height: 176px; display: flex; flex-direction: column; border-radius: 8px; background: #fff; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
 .sk__mhead { height: 20px; border-bottom: 1px solid #e3e6ee; }
