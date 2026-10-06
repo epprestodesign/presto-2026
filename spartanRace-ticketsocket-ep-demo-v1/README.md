@@ -27,13 +27,13 @@ npm run build      # → dist/ (relative base, runs from any sub-path)
 
 ## Concepts
 
-`#/` is the prototype hub. Every screen is deep-linkable per concept as `#/<a|b|c|d>/<route>`.
+`#/` is the prototype hub. Every screen is deep-linkable per concept as `#/<a…f>/<route>`.
 The prototype banner switches concepts while keeping you on the same screen.
 
-| | Inline: the finder expands inside the step | Modal: 900px `DsModal`, full-screen on phones |
-| --- | --- | --- |
-| **Presto colors** (native navy) | **A** · `#/a/…` | **B** · `#/b/…` |
-| **Spartan colors** (host red/black, neutral grays, black text) | **C** · `#/c/…` | **D** · `#/d/…` |
+| | Inline: the finder expands inside the step | Modal: 900px `DsModal`, full-screen on phones | Separate page: hotel booked after the tickets |
+| --- | --- | --- | --- |
+| **Presto colors** (native navy) | **A** · `#/a/…` | **B** · `#/b/…` | **E** · `#/e/…` |
+| **Spartan colors** (host red/black, neutral grays, black text) | **C** · `#/c/…` | **D** · `#/d/…` | **F** · `#/f/…` |
 
 - **Modal concepts (B, D):** picking a hotel opens a **Review your stay** step. How to pay and
   Confirm sit on the left, the hotel order summary on the right, and "Powered by Eventpipe"
@@ -55,6 +55,8 @@ The prototype banner switches concepts while keeping you on the same screen.
 | `checkout/extras` | Race for a Cause (givestar) + refundable booking | 4.24.10 |
 | `checkout/your-details` | **New · Eventpipe:** library checkout steps 1–4 (contact, payment method, review your reservation, policies). No order rail and no Book Now; Continue goes to Payment | Checkout Experience Expanded |
 | `checkout/payment` | Sezzle / card (Stripe Link) / Flex + terms → **Pay**, with a Hotel reservation block | 4.24.21 |
+| `checkout/order-confirmed` | **E/F:** Spartan ticket receipt + "Make a weekend of it" hotel card → Find a hotel | (new) |
+| `hotels` | **E/F:** separate hotel booking page under the Spartan bar: full Presto journey (browse, details, checkout, confirmation), paid on its own | Booking site |
 | `checkout/confirmed` | **New · Eventpipe:** confirmation (library Single Reservation) with the hotel stay + race order; Spartan logo centered, Manage booking | Confirmation story |
 
 **Pay** shows a processing state, then the confirmation. No real order is placed. A reload restarts the add-ons
@@ -84,6 +86,10 @@ sketch. The map needs `VITE_GOOGLE_MAPS_API_KEY` (repo-root `.env` locally, the
 ## Changelog
 
 **Oct 6, 2026**
+- Concepts **E/F**: tickets-only checkout (Add-ons = parking + photo), Pay → ticket receipt with a
+  hotel card → separate hotel page (`StayJourney.vue`: browse with HotelBrowser `layout="page"` +
+  `HotelCardGroup`, `HotelDetailPage`, `CheckoutPageExpanded`, hotel-only `ConfirmationPage`).
+  Shared helpers: `presto/cart.js`, `presto/fillDom.js`.
 - Itemized order summary (Tickets → Add-ons → *Hotel & weekend add-ons by Eventpipe*, with the
   hotel fully itemized → Subtotal → fees → Total at the bottom). It pins by its bottom edge when tall.
 - Confirmation step after Pay (`checkout/confirmed`): black bar with the Spartan logo centered and

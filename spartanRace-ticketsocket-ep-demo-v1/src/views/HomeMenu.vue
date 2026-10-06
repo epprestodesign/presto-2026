@@ -162,6 +162,7 @@ function start (c, jump = false) {
       <div class="hm__logentry">
         <p class="hm__logdate">Oct 6, 2026</p>
         <ul>
+          <li>Concepts E and F: the hotel booked on a separate page after the ticket purchase, linked from the ticket confirmation.</li>
           <li>Itemized order summary: tickets, add-ons and the hotel stay broken out line by line, with the Total at the bottom.</li>
           <li>Confirmation page after Pay: Spartan logo centered, Manage booking, full hotel details plus the race order.</li>
           <li>Auto-fill forms toggle and Fill form button in the prototype bar.</li>
