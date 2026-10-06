@@ -52,6 +52,34 @@ cd prototype-custom-fees
 node ../node_modules/vite/bin/vite.js --port 6200 --host   # → http://localhost:6200
 ```
 
+### Widgets & Embeds R&D — Spartan × Eventpipe
+Research into **embedding Eventpipe booking inside a partner's checkout**. The
+case study is the 2026 San Antonio Spartan Trifecta Weekend, sold on TicketSocket:
+- **Host:** a pixel recreation of Spartan's event page and checkout, in plain Vue
+  with no design-system code.
+- **Embed:** an Eventpipe widget (`presto.html`, in an iframe) built from the real
+  Presto library. It adds an **Add-ons** step (parking, photo package, hotel finder
+  with filters / map / details / order summary) and a **Your Details** step
+  (checkout steps 1–4) to the checkout.
+
+Four concepts, deep-linked as `#/a/…` to `#/d/…`:
+
+| | Inline | Modal (900px) |
+| --- | --- | --- |
+| **Presto colors** | A | B |
+| **Spartan colors** | C | D |
+
+Write-up: Storybook **Widgets & Embeds → R&D Overview**. Source in
+[`spartanRace-ticketsocket-ep-demo-v1/`](spartanRace-ticketsocket-ep-demo-v1/)
+(see its README for the flow, embed protocol and pricing).
+
+**▶ Launch: https://epprestodesign.github.io/presto-2026/spartanRace-ticketsocket-ep-demo-v1/**
+
+```bash
+cd spartanRace-ticketsocket-ep-demo-v1
+npm run dev   # → http://localhost:6201
+```
+
 ## Local development
 ```bash
 pnpm install
@@ -82,6 +110,8 @@ node scripts/gen-tokens-data.mjs
 ## Storybook structure
 The sidebar mirrors how product & design think — **primitives** plus **experience flows**:
 
+- **R&D:** **Widgets & Embeds** (right after Getting Started) — embed explorations,
+  starting with the Spartan × Eventpipe concepts.
 - **Primitives:** Foundations · **Components** (Actions · Forms · Feedback & Status ·
   Layout & Structure · Media & Visuals · Typography & Content)
 - **Experience flows:** App Shell · Landing Page · Browse Hotels · Hotel Details ·
@@ -181,20 +211,27 @@ Handled by [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): build
 Storybook, builds the [`prototype/`](prototype/) app (nested at `/prototype/`), the
 [`prototype-mobile/`](prototype-mobile/) device-frame showcase (nested at
 `/prototype-mobile/`), the [`prototype-custom-fees/`](prototype-custom-fees/) app
-(nested at `/prototype-custom-fees/`), and publishes `storybook-static/` to GitHub
+(nested at `/prototype-custom-fees/`), the
+[`spartanRace-ticketsocket-ep-demo-v1/`](spartanRace-ticketsocket-ep-demo-v1/) Widgets & Embeds
+concepts (nested at `/spartanRace-ticketsocket-ep-demo-v1/`), and publishes `storybook-static/` to GitHub
 Pages on every push to `main`. Pages is
 already enabled (**Settings → Pages → Source: GitHub Actions**).
 
 The prototypes are *also* published on Netlify
 ([`ep-presto-2026`](https://app.netlify.com/projects/ep-presto-2026)) via
 [`netlify.toml`](netlify.toml) + [`scripts/netlify-build.sh`](scripts/netlify-build.sh),
-which builds all three apps into `dist-netlify/`. Storybook is not part of that build.
+which builds all four apps into `dist-netlify/`. Storybook is not part of that build.
 
 | | Netlify | GitHub Pages |
 | --- | --- | --- |
 | Booking journey | https://ep-presto-2026.netlify.app/prototype/ | https://epprestodesign.github.io/presto-2026/prototype/ |
 | Mobile showcase | https://ep-presto-2026.netlify.app/mobile/ | https://epprestodesign.github.io/presto-2026/prototype-mobile/ |
 | Custom Fees Request | https://ep-presto-2026.netlify.app/custom-fees/ | https://epprestodesign.github.io/presto-2026/prototype-custom-fees/ |
+| Widgets & Embeds (Spartan × Eventpipe) | https://ep-presto-2026.netlify.app/spartan-widgets/ | https://epprestodesign.github.io/presto-2026/spartanRace-ticketsocket-ep-demo-v1/ |
+
+> **Google Maps on the hosted sites** needs the `GOOGLE_MAPS_API_KEY` Actions secret
+> (restricted by HTTP referrer). Without it, hotel maps show the "API key needed"
+> fallback; everything else works.
 
 The Netlify root (`/`) redirects to `/prototype/`, which is what it served before
 the mobile prototype was added.
