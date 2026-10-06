@@ -11,13 +11,13 @@ import { ref, reactive, watch, onMounted, onBeforeUnmount } from 'vue'
 import { state, partySize, pricing, receipt } from '../store.js'
 
 const props = defineProps({
-  view: { type: String, default: 'addons' }, // addons | modal | details | confirm
+  view: { type: String, default: 'addons' }, // addons | modal | details | confirm | journey
   variant: { type: String, default: 'inline' }, // inline | modal
   fill: { type: Boolean, default: false }, // fill the parent (modal layer)
   skin: { type: String, default: 'presto' }, // presto | spartan (widget color skin)
   width: { type: Number, default: 600 },
 })
-const emit = defineEmits(['open-overlay', 'confirm', 'cancel'])
+const emit = defineEmits(['open-overlay', 'confirm', 'cancel', 'booked', 'back'])
 
 const wrap = ref(null)
 const frame = ref(null)
@@ -68,6 +68,9 @@ function onMessage (e) {
   else if (m.type === 'open-overlay') emit('open-overlay')
   else if (m.type === 'confirm') emit('confirm', m.payload.hotel)
   else if (m.type === 'cancel') emit('cancel')
+  else if (m.type === 'booked') emit('booked', m.payload.hotel)
+  else if (m.type === 'back') emit('back')
+  else if (m.type === 'top') window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 onMounted(() => window.addEventListener('message', onMessage))
 onBeforeUnmount(() => {

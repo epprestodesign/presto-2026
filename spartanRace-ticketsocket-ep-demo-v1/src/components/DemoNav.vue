@@ -12,7 +12,9 @@ const STEPS = [
   ['extras', 'Extras'],
   ['guest', 'Your Details (Eventpipe)'],
   ['payment', 'Payment'],
-  ['confirmed', 'Confirmation (Eventpipe)'],
+  ['confirmed', 'Confirmation (A–D)'],
+  ['ticketconf', 'Ticket confirmation (E/F)'],
+  ['stay', 'Hotel booking page (E/F)'],
   ['location', 'Location picker'],
 ]
 </script>

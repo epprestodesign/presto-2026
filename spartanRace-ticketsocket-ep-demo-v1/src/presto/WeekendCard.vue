@@ -41,7 +41,7 @@ function startOver () {
   <section class="wk">
     <header class="wk__head">
       <h2 class="wk__title">Make a weekend of it</h2>
-      <p class="wk__sub">Add what you need now. Everything stays in one order.</p>
+      <p class="wk__sub">{{ VARIANT === 'separate' ? 'Add what you need for race day.' : 'Add what you need now. Everything stays in one order.' }}</p>
     </header>
 
     <div v-for="a in ADDONS" :key="a.id" class="wk__row">
@@ -53,7 +53,11 @@ function startOver () {
       <q-toggle :model-value="store[a.id]" color="primary" size="lg" :aria-label="`Add ${a.name}`" @update:model-value="setAddon(a.id, $event)" />
     </div>
 
-    <div class="wk__row wk__row--last">
+    <!-- E/F: no hotel in the checkout — it's booked on its own page after the tickets -->
+    <p v-if="VARIANT === 'separate'" class="wk__later">
+      <q-icon name="hotel" size="18px" /> Need a place to stay? You can book a hotel for race weekend right after checkout.
+    </p>
+    <div v-else class="wk__row wk__row--last">
       <div class="wk__info">
         <p class="wk__name">Hotel room</p>
         <p v-if="!store.hotel" class="wk__detail">Held for you, billed in this order</p>
@@ -131,6 +135,8 @@ function startOver () {
 .wk__railbtn:hover { background: var(--ds-palette-navy-50); }
 .wk__railbtn--ghost { border-color: var(--ds-color-border-bold); color: var(--ds-color-text); }
 .wk__railbtn--ghost:hover { background: var(--ds-palette-slate-100); }
+.wk__later { display: flex; align-items: center; gap: 8px; margin: 0 -24px -8px; padding: 14px 24px; border-top: 1px solid var(--ds-color-border); background: var(--ds-color-surface-sunken); border-radius: 0 0 var(--ds-radius-lg) var(--ds-radius-lg); font-size: 0.9375rem; color: var(--ds-color-text-subtle); }
+.wk__later .q-icon { color: var(--ds-color-text-brand); }
 .wk__overlay-note {
   display: flex;
   align-items: center;

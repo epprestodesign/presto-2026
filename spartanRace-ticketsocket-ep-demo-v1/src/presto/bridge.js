@@ -7,13 +7,16 @@
 //     open-overlay  —                        variant B: open the hotel modal
 //     confirm       { hotel }                modal: add hotel to order
 //     cancel        —                        modal: closed without adding
+//     booked        { hotel }                journey (E/F): hotel booked on its own
+//     back          —                        journey (E/F): back to the race order
+//     top           —                        journey step changed: scroll host to top
 //     modal         { open }                 a library DsModal (Filters / Map) opened inside the inline embed
 //   host → widget  { source: 'spartan', type: 'sync', payload: { parking, photo, hotelOn, hotel, party } }
 //                  { source: 'spartan', type: 'scroll', payload: { y } }  align content while pinned
 import { reactive } from 'vue'
 
 const params = new URLSearchParams(location.search)
-export const VIEW = params.get('view') || 'addons' // addons | modal | details | confirm
+export const VIEW = params.get('view') || 'addons' // addons | modal | details | confirm | journey
 export const VARIANT = params.get('variant') || 'inline' // inline | modal
 export const SKIN = params.get('skin') === 'spartan' ? 'spartan' : 'presto' // widget color skin
 document.documentElement.classList.add(`skin-${SKIN}`)
