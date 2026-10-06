@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 
 // autoSign: draws a scripted signature (prototype Auto-fill), now or when it turns on
 const props = defineProps({ error: Boolean, autoSign: Boolean })
@@ -23,6 +23,10 @@ onMounted(() => {
   if (props.autoSign) sign()
 })
 watch(() => props.autoSign, (on) => { if (on && !strokes.length) sign() })
+// prototype "Fill form" button
+const onFill = () => { if (!strokes.length) sign() }
+onMounted(() => window.addEventListener('ew:sign', onFill))
+onBeforeUnmount(() => window.removeEventListener('ew:sign', onFill))
 
 function sign () {
   const r = canvas.value.getBoundingClientRect()

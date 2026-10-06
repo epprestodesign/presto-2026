@@ -43,6 +43,7 @@ window.addEventListener('message', (e) => {
   if (!m || m.source !== 'spartan') return
   if (m.type === 'sync') Object.assign(store, m.payload)
   else if (m.type === 'scroll') window.scrollTo(0, m.payload.y)
+  else if (m.type === 'fill') window.dispatchEvent(new CustomEvent('ew:fill', { detail: m.payload || {} }))
 })
 
 // Inline embed: the iframe is always exactly as tall as the widget, so the

@@ -1,13 +1,22 @@
 <script setup>
 // Prototype chrome — sits above the Spartan site on every screen except the
 // hub. Not part of either brand's UI.
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
+import { fillNow, FORM_ROUTES } from '../autofill.js'
 import { state, hrefFor, CONCEPTS, conceptOf } from '../store.js'
 
 const LABEL = { inline: 'Inline', modal: 'Modal' }
 const SKIN = { presto: 'Presto colors', spartan: 'Spartan colors' }
 const current = computed(() => conceptOf(state.variant, state.skin))
 const list = Object.entries(CONCEPTS).map(([id, c]) => ({ id, ...c }))
+
+const hasForm = computed(() => FORM_ROUTES.includes(state.route))
+const filled = ref(false)
+function onFill () {
+  fillNow()
+  filled.value = true
+  setTimeout(() => (filled.value = false), 1400)
+}
 </script>
 
 <template>
@@ -25,6 +34,10 @@ const list = Object.entries(CONCEPTS).map(([id, c]) => ({ id, ...c }))
       <span class="pb__track" aria-hidden="true"><span class="pb__thumb" /></span>
       <span class="pb__filltext">Auto-fill forms <b>{{ state.autofill ? 'On' : 'Off' }}</b></span>
     </label>
+    <button v-if="state.autofill" type="button" class="pb__fillbtn" :disabled="!hasForm" :title="hasForm ? 'Fill every field on this step' : 'No form on this step'" @click="onFill">
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4ZM14 6l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      {{ filled ? 'Filled ✓' : 'Fill form' }}
+    </button>
     <nav class="pb__switch" aria-label="Switch concept">
       <span>Switch</span>
       <a
@@ -71,6 +84,9 @@ const list = Object.entries(CONCEPTS).map(([id, c]) => ({ id, ...c }))
 .pb__fill input:focus-visible + .pb__track { outline: 2px solid #8fd3a8; outline-offset: 2px; }
 .pb__filltext { color: rgba(255, 255, 255, 0.8); font-weight: 600; }
 .pb__filltext b { color: #fff; }
+.pb__fillbtn { display: inline-flex; align-items: center; gap: 6px; height: 26px; margin-left: 8px; padding: 0 12px; border-radius: 6px; background: #2fa36b; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.pb__fillbtn:hover:not(:disabled) { background: #27925f; }
+.pb__fillbtn:disabled { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.4); cursor: default; }
 .pb__switch { display: flex; align-items: center; gap: 4px; margin-left: 16px; padding-left: 16px; border-left: 1px solid rgba(255, 255, 255, 0.16); }
 .pb__switch span { margin-right: 4px; color: rgba(255, 255, 255, 0.5); }
 .pb__switch a { display: grid; place-items: center; width: 28px; height: 26px; border-radius: 6px; border-bottom: 2px solid #4e63a0; font-weight: 700; }

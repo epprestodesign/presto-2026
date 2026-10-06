@@ -45,16 +45,19 @@ function setValue (el, v) {
   Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, v)
   el.dispatchEvent(new Event(el.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true }))
 }
-async function fill () {
+async function fill (force = false) {
   const el = root.value
   if (!el) return
   el.querySelectorAll('input[placeholder]').forEach((i) => {
     const v = TEXT[i.getAttribute('placeholder')]
-    if (v && !i.value) setValue(i, v)
+    if (v && (force || !i.value)) setValue(i, v)
   })
   await nextTick()
   el.querySelectorAll('select').forEach((s) => {
-    if (s.value) return
+    // required pickers (state / month / year) start on a disabled placeholder option;
+    // Country has none and is left alone
+    const isPicker = s.options[0]?.disabled
+    if (s.value && !(force && isPicker)) return
     const opts = [...s.options].filter((o) => !o.disabled && o.value)
     const pick = PREFERRED_OPTIONS.map((p) => opts.find((o) => o.value === p || o.text === p)).find(Boolean) || opts[0]
     if (pick) setValue(s, pick.value)
@@ -64,6 +67,9 @@ async function fill () {
 }
 onMounted(() => { if (store.autofill) setTimeout(fill, 150) })
 watch(() => store.autofill, (on) => { if (on) fill() })
+// prototype "Fill form" button (relayed by bridge.js)
+const onFillEvent = (e) => fill(!!e.detail?.force)
+onMounted(() => window.addEventListener('ew:fill', onFillEvent))
 
 const steps = [
   { key: 'contact', label: 'Enter contact information' },
