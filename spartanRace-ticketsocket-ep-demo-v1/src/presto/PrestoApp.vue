@@ -52,19 +52,56 @@ html.skin-spartan {
   --ds-palette-navy-800: #a1231e;
   --ds-palette-navy-900: #be2d27;
   --ds-palette-navy-950: #000000;
+  /* Neutrals: Presto's Slate scale leans blue. Re-point the full 50–950 ramp at
+     true grays matched to Spartan's site (panels #FAFAFA/#F3F3F3, rules #E2E2E2,
+     greys #B1B1B1/#8C8C8C, ink #222/#121212) so every container is neutral. */
+  --ds-palette-slate-50: #fafafa;
+  --ds-palette-slate-100: #f3f3f3;
+  --ds-palette-slate-200: #e2e2e2;
+  --ds-palette-slate-300: #d6d6d6;
+  --ds-palette-slate-400: #b1b1b1;
+  --ds-palette-slate-500: #8c8c8c;
+  --ds-palette-slate-600: #6b6b6b;
+  --ds-palette-slate-700: #4a4a4a;
+  --ds-palette-slate-800: #222222;
+  --ds-palette-slate-900: #121212;
+  --ds-palette-slate-950: #000000;
+  --ds-color-surface-canvas: #fafafa;
+  --ds-color-surface-sunken: #f3f3f3;
+  /* Text defaults to black (status colors — available / limited — keep their meaning). */
+  --ds-color-text: #000000;
+  --ds-color-text-subtle: #000000;
+  --ds-color-text-subtlest: #000000;
+  --ds-color-icon: #000000;
+  --ds-color-icon-subtle: #000000;
   --ds-color-text-brand: #000000;
   --ds-color-link: #000000;
-  --ds-color-link-visited: #222222;
+  --ds-color-link-visited: #000000;
+  /* Brand: Spartan checkout red for actions + selection outlines; tinted
+     containers use the neutral ramp instead of pink. */
   --ds-color-border-brand: #be2d27;
+  --ds-color-border-focused: #be2d27;
   --ds-color-background-brand-bold: #be2d27;
-  --ds-color-background-brand-subtlest: #fae8ea;
-  --ds-color-background-selected: #fae8ea;
+  --ds-color-background-brand-subtlest: #f3f3f3;
+  --ds-color-background-selected: #f3f3f3;
   --ds-color-background-selected-bold: #be2d27;
+  --q-dark: #121212;
 }
+/* Quasar's own greys (field labels, hints) and the navy-tinted card shadows */
+html.skin-spartan .q-field__label,
+html.skin-spartan .q-field__native,
+html.skin-spartan .q-field__marginal,
+html.skin-spartan .q-field__bottom { color: #000; }
+html.skin-spartan .text-grey-7,
+html.skin-spartan .text-grey-8 { color: #000 !important; }
 /* HotelMap paints its price pills with a hard-coded navy inline style. */
 html.skin-spartan [style*="background: rgb(1, 17, 62)"] { background: #be2d27 !important; }
 html.skin-spartan [style*="rgb(1, 17, 62)"] { border-color: #be2d27 !important; }
 html.skin-spartan [style*="color: rgb(1, 17, 62)"] { color: #be2d27 !important; }
+/* HotelMap popups author their text in zinc greys inline — default them to black */
+html.skin-spartan [style*="#71717A"], html.skin-spartan [style*="rgb(113, 113, 122)"],
+html.skin-spartan [style*="color:#18181B"], html.skin-spartan [style*="color: rgb(24, 24, 27)"] { color: #000 !important; }
+html.skin-spartan .hb__legend-dot { box-shadow: 0 0 0 4px rgba(190, 45, 39, 0.18); }
 html.skin-spartan .hb-venue { background: #000; }
 html.skin-spartan .hb-venue::after { border-top-color: #000; }
 
