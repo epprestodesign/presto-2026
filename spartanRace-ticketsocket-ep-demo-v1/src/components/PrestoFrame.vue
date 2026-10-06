@@ -23,7 +23,7 @@ const wrap = ref(null)
 const frame = ref(null)
 const autoH = ref(320)
 const pinned = reactive({ on: false, top: 0, left: 0, height: 0 })
-const snapshot = () => JSON.parse(JSON.stringify({ parking: state.parking, photo: state.photo, hotelOn: state.hotelOn, hotel: state.hotel, party: partySize.value, total: pricing.value.total, receipt: props.view === 'confirm' ? receipt.value : null }))
+const snapshot = () => JSON.parse(JSON.stringify({ parking: state.parking, photo: state.photo, hotelOn: state.hotelOn, hotel: state.hotel, party: partySize.value, total: pricing.value.total, autofill: state.autofill, receipt: props.view === 'confirm' ? receipt.value : null }))
 // built once — later changes travel as 'sync' messages so the widget never reloads
 const src = `./presto.html?view=${props.view}&variant=${props.variant}&skin=${props.skin}&s=${encodeURIComponent(JSON.stringify(snapshot()))}`
 const post = (type, payload) => frame.value?.contentWindow?.postMessage({ source: 'spartan', type, payload }, '*')
@@ -75,7 +75,7 @@ onBeforeUnmount(() => {
   if (pinned.on) document.body.style.overflow = ''
 })
 
-watch(() => [state.parking, state.photo, state.hotelOn, state.hotel, partySize.value, pricing.value.total], () => post('sync', snapshot()), { deep: true })
+watch(() => [state.parking, state.photo, state.hotelOn, state.hotel, partySize.value, pricing.value.total, state.autofill], () => post('sync', snapshot()), { deep: true })
 </script>
 
 <template>

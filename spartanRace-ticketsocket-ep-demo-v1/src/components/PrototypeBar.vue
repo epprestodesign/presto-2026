@@ -20,6 +20,11 @@ const list = Object.entries(CONCEPTS).map(([id, c]) => ({ id, ...c }))
     <span class="pb__tag">Prototype</span>
     <span class="pb__title">Spartan × Eventpipe hotel add-ons</span>
     <span class="pb__ver">Concept {{ current.toUpperCase() }} · {{ LABEL[state.variant] }} · {{ SKIN[state.skin] }}</span>
+    <label class="pb__fill" :class="{ on: state.autofill }" title="Auto-fill: form steps fill themselves so you can click straight through. Off: type everything yourself.">
+      <input v-model="state.autofill" type="checkbox" role="switch" :aria-checked="state.autofill" />
+      <span class="pb__track" aria-hidden="true"><span class="pb__thumb" /></span>
+      <span class="pb__filltext">Auto-fill forms <b>{{ state.autofill ? 'On' : 'Off' }}</b></span>
+    </label>
     <nav class="pb__switch" aria-label="Switch concept">
       <span>Switch</span>
       <a
@@ -56,7 +61,17 @@ const list = Object.entries(CONCEPTS).map(([id, c]) => ({ id, ...c }))
 .pb__tag { padding: 2px 7px; border-radius: 4px; background: rgba(255, 90, 95, 0.16); color: #ff7a7e; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .pb__title { color: rgba(255, 255, 255, 0.6); }
 .pb__ver { padding: 3px 9px; border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 999px; color: #fff; font-weight: 600; }
-.pb__switch { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.pb__fill { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; padding: 4px 10px 4px 6px; border-radius: 999px; cursor: pointer; user-select: none; }
+.pb__fill:hover { background: rgba(255, 255, 255, 0.08); }
+.pb__fill input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pb__track { position: relative; width: 30px; height: 18px; border-radius: 9px; background: #4a4a52; transition: background 0.15s; }
+.pb__thumb { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform 0.15s; }
+.pb__fill.on .pb__track { background: #2fa36b; }
+.pb__fill.on .pb__thumb { transform: translateX(12px); }
+.pb__fill input:focus-visible + .pb__track { outline: 2px solid #8fd3a8; outline-offset: 2px; }
+.pb__filltext { color: rgba(255, 255, 255, 0.8); font-weight: 600; }
+.pb__filltext b { color: #fff; }
+.pb__switch { display: flex; align-items: center; gap: 4px; margin-left: 16px; padding-left: 16px; border-left: 1px solid rgba(255, 255, 255, 0.16); }
 .pb__switch span { margin-right: 4px; color: rgba(255, 255, 255, 0.5); }
 .pb__switch a { display: grid; place-items: center; width: 28px; height: 26px; border-radius: 6px; border-bottom: 2px solid #4e63a0; font-weight: 700; }
 .pb__switch a.is-spartan { border-bottom-color: #be2d27; }

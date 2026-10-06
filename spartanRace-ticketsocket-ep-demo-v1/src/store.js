@@ -48,6 +48,13 @@ const boot = parseHash(location.hash)
 const isReload = (performance.getEntriesByType?.('navigation')[0]?.type) === 'reload'
 if (isReload && boot.route === 'hotels') boot.route = 'addons'
 
+// The Auto-fill toggle is a presenter preference: stored on its own so
+// "Reset demo" (which clears the order) keeps it.
+const AUTOFILL_KEY = 'spartan-ts-demo-autofill'
+function readAutofill () {
+  try { return localStorage.getItem(AUTOFILL_KEY) !== 'off' } catch { return true }
+}
+
 export const state = reactive({
   route: boot.route,
   signedIn: false,
@@ -73,6 +80,7 @@ export const state = reactive({
   hotelOn: false,
   hotel: null, // priced quote from the widget — see src/presto/hotels.js quote()
   overlayOpen: false,
+  autofill: readAutofill(), // prototype Auto-fill: form steps fill themselves (toggle in the prototype bar)
 })
 
 export const PARKING_PRICE = 20
@@ -273,6 +281,7 @@ try {
     overlayOpen: false,
     signature: false,
     waiverAgreed: false,
+    autofill: readAutofill(),
     ...(keepOrder ? {} : { parking: false, photo: false, hotelOn: false, hotel: null }),
   })
   if (state.variant === 'overlay') state.variant = 'modal' // older saved demos
@@ -294,3 +303,4 @@ export function resetDemo() {
 canonicalize()
 // switching version from the demo menu rewrites the URL in place
 watch(() => [state.variant, state.skin], canonicalize)
+watch(() => state.autofill, (on) => { try { localStorage.setItem(AUTOFILL_KEY, on ? 'on' : 'off') } catch {} })

@@ -29,6 +29,7 @@ export const store = reactive({
   party: initial.party || 1,
   total: initial.total || 0, // host order total (shown in Review your reservation)
   receipt: initial.receipt || null, // race order lines (confirmation page)
+  autofill: initial.autofill !== false, // prototype Auto-fill (fills Your Details forms)
 })
 
 const embedded = window.parent && window.parent !== window
