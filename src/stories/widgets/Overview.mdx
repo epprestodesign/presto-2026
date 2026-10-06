@@ -88,14 +88,17 @@ place, keeping you on the same screen.
 
 ## How the embed works
 
-| Piece | What it does |
-| --- | --- |
-| **Host page** | Spartan’s event page and TicketSocket checkout, rebuilt from captures in plain Vue (no design-system code). It owns the order and the total. |
-| **Widget page** (`presto.html`) | The Eventpipe add-ons UI, built from the real Presto library (Quasar + `src/` components), rendered in an **iframe**. That keeps Quasar’s global CSS off the host and matches how a real third-party embed ships. |
-| **postMessage bridge** | The widget reports `resize`, `state` (parking / photo / hotel), `open-overlay`, `confirm` and `modal`; the host replies with `sync`. The host is the source of truth for the order. |
-| **Auto-height** | The inline embed is always exactly as tall as its content, so only the host page scrolls. |
-| **Contained overlays** | In the inline concepts, the library’s Filters sheet and Map open inside the widget’s visible area, not over the whole checkout. |
-| **Skins** | The Spartan skin re-points the Presto brand tokens (`--ds-palette-navy-*`, `--ds-color-*-brand`, `--q-primary`) at Spartan’s palette. It changes colors only, not components, type or spacing. |
+<table style={{ width: '100%', borderCollapse: 'collapse', margin: '12px 0 20px' }}>
+  <thead><tr><th style={{ textAlign: 'left', padding: '10px 12px', borderBottom: '2px solid #e2e8f0', fontSize: '14px' }}>Piece</th><th style={{ textAlign: 'left', padding: '10px 12px', borderBottom: '2px solid #e2e8f0', fontSize: '14px' }}>What it does</th></tr></thead>
+  <tbody>
+    <tr><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5, whiteSpace: 'nowrap' }}><strong>Host page</strong></td><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5 }}>Spartan’s event page and TicketSocket checkout, rebuilt from captures in plain Vue (no design-system code). It owns the order and the total.</td></tr>
+    <tr><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5, whiteSpace: 'nowrap' }}><strong>Widget page</strong> (<code>presto.html</code>)</td><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5 }}>The Eventpipe add-ons UI, built from the real Presto library (Quasar + <code>src/</code> components), rendered in an <strong>iframe</strong>. That keeps Quasar’s global CSS off the host and matches how a real third-party embed ships.</td></tr>
+    <tr><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5, whiteSpace: 'nowrap' }}><strong>postMessage bridge</strong></td><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5 }}>The widget reports <code>resize</code>, <code>state</code> (parking / photo / hotel), <code>open-overlay</code>, <code>confirm</code> and <code>modal</code>; the host replies with <code>sync</code>. The host is the source of truth for the order.</td></tr>
+    <tr><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5, whiteSpace: 'nowrap' }}><strong>Auto-height</strong></td><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5 }}>The inline embed is always exactly as tall as its content, so only the host page scrolls.</td></tr>
+    <tr><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5, whiteSpace: 'nowrap' }}><strong>Contained overlays</strong></td><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5 }}>In the inline concepts, the library’s Filters sheet and Map open inside the widget’s visible area, not over the whole checkout.</td></tr>
+    <tr><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5, whiteSpace: 'nowrap' }}><strong>Skins</strong></td><td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', verticalAlign: 'top', fontSize: '14px', lineHeight: 1.5 }}>The Spartan skin re-points the Presto brand tokens (<code>{'--ds-palette-navy-*'}</code>, <code>{'--ds-color-*-brand'}</code>, <code>--q-primary</code>) and the Slate 50–950 neutral ramp at Spartan’s palette. It changes colors only, not components, type or spacing.</td></tr>
+  </tbody>
+</table>
 
 **Library components in the widget:** `SearchSummaryBar`, `FilterRail`,
 `SortDropdown`, `HotelCardHorizontal` (Group Block “Select Rooms”), `RoomAvailability`,

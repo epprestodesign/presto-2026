@@ -1,66 +1,84 @@
 # spartanRace-ticketsocket-ep-demo-v1
 
-Desktop prototype recreating Spartan Race's San Antonio event page and its TicketSocket checkout,
-built from the captures in `../references/100526/SpartanRace/`.
+**Widgets & Embeds R&D:** Eventpipe hotel booking embedded inside a partner's checkout.
+The host is a desktop recreation of Spartan Race's San Antonio event page and TicketSocket
+checkout, built from the captures in `../references/100526/SpartanRace/`. An Eventpipe widget
+built from the Presto design system is embedded into that checkout.
 
-It's a standalone Vue 3 + Vite app. It does **not** use Quasar, the presto design system, or
-anything from `../src` / Storybook. Like `../prototype/`, it has no dependencies of its own:
-`vue` and `vite` resolve from the repo root's `node_modules`.
+- **Write-up:** Storybook → **Widgets & Embeds → R&D Overview** (`../src/stories/widgets/Overview.mdx`)
+- **Hosted:** https://epprestodesign.github.io/presto-2026/spartanRace-ticketsocket-ep-demo-v1/
+  (also Netlify `/spartan-widgets/`)
+
+There are two pages:
+- `index.html` is the Spartan host. It's plain Vue 3 with **no** Quasar or design-system code,
+  so it stays pixel-matched.
+- `presto.html` is the embedded Eventpipe widget. It uses the **real** presto-2026 library
+  (Quasar plus `../src` components via the `@lib` alias) and renders in an iframe, the way a
+  real third-party embed would.
+
+Neither page has dependencies of its own: `vue`, `quasar` and `vite` resolve from the repo
+root's `node_modules`.
 
 ```bash
 cd spartanRace-ticketsocket-ep-demo-v1
 npm run dev        # http://localhost:6201
-npm run build      # → dist/
+npm run build      # → dist/ (relative base, runs from any sub-path)
 ```
+
+## Concepts
+
+`#/` is the prototype hub. Every screen is deep-linkable per concept as `#/<a|b|c|d>/<route>`.
+The prototype banner switches concepts while keeping you on the same screen.
+
+| | Inline: the finder expands inside the step | Modal: 900px `DsModal`, full-screen on phones |
+| --- | --- | --- |
+| **Presto colors** (native navy) | **A** · `#/a/…` | **B** · `#/b/…` |
+| **Spartan colors** (host red/black, neutral grays, black text) | **C** · `#/c/…` | **D** · `#/d/…` |
+
+- **Modal concepts (B, D):** picking a hotel opens a **Review your stay** step. How to pay and
+  Confirm sit on the left, the hotel order summary on the right, and "Powered by Eventpipe"
+  sits under the modal.
+- **Spartan skin:** colors only. It re-points the Presto brand tokens and the Slate 50–950
+  neutral ramp at Spartan's palette (`src/presto/PrestoApp.vue`, `html.skin-spartan`).
 
 ## Flow
 
-| Route | Screen | Reference |
+| Route (`#/<concept>/…`) | Screen | Reference |
 | --- | --- | --- |
-| `#/` | Prototype hub: choose version A or B, with deep links | (new) |
-| `#/a/event` · `#/b/event` | Event page: info, ticket cards, gallery, distances, obstacles, earn, race-day info, map, testimonials, nearby events, footer | `screencapture-…`, 4.22.29, 4.22.36 |
+| `#/` | Prototype hub: four concepts with deep links | (new) |
+| `event` | Event page, opening with a Sprint ticket in the cart | `screencapture-…`, 4.22.29, 4.22.36 |
 | (overlay) | Ticket cart popover → **Commit now** | 4.22.46 |
-| `#/account` | Join for free / sign in | 4.22.52 |
-| `#/location` | Select your location (globe icon) | 4.23.18 |
-| `#/checkout/details` | Order details: wave time, add-ons, waiver signature, Instagram, refund policy | 4.23.32, 4.23.53, 4.24.02 |
-| `#/<a|b>/checkout/addons` (`/hotels` = finder open) | **New:** Eventpipe add-ons (parking + hotel) | Eventpipe sketch |
-| `#/checkout/extras` | Race for a Cause (givestar) + refundable booking | 4.24.10 |
-| `#/checkout/payment` | Sezzle / card (Stripe Link) / Flex + terms → **Pay** | 4.24.21 |
+| `account` | Join for free / sign in | 4.22.52 |
+| `location` | Select your location (globe icon) | 4.23.18 |
+| `checkout/details` | Order details, auto-filled (wave, signed waiver) so Checkout goes straight through | 4.23.32, 4.23.53, 4.24.02 |
+| `checkout/addons` (`/hotels` = finder open) | **New · Eventpipe:** Make a weekend of it (parking, photo package, hotel). Hotel finder with filters, map (race venue labelled), sort, 5 pages of results, hotel details and a hotel order summary with Edit reservation / Start over | Eventpipe sketch |
+| `checkout/extras` | Race for a Cause (givestar) + refundable booking | 4.24.10 |
+| `checkout/your-details` | **New · Eventpipe:** library checkout steps 1–4 (contact, payment method, review your reservation, policies). No order rail and no Book Now; Continue goes to Payment | Checkout Experience Expanded |
+| `checkout/payment` | Sezzle / card (Stripe Link) / Flex + terms → **Pay**, with a Hotel reservation block | 4.24.21 |
 
-**Pay** shows a processing state and stops. No order is placed. Hover the faint **DEMO** tab in
-the bottom-left corner to jump between screens or reset the demo.
+**Pay** shows a processing state and stops. No order is placed. A reload restarts the add-ons
+step. Hover the faint **DEMO** tab in the bottom-left corner to jump between screens, switch
+concepts or reset the demo.
 
-## Hotel add-ons (Eventpipe × Presto)
+## How the embed works
 
-`#/` is a prototype hub with two versions of a new **Add-ons** step
-(Details › **Add-ons** › Extras › Payment), built from the sketch "Make a weekend of it":
+- `src/components/PrestoFrame.vue` (host) ↔ `src/presto/bridge.js` (widget) talk over
+  postMessage: `resize`, `state`, `open-overlay`, `confirm`, `modal`, `sync`, `scroll`. The host
+  owns the order: the hotel, parking and photo package flow into its total, breakdown, summary
+  card and Payment.
+- Inline embeds auto-size to their content, so only the host page scrolls. The library's Filters
+  sheet and Map stay contained inside the widget.
+- Library components used: `SearchSummaryBar`, `FilterRail`, `SortDropdown`,
+  `HotelCardHorizontal`, `RoomAvailability`, `HotelMap`, `DsModal`, `HotelDetailPage`,
+  `CartReview`, `StepContactInfo`, `StepPayment`, `StepReviewReservation`,
+  `PoliciesAgreement`, `QPagination`.
 
-| Version | What happens when you turn on "Hotel room" |
-| --- | --- |
-| **A · Inline** | The Presto hotel finder expands inside the step. Picking a hotel and a payment option updates the Spartan total as you go. |
-| **B · Modal** | A 900px `DsModal` opens over the checkout. Filter rail and results sit side by side; it stacks below 700px and becomes the library's full-screen phone pattern at 600px and below. **Add to order** brings the stay back. |
-
-Every screen is deep-linkable per version. The `#/a/…` URLs are Version A and the `#/b/…` URLs
-are Version B. `#/<a|b>/checkout/addons/hotels` opens straight to the hotel finder. The home
-page lists every link with a copy button. Links without a version prefix pick up the current
-version and rewrite themselves.
-
-The add-ons UI lives in `presto.html` → `src/presto/` and is rendered in an iframe. It uses the
-real presto-2026 library (Quasar plus `../src` components, via the `@lib` alias, in native Presto
-colors): `SearchSummaryBar`, `FilterRail` (Filters sheet), `SortDropdown`, `HotelCardHorizontal`
-in Group Block mode ("Starting price · Select Rooms" plus the availability panel), and
-`DsModal` + `HotelMap` for the map. The iframe keeps Quasar's global CSS off the Spartan page.
-`src/presto/bridge.js` documents the postMessage protocol. The host owns the order, so the hotel
-shows up in the total breakdown, the summary card and a "Hotel reservation" block on Payment.
-
-Hotel math (`src/presto/hotels.js`): nightly rate × 1.13 tax, per room. "First night now" charges
-one night today and the rest at the hotel; "Pay in full" charges the whole stay today.
-Hill Country Lodge (2 Queen beds, Nov 20–22) works out to $122.04 or $244.08, matching the sketch.
-The map needs `VITE_GOOGLE_MAPS_API_KEY` in the repo-root `.env`; without it the map shows the
-library's "key needed" fallback.
-
-Planned next: a Spartan-skinned version of A and B (4 variations total). That's a token
-swap in the Presto app only.
+**Hotel math** (`src/presto/hotels.js`): nightly rate × 1.13 tax, per room. "First night now"
+charges one night today and the rest at the hotel; "Pay in full" charges the whole stay today.
+Hill Country Lodge (2 Queen beds, Nov 20–22) works out to $122.04 or $244.08, matching the
+sketch. The map needs `VITE_GOOGLE_MAPS_API_KEY` (repo-root `.env` locally, the
+`GOOGLE_MAPS_API_KEY` Actions secret when hosted); without it the map shows the library's
+"key needed" fallback.
 
 ## Phase 2: widget slot
 

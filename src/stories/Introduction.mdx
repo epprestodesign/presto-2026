@@ -55,6 +55,25 @@ Fredericksburg Sportsplex, July 18–19 2026).
   </a>
 </div>
 
+<div style={{ background: '#0e0e10', color: '#fff', borderRadius: '12px', padding: '20px 24px', margin: '24px 0', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', borderLeft: '6px solid #BE2D27' }}>
+  <div>
+    <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#fff' }}>🧩 New — Widgets &amp; Embeds R&amp;D: Spartan × Eventpipe</div>
+    <div style={{ marginTop: '4px', maxWidth: '62ch' }}>
+      <span style={{ color: '#fff' }}>Eventpipe hotel booking <strong style={{ color: '#fff' }}>embedded inside a partner's checkout</strong>. A pixel recreation of Spartan's San Antonio event page + TicketSocket checkout, with a Presto-built widget adding parking, photos and a hotel to the same order. <strong style={{ color: '#fff' }}>Four concepts</strong>: inline vs. modal × Presto vs. Spartan colors. Read the write-up under <strong style={{ color: '#fff' }}>Widgets &amp; Embeds → R&amp;D Overview</strong> (source in <code style={{ color: '#fff' }}>spartanRace-ticketsocket-ep-demo-v1/</code>).</span>
+    </div>
+  </div>
+  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+    <a href="?path=/docs/widgets-embeds-r-d-overview--docs" target="_top"
+       style={{ border: '1px solid rgba(255,255,255,0.5)', color: '#fff', fontWeight: 700, padding: '11px 18px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+      Read the R&amp;D
+    </a>
+    <a href="https://epprestodesign.github.io/presto-2026/spartanRace-ticketsocket-ep-demo-v1/" target="_blank" rel="noopener"
+       style={{ background: '#fff', color: '#0e0e10', fontWeight: 700, padding: '12px 20px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+      Launch concepts ↗
+    </a>
+  </div>
+</div>
+
 > **Building the localized prototype or a full user journey?** Read
 > **Getting Started → User Journey & Build Spec** — it specifies every stage of
 > every flow (all three booking modes) and its edge cases. Read **Architecture &
@@ -108,6 +127,7 @@ folder holding the pieces that page is built from. **App Shell** holds the chrom
 | Category | What it's for |
 | --- | --- |
 | **Getting Started** | Introduction (this page), Architecture & Conventions, User Journey & Build Spec. |
+| **Widgets & Embeds** | R&D on embedding Eventpipe inside partner checkouts. **R&D Overview** covers the Spartan × Eventpipe hotel add-on concepts (A–D), how the embed works, library gaps found and open questions, with links to the hosted prototype. |
 | **Foundations** | Design tokens made visible — colors, palette, type, icons, imagery, spacing, radius, elevation, breakpoints, motion. |
 | **Components → Actions** | Button, Dialog, **Modal** (`DsModal`), **Side Panel** (`DsSidePanel`), Backdrop. |
 | **Components → Forms** | Text/Area/Select/Autocomplete, Checkbox + **Checkbox Tree**, Radio, **Choice Chips**, Switch, Date/Time Picker, Slider, **Range**, Rating, **Quantity Stepper**, **Phone Field**, Transfer List. |
@@ -225,4 +245,7 @@ on the left; section content on the right — **Profile**, **Communications**,
 ## Deploy
 
 The build output is a plain static site. Pushing to `main` deploys to GitHub
-Pages via `.github/workflows/deploy.yml`. See `README.md` for details.
+Pages via `.github/workflows/deploy.yml`, together with the prototypes nested
+under the same site: `/prototype/`, `/prototype-mobile/`, `/prototype-custom-fees/`
+and the Widgets & Embeds concepts at `/spartanRace-ticketsocket-ep-demo-v1/`.
+See `README.md` for details.
