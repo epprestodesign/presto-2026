@@ -119,6 +119,10 @@ MORE.forEach(([name, city, stars, miles, airportMiles, queen, king, tags, lat, l
   })
 })
 
+// Street addresses (shown on the confirmation, like the library's Single Reservation story)
+const ADDRESSES = {"Sandy Oaks Inn & Suites": "1120 Hwy 173 N, Devine, TX, US, 78016", "Hill Country Lodge South": "8415 S Loop 1604 W, San Antonio, TX, US, 78224", "Alamo Ridge Hotel": "315 E Commerce St, San Antonio, TX, US, 78205", "Lytle Creek Lodge": "19340 McDonald St, Lytle, TX, US, 78052", "Mission Trail Inn": "9700 S IH-35, San Antonio, TX, US, 78214", "Riverwalk Plaza Suites": "100 Villita St, San Antonio, TX, US, 78205", "Alamo Heights Hotel": "5101 Broadway St, San Antonio, TX, US, 78209", "Lackland Gateway Inn": "6735 Military Dr W, San Antonio, TX, US, 78227", "SeaWorld Drive Suites": "10950 Westover Hills Blvd, San Antonio, TX, US, 78251", "Medical Center Residence": "7615 Wurzbach Rd, San Antonio, TX, US, 78229", "Pearl District Hotel": "303 Pearl Pkwy, San Antonio, TX, US, 78215", "La Cantera Golf Lodge": "16641 La Cantera Pkwy, San Antonio, TX, US, 78256", "Airport Northside Inn": "9411 Airport Blvd, San Antonio, TX, US, 78216", "Stone Oak Suites": "20015 Stone Oak Pkwy, San Antonio, TX, US, 78258", "Fiesta Texas Resort": "17000 IH-10 W, San Antonio, TX, US, 78257", "Hill Country Ranch Inn": "36 Old San Antonio Rd, Boerne, TX, US, 78006", "Converse Crossing Hotel": "9020 FM 78, Converse, TX, US, 78109", "Schertz Station Suites": "17600 IH-35 N, Schertz, TX, US, 78154", "New Braunfels River Lodge": "1050 N Business IH-35, New Braunfels, TX, US, 78130", "Gruene Historic Inn": "1601 Hunter Rd, New Braunfels, TX, US, 78130"}
+HOTELS.forEach((h) => { h.address = ADDRESSES[h.name] || h.city })
+
 export const PAGE_SIZE = 4
 
 export const FROM_NIGHTLY = Math.min(...HOTELS.flatMap((h) => Object.values(h.rates)))
@@ -144,6 +148,7 @@ export function quote(hotel, { roomType = 'queen', rooms = 1, stay = 'fri-sun', 
     name: hotel.name,
     stars: hotel.stars,
     city: hotel.city,
+    address: hotel.address,
     miles: hotel.miles,
     shuttle: !!hotel.shuttle,
     roomType,

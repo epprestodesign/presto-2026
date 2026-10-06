@@ -15,6 +15,7 @@ const confirmationId = String(7205577 + Math.floor(now.getTime() / 1000) % 10000
 const data = computed(() => {
   const q = store.hotel
   const h = q ? HOTELS.find((x) => x.id === q.hotelId) : null
+  const king = q?.roomType === 'king'
   return {
     bannerTitle: q ? 'Success! Your race weekend is booked.' : 'Success! Your race order is confirmed.',
     bannerCta: 'Back to the race',
@@ -26,21 +27,23 @@ const data = computed(() => {
     hotels: q ? [{
       name: q.name,
       stars: q.stars,
-      address: `${q.city} · ${q.miles} mi from Sandy Oaks Ranch (race venue)`,
+      address: `${q.address || h?.address || q.city} · ${q.miles} mi from Sandy Oaks Ranch (race venue)`,
       seed: q.seed ?? h?.seed ?? 0,
       checkIn: `${q.checkIn || ''} 03:00 PM`,
       checkOut: `${q.checkOut || ''} 11:00 AM`,
       rooms: [{
-        type: q.roomLabel === '1 King bed' ? 'Standard King, Non Smoking' : 'Standard Double Queen, Non Smoking',
-        note: `${q.roomLabel} · ${q.rooms} ${q.rooms === 1 ? 'room' : 'rooms'}${q.shuttle ? ' · Free race-morning shuttle' : ''}`,
+        type: king ? 'Room, 1 King Bed, Non Smoking' : 'Room, 2 Queen Beds, Non Smoking',
+        note: [king ? '1 King Bed' : '2 Queen Beds', `Sleeps ${king ? 2 : 4}`, ...(h?.tags || q.tags || [])].join(' · '),
         nights: (q.nightDates || []).map((date) => ({ date, qty: q.rooms, price: q.nightly })),
       }],
       totals: { taxes: q.taxes, rooms: q.rooms, roomCost: q.total, amountPaid: q.dueToday, balanceDue: q.dueAtHotel },
     }] : [],
     policies: q ? [{ hotel: q.name, items: [
-      { title: 'Cancellation Policy', body: 'Free cancellation until Fri, 11/13/2026. After that, the first night plus taxes is non-refundable.' },
-      { title: 'Payment', body: q.payOption === 'full' ? 'The full stay was charged with your race order. Nothing is due at check-in.' : `The first night was charged with your race order. The balance of ${money(q.dueAtHotel)} is due at check-in.` },
-      { title: 'Check-in', body: 'Check-in from 3:00 PM with photo ID and the card used for booking. Check-out by 11:00 AM.' },
+      { title: 'Cancellation Policy', body: `A cancellation fee will not be charged if you cancel before Fri, 11/13/2026 at 4:00 PM. If you cancel after that, you agree to be charged a fee of ${money(q.firstNight)}.` },
+      { title: 'Deposit', body: q.payOption === 'full' ? 'The full stay was charged to the card on file with your race order. No additional deposit is collected at check-in.' : `The first night (${money(q.dueToday)}) was charged to the card on file with your race order. The balance of ${money(q.dueAtHotel)} is due at check-in.` },
+      { title: 'Check-in & Check-out', body: 'Check-in from 3:00 PM with photo ID and the card used for booking. Check-out by 11:00 AM.' },
+      { title: 'Amenities Notice', body: 'Kindly note that amenities like laundry, pools, parking rates, breakfast and restaurants are not guaranteed. For the latest updates on available amenities, please visit the hotel website.' },
+      { title: 'Refund Policy', body: 'Eligible refunds are returned to the original payment method within 5–7 business days of cancellation.' },
     ] }] : [],
   }
 })
