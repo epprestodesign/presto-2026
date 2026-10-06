@@ -24,6 +24,7 @@ const LINKS = [
   ['addons', 'Add-ons'],
   ['hotels', 'Add-ons · hotel finder open'],
   ['extras', 'Extras'],
+  ['guest', 'Your Details'],
   ['payment', 'Payment'],
 ]
 const origin = location.origin + location.pathname
@@ -126,7 +127,7 @@ function start (c, jump = false) {
 
     <section class="hm__flow" aria-label="Flow">
       <span>Event page</span><i>›</i><span>Ticket cart</span><i>›</i><span>Sign in</span><i>›</i><span>Details</span><i>›</i>
-      <span class="is-new">Add-ons</span><i>›</i><span>Extras</span><i>›</i><span>Payment</span>
+      <span class="is-new">Add-ons</span><i>›</i><span>Extras</span><i>›</i><span class="is-new">Your Details</span><i>›</i><span>Payment</span>
     </section>
 
     <section class="hm__next">

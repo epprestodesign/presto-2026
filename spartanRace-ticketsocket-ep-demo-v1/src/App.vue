@@ -4,6 +4,7 @@ import { state } from './store.js'
 import HomeMenu from './views/HomeMenu.vue'
 import EventPage from './views/EventPage.vue'
 import AddonsPage from './views/AddonsPage.vue'
+import YourDetailsPage from './views/YourDetailsPage.vue'
 import LoginPage from './views/LoginPage.vue'
 import LocationPage from './views/LocationPage.vue'
 import OrderDetails from './views/OrderDetails.vue'
@@ -21,6 +22,7 @@ const VIEWS = {
   details: OrderDetails,
   addons: AddonsPage,
   hotels: AddonsPage,
+  guest: YourDetailsPage,
   extras: ExtrasPage,
   payment: PaymentPage,
 }

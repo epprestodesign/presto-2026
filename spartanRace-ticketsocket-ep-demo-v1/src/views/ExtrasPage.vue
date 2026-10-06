@@ -13,7 +13,7 @@ function submit() {
     document.querySelector('.rb')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     return
   }
-  go('payment')
+  go('guest')
 }
 const check = `<svg viewBox="0 0 20 20" width="21" height="21" aria-hidden="true"><path d="M3 10.5l4.5 4.5L17 5.5" fill="none" stroke="#7aa972" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
 </script>

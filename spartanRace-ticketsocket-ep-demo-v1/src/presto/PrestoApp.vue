@@ -4,15 +4,17 @@ import { VIEW, VARIANT, store, pushState, autoResize } from './bridge.js'
 import WeekendCard from './WeekendCard.vue'
 import HotelBrowser from './HotelBrowser.vue'
 import ModalShell from './ModalShell.vue'
+import YourDetails from './YourDetails.vue'
 
 // Variant A: the inline browser writes straight into the order as you choose.
 const onQuote = (q) => { store.hotel = q; pushState() }
 const root = ref(null)
-onMounted(() => { if (VIEW === 'addons') autoResize(root.value) })
+onMounted(() => { if (VIEW === 'addons' || VIEW === 'details') autoResize(root.value) })
 </script>
 
 <template>
   <modal-shell v-if="VIEW === 'modal'" />
+  <div v-else-if="VIEW === 'details'" ref="root" class="pa"><your-details /></div>
   <div v-else ref="root" class="pa">
     <weekend-card />
     <transition name="pa-slide">

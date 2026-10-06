@@ -15,9 +15,10 @@ const STEPS = [
   ['details', 'Details'],
   ['addons', 'Add-ons'],
   ['extras', 'Extras'],
+  ['guest', 'Your Details'],
   ['payment', 'Payment'],
 ]
-const order = { details: 0, addons: 1, extras: 2, payment: 3 }
+const order = { details: 0, addons: 1, extras: 2, guest: 3, payment: 4 }
 const canJump = (s) => order[s] < order[props.step]
 
 // open by default so the order lines (incl. hotel + parking) are visible at a glance

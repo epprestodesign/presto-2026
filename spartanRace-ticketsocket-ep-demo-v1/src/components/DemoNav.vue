@@ -10,6 +10,7 @@ const STEPS = [
   ['addons', 'Add-ons (Eventpipe)'],
   ['hotels', 'Add-ons · hotel finder open'],
   ['extras', 'Extras'],
+  ['guest', 'Your Details (Eventpipe)'],
   ['payment', 'Payment'],
   ['location', 'Location picker'],
 ]

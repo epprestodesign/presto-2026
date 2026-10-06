@@ -12,6 +12,7 @@ export const ROUTES = {
   addons: '/checkout/addons',
   hotels: '/checkout/addons/hotels', // Add-ons with the hotel finder open (A: expanded · B: modal)
   extras: '/checkout/extras',
+  guest: '/checkout/your-details', // Your Details — library checkout steps 1–4 (embedded)
   payment: '/checkout/payment',
 }
 
