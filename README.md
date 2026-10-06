@@ -75,6 +75,10 @@ Write-up: Storybook **Widgets & Embeds → R&D Overview**. Source in
 
 **▶ Launch: https://epprestodesign.github.io/presto-2026/spartanRace-ticketsocket-ep-demo-v1/**
 
+**Updated Oct 6, 2026:** itemized order summary (hotel stay broken out), a confirmation page
+after Pay, and an Auto-fill forms toggle with a Fill form button. Full changelog on the Storybook
+R&D Overview page and in the prototype README.
+
 ```bash
 cd spartanRace-ticketsocket-ep-demo-v1
 npm run dev   # → http://localhost:6201

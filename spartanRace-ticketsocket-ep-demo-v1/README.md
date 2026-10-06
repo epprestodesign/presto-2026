@@ -55,8 +55,9 @@ The prototype banner switches concepts while keeping you on the same screen.
 | `checkout/extras` | Race for a Cause (givestar) + refundable booking | 4.24.10 |
 | `checkout/your-details` | **New · Eventpipe:** library checkout steps 1–4 (contact, payment method, review your reservation, policies). No order rail and no Book Now; Continue goes to Payment | Checkout Experience Expanded |
 | `checkout/payment` | Sezzle / card (Stripe Link) / Flex + terms → **Pay**, with a Hotel reservation block | 4.24.21 |
+| `checkout/confirmed` | **New · Eventpipe:** confirmation (library Single Reservation) with the hotel stay + race order; Spartan logo centered, Manage booking | Confirmation story |
 
-**Pay** shows a processing state and stops. No order is placed. A reload restarts the add-ons
+**Pay** shows a processing state, then the confirmation. No real order is placed. A reload restarts the add-ons
 step. Hover the faint **DEMO** tab in the bottom-left corner to jump between screens, switch
 concepts or reset the demo.
 
@@ -79,6 +80,21 @@ Hill Country Lodge (2 Queen beds, Nov 20–22) works out to $122.04 or $244.08, 
 sketch. The map needs `VITE_GOOGLE_MAPS_API_KEY` (repo-root `.env` locally, the
 `GOOGLE_MAPS_API_KEY` Actions secret when hosted); without it the map shows the library's
 "key needed" fallback.
+
+## Changelog
+
+**Oct 6, 2026**
+- Itemized order summary (Tickets → Add-ons → *Hotel & weekend add-ons by Eventpipe*, with the
+  hotel fully itemized → Subtotal → fees → Total at the bottom). It pins by its bottom edge when tall.
+- Confirmation step after Pay (`checkout/confirmed`): black bar with the Spartan logo centered and
+  Manage booking; library `ConfirmationPage` (Single Reservation) with full hotel details and a
+  race-order card.
+- Prototype bar: **Auto-fill forms** toggle (persists across Reset demo) and a **Fill form** button.
+- Hotels now have street addresses.
+
+**Oct 5, 2026**
+- Host page + checkout; Eventpipe Add-ons step; concepts A–D; Your Details step; prototype hub,
+  banner and deep links; hosted under the Storybook site.
 
 ## Phase 2: widget slot
 
