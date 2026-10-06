@@ -14,6 +14,7 @@ export const ROUTES = {
   extras: '/checkout/extras',
   guest: '/checkout/your-details', // Your Details — library checkout steps 1–4 (embedded)
   payment: '/checkout/payment',
+  confirmed: '/checkout/confirmed', // Eventpipe confirmation (library ConfirmationPage)
 }
 
 // Every screen is deep-linkable per version so feedback can point at a URL:
@@ -236,6 +237,19 @@ export const pricing = computed(() => {
   }
 })
 
+// Plain-data receipt of the race order, for the embedded confirmation page.
+export const receipt = computed(() => {
+  const p = pricing.value
+  const tickets = cartLines.value.filter((l) => l.kind === 'ticket').map((l) => {
+    const t = ticketById(l.id)
+    return { label: `${t.race.eventName} - ${t.day.dayName} - ${t.name.toUpperCase()} (${t.day.dayName} ${t.window})`, qty: l.qty, amount: t.price * l.qty }
+  })
+  const addons = p.addons.map((a) => ({ label: a.name, qty: a.qty, amount: a.price * a.qty }))
+  if (p.parking) addons.push({ label: 'Parking pass', qty: 1, amount: p.parking })
+  if (p.photo) addons.push({ label: 'Photo package (Eventpipe)', qty: partySize.value, amount: p.photo })
+  return { tickets, addons, total: p.total, hotelAtHotel: p.hotelAtHotel, party: partySize.value }
+})
+
 export const money = (n) =>
   '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
@@ -249,6 +263,8 @@ try {
   // the signature canvas can't be restored, so the waiver always starts unsigned
   // A reload always restarts the Eventpipe add-ons step (no parking, photo or
   // hotel carried over); everything else in the demo order survives.
+  // (The confirmation page keeps the completed order so it can be re-viewed.)
+  const keepOrder = boot.route === 'confirmed'
   if (saved) Object.assign(state, saved, {
     route: state.route,
     variant: boot.variant || saved.variant || 'inline',
@@ -257,10 +273,7 @@ try {
     overlayOpen: false,
     signature: false,
     waiverAgreed: false,
-    parking: false,
-    photo: false,
-    hotelOn: false,
-    hotel: null,
+    ...(keepOrder ? {} : { parking: false, photo: false, hotelOn: false, hotel: null }),
   })
   if (state.variant === 'overlay') state.variant = 'modal' // older saved demos
 } catch {}

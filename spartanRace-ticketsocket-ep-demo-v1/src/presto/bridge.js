@@ -13,7 +13,7 @@
 import { reactive } from 'vue'
 
 const params = new URLSearchParams(location.search)
-export const VIEW = params.get('view') || 'addons' // addons | modal | details
+export const VIEW = params.get('view') || 'addons' // addons | modal | details | confirm
 export const VARIANT = params.get('variant') || 'inline' // inline | modal
 export const SKIN = params.get('skin') === 'spartan' ? 'spartan' : 'presto' // widget color skin
 document.documentElement.classList.add(`skin-${SKIN}`)
@@ -28,6 +28,7 @@ export const store = reactive({
   hotel: initial.hotel || null,
   party: initial.party || 1,
   total: initial.total || 0, // host order total (shown in Review your reservation)
+  receipt: initial.receipt || null, // race order lines (confirmation page)
 })
 
 const embedded = window.parent && window.parent !== window

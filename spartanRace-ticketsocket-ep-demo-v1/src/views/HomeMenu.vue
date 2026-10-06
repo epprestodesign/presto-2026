@@ -26,6 +26,7 @@ const LINKS = [
   ['extras', 'Extras'],
   ['guest', 'Your Details'],
   ['payment', 'Payment'],
+  ['confirmed', 'Confirmation'],
 ]
 const origin = location.origin + location.pathname
 const full = (route, c) => origin + hrefFor(route, c.variant, c.skin)
@@ -127,7 +128,7 @@ function start (c, jump = false) {
 
     <section class="hm__flow" aria-label="Flow">
       <span>Event page</span><i>›</i><span>Ticket cart</span><i>›</i><span>Sign in</span><i>›</i><span>Details</span><i>›</i>
-      <span class="is-new">Add-ons</span><i>›</i><span>Extras</span><i>›</i><span class="is-new">Your Details</span><i>›</i><span>Payment</span>
+      <span class="is-new">Add-ons</span><i>›</i><span>Extras</span><i>›</i><span class="is-new">Your Details</span><i>›</i><span>Payment</span><i>›</i><span class="is-new">Confirmation</span>
     </section>
 
     <section class="hm__next">

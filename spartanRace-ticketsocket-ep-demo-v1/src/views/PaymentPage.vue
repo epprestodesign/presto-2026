@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
 import { LINK_ACCOUNT, asset } from '../data.js'
-import { state, ensureOrder, pricing, money } from '../store.js'
+import { state, ensureOrder, pricing, money, go } from '../store.js'
 import CheckoutLayout from '../components/CheckoutLayout.vue'
 
 onBeforeMount(ensureOrder)
@@ -9,7 +9,6 @@ onBeforeMount(ensureOrder)
 // Phase 1 stops here: PAY shows a processing state, then returns. No order is placed.
 const busy = ref(false)
 const tried = ref(false)
-const done = ref(false)
 const linkConfirmed = ref(false)
 const changing = ref(false)
 
@@ -17,10 +16,9 @@ function pay() {
   tried.value = true
   if (!state.termsAgreed) return
   busy.value = true
-  done.value = false
   setTimeout(() => {
     busy.value = false
-    done.value = true
+    go('confirmed')
   }, 1800)
 }
 </script>
@@ -112,9 +110,6 @@ function pay() {
       </div>
     </section>
 
-    <p v-if="done" class="demo-note" role="status">
-      Prototype stop — no payment was processed. Total that would be charged: {{ money(pricing.total) }}.
-    </p>
 
     <template #aside>
       <label class="terms" :class="{ 'is-err': tried && !state.termsAgreed }">

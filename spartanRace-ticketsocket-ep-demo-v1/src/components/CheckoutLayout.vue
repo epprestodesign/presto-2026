@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue'
-import { state, pricing, money, PROMO_CODES, go } from '../store.js'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { state, pricing, money, PROMO_CODES, go, cartLines, ticketById, partySize } from '../store.js'
 import { asset } from '../data.js'
 
 const props = defineProps({
@@ -21,8 +21,48 @@ const STEPS = [
 const order = { details: 0, addons: 1, extras: 2, guest: 3, payment: 4 }
 const canJump = (s) => order[s] < order[props.step]
 
-// open by default so the order lines (incl. hotel + parking) are visible at a glance
-const breakdown = ref(true)
+// ── Itemized order summary (reads top-down like Spartan's receipt) ──
+const qtyNote = (price, qty) => `(${money(price)}${qty > 1 ? ` x ${qty}` : ''})`
+const ticketItems = computed(() =>
+  cartLines.value
+    .filter((l) => l.kind === 'ticket')
+    .map((l) => {
+      const t = ticketById(l.id)
+      return {
+        id: l.id,
+        label: `${t.race.eventName} - ${t.day.dayName} - ${t.name.toUpperCase()} (${t.day.dayName} ${t.window}) ${qtyNote(t.price, l.qty)}`,
+        amount: t.price * l.qty,
+      }
+    }),
+)
+const spartanAddons = computed(() =>
+  pricing.value.addons.map((a) => ({ id: a.id, label: `${a.name} ${qtyNote(a.price, a.qty)}`, amount: a.price * a.qty })),
+)
+const hotel = computed(() => state.hotel)
+const hasEventpipe = computed(() => !!(state.hotel || state.parking || state.photo))
+const subtotal = computed(() => {
+  const p = pricing.value
+  return p.registration + p.addons.reduce((s, a) => s + a.price * a.qty, 0) + p.parking + p.photo + p.hotelToday
+})
+const preDiscount = computed(() => pricing.value.total + pricing.value.discount)
+const stars = (n) => '★'.repeat(n || 0)
+
+// Sticky that never hides the bottom: short summaries pin under the header;
+// taller ones pin by their bottom edge so Total + CTA stay reachable.
+const sumEl = ref(null)
+const stickTop = ref(68)
+const fit = () => {
+  const h = sumEl.value?.offsetHeight || 0
+  stickTop.value = Math.min(68, window.innerHeight - h - 16)
+}
+let ro
+onMounted(() => {
+  ro = new ResizeObserver(fit)
+  if (sumEl.value) ro.observe(sumEl.value)
+  window.addEventListener('resize', fit)
+  fit()
+})
+onBeforeUnmount(() => { ro?.disconnect(); window.removeEventListener('resize', fit) })
 const code = ref(state.promo?.code || '')
 const promoMsg = ref(state.promo ? `${state.promo.code} applied` : '')
 const promoErr = ref(false)
@@ -74,47 +114,75 @@ function clearPromo() {
       </main>
 
       <aside class="co__aside">
-        <div class="sum">
+        <div ref="sumEl" class="sum" :style="{ top: stickTop + 'px' }">
+          <h2 class="sum__h">Order summary</h2>
+
+          <!-- Tickets -->
+          <section class="sum__sec">
+            <h3 class="sum__sech">Tickets</h3>
+            <div v-for="t in ticketItems" :key="t.id" class="sum__row">
+              <span>{{ t.label }}</span><span>{{ money(t.amount) }}</span>
+            </div>
+          </section>
+
+          <!-- Spartan add-ons -->
+          <section v-if="spartanAddons.length" class="sum__sec">
+            <h3 class="sum__sech">Add-ons</h3>
+            <div v-for="a in spartanAddons" :key="a.id" class="sum__row">
+              <span>{{ a.label }}</span><span>{{ money(a.amount) }}</span>
+            </div>
+          </section>
+
+          <!-- Eventpipe add-ons: hotel itemized in full -->
+          <section v-if="hasEventpipe" class="sum__sec">
+            <h3 class="sum__sech">Hotel &amp; weekend add-ons <span class="sum__by">by Eventpipe</span></h3>
+
+            <div v-if="hotel" class="htl">
+              <div class="htl__head">
+                <svg class="htl__ico" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5M7 11.5a1.5 1.5 0 1 0 0-.01" fill="none" stroke="#000" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div>
+                  <p class="htl__name">{{ hotel.name }}</p>
+                  <p class="htl__meta"><span class="htl__stars">{{ stars(hotel.stars) }}</span> {{ hotel.city }}<template v-if="hotel.miles"> · {{ hotel.miles }} mi from Sandy Oaks Ranch</template></p>
+                </div>
+              </div>
+              <dl class="htl__grid">
+                <div><dt>Check-in</dt><dd>{{ hotel.checkIn || hotel.stayLabel }}<small>3:00 PM</small></dd></div>
+                <div><dt>Check-out</dt><dd>{{ hotel.checkOut || '—' }}<small>11:00 AM</small></dd></div>
+                <div><dt>Reservation</dt><dd>{{ hotel.nights }} {{ hotel.nights === 1 ? 'night' : 'nights' }} · {{ hotel.rooms }} {{ hotel.rooms === 1 ? 'room' : 'rooms' }}</dd></div>
+                <div><dt>Room</dt><dd>{{ hotel.roomLabel }}</dd></div>
+              </dl>
+              <div class="sum__row sum__row--sub"><span>Room rate ({{ money(hotel.nightly) }} x {{ hotel.nights }} {{ hotel.nights === 1 ? 'night' : 'nights' }}<template v-if="hotel.rooms > 1"> x {{ hotel.rooms }} rooms</template>)</span><span>{{ money(hotel.subtotal) }}</span></div>
+              <div class="sum__row sum__row--sub"><span>Hotel taxes &amp; fees</span><span>{{ money(hotel.taxes) }}</span></div>
+              <div class="sum__row sum__row--sub sum__row--strong"><span>Stay total</span><span>{{ money(hotel.total) }}</span></div>
+              <div class="htl__split">
+                <div class="sum__row"><span><strong>Charged today</strong> · {{ hotel.payOption === 'full' ? 'paid in full' : 'first night' }}</span><span><strong>{{ money(hotel.dueToday) }}</strong></span></div>
+                <div class="sum__row sum__row--muted"><span>Due at check-in (not charged now)</span><span>{{ money(hotel.dueAtHotel) }}</span></div>
+              </div>
+              <p class="htl__note">Free cancellation until Nov 13, 2026<template v-if="hotel.shuttle"> · free race-morning shuttle</template></p>
+            </div>
+
+            <div v-if="state.parking" class="sum__row"><span>Parking pass · on-site lot, both days</span><span>{{ money(pricing.parking) }}</span></div>
+            <div v-if="state.photo" class="sum__row"><span>Photo package · digital race photos {{ qtyNote(25, partySize) }}</span><span>{{ money(pricing.photo) }}</span></div>
+          </section>
+
+          <!-- Subtotal + fees -->
+          <section class="sum__sec sum__sec--totals">
+            <div class="sum__row sum__row--subtotal"><span>Subtotal</span><span>{{ money(subtotal) }}</span></div>
+            <div class="sum__row"><span>Insurance</span><span>{{ money(pricing.insurance) }}</span></div>
+            <div class="sum__row"><span>Service fee</span><span>{{ money(pricing.service) }}</span></div>
+            <div class="sum__row"><span>Taxes</span><span>{{ money(pricing.tax) }}</span></div>
+            <div v-if="pricing.refund" class="sum__row"><span>Refundable booking</span><span>{{ money(pricing.refund) }}</span></div>
+            <div v-if="pricing.discount" class="sum__row sum__row--discount"><span>Promocode {{ state.promo.code }}</span><span>−{{ money(pricing.discount) }}</span></div>
+          </section>
+
           <div class="sum__total">
             <span class="sum__label">Total</span>
-            <button class="sum__amt" :aria-expanded="breakdown" @click="breakdown = !breakdown">
-              {{ money(pricing.total) }}
-              <svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true" :class="{ flip: breakdown }"><path d="M0 0h10L5 6Z" fill="#000" /></svg>
-            </button>
+            <span class="sum__amtwrap">
+              <s v-if="pricing.discount" class="sum__was">{{ money(preDiscount) }}</s>
+              <span class="sum__amt">{{ money(pricing.total) }}</span>
+            </span>
           </div>
-
-          <dl v-if="breakdown" class="sum__lines">
-            <div><dt>Registration</dt><dd>{{ money(pricing.registration) }}</dd></div>
-            <div v-for="a in pricing.addons" :key="a.id"><dt>{{ a.name }}<template v-if="a.qty > 1"> × {{ a.qty }}</template></dt><dd>{{ money(a.price * a.qty) }}</dd></div>
-            <div v-if="pricing.discount"><dt>Promocode</dt><dd>−{{ money(pricing.discount) }}</dd></div>
-            <div><dt>Insurance</dt><dd>{{ money(pricing.insurance) }}</dd></div>
-            <div><dt>Service fee</dt><dd>{{ money(pricing.service) }}</dd></div>
-            <div><dt>Taxes</dt><dd>{{ money(pricing.tax) }}</dd></div>
-            <div v-if="pricing.refund"><dt>Refundable booking</dt><dd>{{ money(pricing.refund) }}</dd></div>
-            <div v-if="pricing.parking"><dt>Parking pass</dt><dd>{{ money(pricing.parking) }}</dd></div>
-            <div v-if="pricing.photo"><dt>Photo package</dt><dd>{{ money(pricing.photo) }}</dd></div>
-            <div v-if="state.hotel"><dt>Hotel — due today</dt><dd>{{ money(pricing.hotelToday) }}</dd></div>
-            <div v-if="pricing.hotelAtHotel" class="sum__later"><dt>Due at the hotel (not charged now)</dt><dd>{{ money(pricing.hotelAtHotel) }}</dd></div>
-          </dl>
-
-          <div v-if="state.hotel || state.parking || state.photo" class="sum__extras">
-            <p v-if="state.hotel" class="sum__hotel">
-              <svg class="sum__ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5M7 11.5a1.5 1.5 0 1 0 0-.01" fill="none" stroke="#555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>{{ state.hotel.name }}</strong><br />{{ state.hotel.stayShort }} · {{ state.hotel.nights }} {{ state.hotel.nights === 1 ? 'night' : 'nights' }} · {{ state.hotel.roomLabel }}</span>
-              <b>{{ money(state.hotel.dueToday) }}</b>
-            </p>
-            <p v-if="state.parking" class="sum__hotel">
-              <svg class="sum__ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3" fill="none" stroke="#555" stroke-width="1.7"/><path d="M10 16.5v-9h3a2.6 2.6 0 0 1 0 5.2h-3" fill="none" stroke="#555" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>Parking pass</strong><br />On-site lot, both days</span>
-              <b>{{ money(pricing.parking) }}</b>
-            </p>
-            <p v-if="state.photo" class="sum__hotel">
-              <svg class="sum__ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4Z" fill="none" stroke="#555" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="#555" stroke-width="1.7"/></svg>
-              <span><strong>Photo package</strong><br />Digital race photos, per racer</span>
-              <b>{{ money(pricing.photo) }}</b>
-            </p>
-            <p v-if="pricing.hotelAtHotel" class="sum__athotel">+ {{ money(pricing.hotelAtHotel) }} due at check-in</p>
-          </div>
+          <p v-if="pricing.hotelAtHotel" class="sum__athotel">+ {{ money(pricing.hotelAtHotel) }} due at hotel check-in</p>
 
           <form class="sum__promo" @submit.prevent="applyPromo">
             <label class="sr-only" for="promo">Promocode</label>
@@ -169,35 +237,47 @@ function clearPromo() {
 .co__aside { margin-left: 125px; padding-top: 71px; }
 .sum {
   position: sticky;
-  top: 68px;
   width: 496px;
   padding: 0 40px 32px;
   border-radius: 15px;
   background: #fff;
   box-shadow: 0 2px 18px rgba(0, 0, 0, 0.1);
 }
-.sum__total { display: flex; align-items: center; justify-content: space-between; height: 114px; padding-top: 2px; }
-.sum__label { font-size: 15.9px; font-weight: 700; text-transform: uppercase; color: #000; }
-.sum__amt { display: inline-flex; align-items: center; gap: 9px; margin-right: 4px; font-size: 22px; font-weight: 700; color: #000; }
-.sum__amt svg { transition: transform 0.15s; }
-.sum__amt svg.flip { transform: rotate(180deg); }
+.sum__h { padding: 30px 0 4px; font-size: 15.9px; font-weight: 700; text-transform: uppercase; color: #000; }
+.sum__sec { padding: 18px 0 16px; border-bottom: 1px solid #e2e2e2; }
+.sum__sech { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; font-size: 16px; font-weight: 700; color: #000; }
+.sum__by { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #8a8a8a; }
+.sum__row { display: flex; justify-content: space-between; gap: 16px; padding: 5px 0; font-size: 14px; line-height: 1.45; color: #000; }
+.sum__row > span:last-child { flex: none; text-align: right; }
+.sum__row--sub { font-size: 13px; color: #333; padding: 3px 0; }
+.sum__row--strong { font-weight: 700; color: #000; }
+.sum__row--muted { color: #8a8a8a; font-size: 13px; }
+.sum__row--subtotal { font-size: 16px; font-weight: 700; padding-bottom: 8px; }
+.sum__row--discount { color: var(--green-refund); font-weight: 600; }
+.sum__sec--totals { padding-top: 16px; }
 
-.sum__lines { margin: -18px 0 16px; padding: 4px 0 14px; border-bottom: 1px solid #eee; }
-.sum__lines div { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; color: #444; }
-.sum__lines dd { margin: 0; font-weight: 600; color: #000; }
-.sum__lines .sum__later { color: #8a8a8a; font-style: italic; }
-.sum__lines .sum__later dd { color: #8a8a8a; font-weight: 500; }
+/* hotel itemization */
+.htl { margin: 2px 0 10px; padding: 14px 14px 10px; border: 1px solid #e2e2e2; border-radius: 8px; background: #fafafa; }
+.htl__head { display: flex; gap: 10px; }
+.htl__ico { flex: none; margin-top: 2px; }
+.htl__name { font-size: 15px; font-weight: 700; color: #000; line-height: 1.3; }
+.htl__meta { margin-top: 2px; font-size: 12.5px; color: #555; }
+.htl__stars { color: #000; letter-spacing: 1px; }
+.htl__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin: 12px 0 10px; padding: 10px 0; border-top: 1px solid #e2e2e2; border-bottom: 1px solid #e2e2e2; }
+.htl__grid dt { font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8a8a8a; }
+.htl__grid dd { margin: 2px 0 0; font-size: 13px; font-weight: 600; color: #000; line-height: 1.35; }
+.htl__grid small { display: block; font-size: 12px; font-weight: 500; color: #555; }
+.htl__split { margin-top: 6px; padding-top: 6px; border-top: 1px dashed #d6d6d6; }
+.htl__note { margin-top: 6px; font-size: 12px; color: #555; }
 
-/* hotel / parking added by the embedded Eventpipe widget */
-.sum__extras { margin: -22px 0 26px; padding: 12px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
-.sum__hotel { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.4; color: #555; }
-.sum__hotel + .sum__hotel { margin-top: 10px; }
-.sum__hotel strong { color: #000; }
-.sum__hotel b { margin-left: auto; color: #000; white-space: nowrap; }
-.sum__ico { flex: none; margin-top: 1px; }
+.sum__total { display: flex; align-items: flex-end; justify-content: space-between; padding: 22px 0 4px; }
+.sum__label { font-size: 26px; font-weight: 700; color: #000; line-height: 1; }
+.sum__amtwrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.sum__was { font-size: 15px; font-weight: 600; color: var(--red-checkout); }
+.sum__amt { font-size: 28px; font-weight: 700; color: #000; line-height: 1; }
 .sum__athotel { margin-top: 8px; font-size: 12px; color: #8a8a8a; text-align: right; }
 
-.sum__promo { display: flex; align-items: center; justify-content: space-between; margin-top: -7px; }
+.sum__promo { display: flex; align-items: center; justify-content: space-between; margin-top: 22px; }
 .sum__promo input {
   width: 206px;
   height: 36px;
