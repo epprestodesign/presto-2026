@@ -15,6 +15,9 @@ const props = defineProps({
   rooms: { type: Array, default: () => [{ adults: 1, children: 0 }] },
   reservations: { type: Array, default: null },
   teamName: { type: Boolean, default: false },
+  teamListHidden: { type: Boolean, default: false },
+  askAgeDivision: { type: Boolean, default: true },
+  askGender: { type: Boolean, default: true },
   customFields: { type: Array, default: () => [] },
   showTeams: { type: Boolean, default: true },
   flat: { type: Boolean, default: false },
@@ -39,7 +42,7 @@ const onNext = () => { if (valid.value) emit('next'); else { showErrors.value = 
     <team-group-contact-block v-if="mode === 'group'" :model-value="modelValue" :show-teams="showTeams" :show-errors="showErrors" @update:model-value="emit('update:modelValue', $event)" />
     <team-reservation-guests
       v-else
-      :rooms="rooms" :reservations="reservations" :team-name="teamName" :custom-fields="customFields"
+      :rooms="rooms" :reservations="reservations" :team-name="teamName" :custom-fields="customFields" :team-list-hidden="teamListHidden" :ask-age-division="askAgeDivision" :ask-gender="askGender"
       :model-value="Array.isArray(modelValue) ? modelValue : []"
       :show-errors="showErrors"
       @update:model-value="emit('update:modelValue', $event)"

@@ -29,6 +29,9 @@ const props = defineProps({
   // Team Name Qualifiers: forwarded to the reservation contact step.
   teamName: { type: Boolean, default: false },
   customFields: { type: Array, default: () => [] },
+  teamListHidden: { type: Boolean, default: false },
+  askAgeDivision: { type: Boolean, default: true },
+  askGender: { type: Boolean, default: true },
 })
 const emit = defineEmits(['update:team'])
 
@@ -108,14 +111,17 @@ const railRoomsAdded = computed(() => {
   if (!n && liveCart.priceDetails?.rooms) n = liveCart.priceDetails.rooms
   return n || 2
 })
+// The team the guest actually chose (no demo fallback) — the rail card only
+// shows once a real team is picked or added.
 const railTeam = computed(() => {
   const g = Array.isArray(contact.value) ? contact.value[0] : null
   return {
-    name: (g && g.teamName) || 'Arsenal U12 Boys Select',
-    age: (g && g.custom && g.custom.ageDivision) || 'U12',
-    gender: (g && g.custom && g.custom.gender) || 'Boys',
+    name: (g && g.teamName) || '',
+    age: (g && g.teamAgeDivision) || '',
+    gender: (g && g.teamGender) || '',
   }
 })
+const railHasTeam = computed(() => !!railTeam.value.name && !/not with a team/i.test(railTeam.value.name))
 
 // Live team summary → emitted to the prototype store, echoed on Confirmation.
 // Age/Gender are parsed from the team name (e.g. "Arsenal U12 Boys Select").
@@ -132,7 +138,9 @@ const teamSummary = computed(() => {
   const arr = Array.isArray(contact.value) ? contact.value : []
   const name = (arr[0] && arr[0].teamName) || ''
   const noTeam = !name || /not with a team/i.test(name)
-  return { teamFlow: 'reserve', team: { name, ...parseAgeGender(name) }, noTeam }
+  const parsed = parseAgeGender(name)
+  const g0 = arr[0] || {}
+  return { teamFlow: 'reserve', team: { name, ageDivision: g0.teamAgeDivision || parsed.ageDivision, gender: g0.teamGender || parsed.gender }, noTeam }
 })
 watch(teamSummary, (v) => emit('update:team', v), { deep: true, immediate: true })
 
@@ -189,7 +197,7 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
 
           <div class="ck__body">
             <step-review-order v-if="s.key === 'review'" :mode="cartMode" :cart="liveCart" :currency="currency" bind flat room-delete />
-            <team-step-contact-info v-else-if="s.key === 'contact'" :mode="mode" :show-teams="showTeams" :team-name="teamName" :custom-fields="customFields" :rooms="contactRooms" :reservations="isMulti ? contactReservations : null" v-model="contact" flat />
+            <team-step-contact-info v-else-if="s.key === 'contact'" :mode="mode" :show-teams="showTeams" :team-name="teamName" :custom-fields="customFields" :team-list-hidden="teamListHidden" :ask-age-division="askAgeDivision" :ask-gender="askGender" :rooms="contactRooms" :reservations="isMulti ? contactReservations : null" v-model="contact" flat />
             <step-payment v-else-if="s.key === 'payment'" v-model="payment" flat />
             <step-review-reservation v-else-if="s.key === 'protect'" :contact-summary="contactSummary" :payment-label="paymentLabel" :total="summary.total" :currency="currency" :flow="policyFlow" :hotels="policyHotels" flat hide-policies />
             <policies-agreement v-else-if="s.key === 'policies'" :flow="policyFlow" :hotels="policyHotels" hide-cta />
@@ -205,7 +213,7 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
            group blocks, whose step 1 already reviews the order (DES-424). -->
       <aside v-if="showRailOrder" class="ck__railwrap" :class="{ 'ck__railwrap--lead': !isGroup }">
         <team-group-block-card v-if="isGroup" class="ck__teamcard" :teams="railTeams" :rooms-added="railRoomsAdded" :initial-open="true" />
-        <team-qualifier-summary v-else class="ck__teamcard" :team-name="railTeam.name" :age-division="railTeam.age" :gender="railTeam.gender" :initial-open="true" />
+        <team-qualifier-summary v-else-if="railHasTeam" class="ck__teamcard" :team-name="railTeam.name" :age-division="railTeam.age" :gender="railTeam.gender" :initial-open="true" />
         <cart-review :mode="cartMode" :cart="liveCart" :currency="currency" readonly bind :show-requests="false" cards :order-title="(isGroup || isMulti) ? 'Review your order' : ''" />
       </aside>
     </div>

@@ -29,6 +29,21 @@ export const journey = reactive({
   team: null,
 })
 
+// ── Team Name Qualifiers — event setup (DES-461 / DES-462) ──
+// The organizer decides whether the registered-team list is shown and which
+// qualifiers are required. Deep-linkable: ?list=hidden · ?age=0 · ?gender=0
+export const teamSettings = reactive({ askAgeDivision: true, askGender: true, listHidden: false })
+if (typeof window !== 'undefined') {
+  const sq = new URLSearchParams(window.location.search)
+  if (sq.get('list') === 'hidden') teamSettings.listHidden = true
+  if (sq.get('age') === '0') teamSettings.askAgeDivision = false
+  if (sq.get('gender') === '0') teamSettings.askGender = false
+}
+export function setTeamSetting(key, value) {
+  teamSettings[key] = !!value
+  syncUrl()
+}
+
 // ── Group-block hold timer (DES-84) ──
 // Group rooms are held temporarily the moment the FIRST room is added to the
 // cart — not when the guest reaches checkout. This single shared countdown is
@@ -98,6 +113,9 @@ function syncUrl() {
   }
   if (journey.cart.length) q.set('n', String(journey.cart.length))
   if (journey.roomsNeeded) q.set('rooms', String(journey.roomsNeeded))
+  if (teamSettings.listHidden) q.set('list', 'hidden')
+  if (!teamSettings.askAgeDivision) q.set('age', '0')
+  if (!teamSettings.askGender) q.set('gender', '0')
   window.history.replaceState(null, '', `${window.location.pathname}?${q.toString()}`)
 }
 

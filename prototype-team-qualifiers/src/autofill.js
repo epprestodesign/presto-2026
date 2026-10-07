@@ -60,7 +60,7 @@ function fillNativeFields(root) {
     if (el.disabled || el.readOnly) return
     if (['hidden', 'checkbox', 'radio', 'file', 'number'].includes(el.type)) return
     // Skip fields inside teleported popovers / filter menus (not this form).
-    if (el.closest('.q-menu, .bw-menu')) return
+    if (el.closest('.q-menu, .bw-menu, .tsf__search')) return
     if (el.tagName === 'SELECT') {
       const opt = [...el.options].find((o) => o.value && !o.disabled)
       if (opt && el.value !== opt.value) { setNativeValue(el, opt.value); n++ }
@@ -91,12 +91,35 @@ function tryGroupTeams(root) {
   } catch (e) { /* best effort */ }
 }
 
+// Book Reservation team field (DES-461/462): list hidden → commit the inline
+// add form; list shown → pick the first listed team, then fill its qualifiers.
+function tryTeamSelect(root) {
+  try {
+    ;[...root.querySelectorAll(".tsf")].forEach((tsf, idx) => setTimeout(() => {
+      const add = tsf.querySelector(".taf__add:not(:disabled)")
+      if (add) { add.click(); return }
+      const trigger = tsf.querySelector(".tsf__trigger")
+      if (trigger && tsf.querySelector(".tsf__value--ph")) {
+        trigger.click()
+        setTimeout(() => {
+          const opt = tsf.querySelector(".tsf__opt")
+          if (opt) opt.click()
+          setTimeout(() => fillNativeFields(tsf), 140)
+        }, 140)
+      } else {
+        fillNativeFields(tsf)
+      }
+    }, 80 + idx * 500))
+  } catch (e) { /* best effort */ }
+}
+
 // Entry point — fills whatever the current screen offers.
 export function autofillScreen(screen) {
   if (screen === 'checkout') {
     const root = document.querySelector('.ck') || document
     const n = fillNativeFields(root)
     tryGroupTeams(root)
+    tryTeamSelect(root)
     return n ? `Auto-filled ${n} field${n === 1 ? '' : 's'}` : 'Nothing to fill here'
   }
   if (screen === 'landing') {

@@ -5,7 +5,7 @@
 // payment). The final CTA ("Book Now"/"Hold Group Block Now") is intercepted
 // globally (App.vue) → Confirmation.
 import { computed } from 'vue'
-import { journey, holdTimer, cartMode, checkoutMode, setTeam } from '../store.js'
+import { journey, holdTimer, cartMode, checkoutMode, setTeam, teamSettings } from '../store.js'
 import { cartFor, summaryFor } from '../fixtures.js'
 import PageFrame from '@lib/components/PageFrame.vue'
 // Expanded checkout: every step open at once with one submit (instead of the
@@ -34,7 +34,7 @@ const qualifiers = [
     <!-- proto-ck--group scopes group-only checkout tweaks (DES-79) without
          touching the individual flow. -->
     <div class="proto-ck" :class="{ 'proto-ck--group': checkoutMode === 'group' }">
-      <team-checkout-page :mode="checkoutMode" :cart="cart" :summary="summary" :show-teams="true" :team-name="true" :custom-fields="qualifiers" @update:team="setTeam" />
+      <team-checkout-page :mode="checkoutMode" :cart="cart" :summary="summary" :show-teams="true" :team-name="true" :custom-fields="qualifiers" :team-list-hidden="teamSettings.listHidden" :ask-age-division="teamSettings.askAgeDivision" :ask-gender="teamSettings.askGender" @update:team="setTeam" />
     </div>
   </page-frame>
 </template>

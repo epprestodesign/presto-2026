@@ -53,3 +53,13 @@ export const MultipleRoomReservations = {
     },
   ),
 }
+
+/** DES-461 scenario 2 — the event hides the team list, so Team name is the
+ *  inline add-team form (name + Age division + Gender). */
+export const ReservationListHidden = {
+  name: 'Reservation — Hidden Team List',
+  render: () => wrap(
+    `<team-reservation-guests :rooms="rooms" :team-name="true" :team-list-hidden="true" :custom-fields="qualifiers" v-model="m" />`,
+    { m: ref([]), rooms: [{ adults: 2, children: 0 }], qualifiers: QUALIFIERS },
+  ),
+}
