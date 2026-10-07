@@ -78,6 +78,18 @@ jobs:
       - name: Nest Custom Fees Request under Storybook
         run: cp -r prototype-custom-fees/dist storybook-static/prototype-custom-fees
 
+      # Team Name Qualifiers - a fork of the booking journey focused on where team
+      # names + qualifiers live across the flow; served at /presto-2026/prototype-team-qualifiers/.
+      - name: Build prototype (Team Name Qualifiers)
+        working-directory: prototype-team-qualifiers
+        run: node ../node_modules/vite/bin/vite.js build --base=/presto-2026/prototype-team-qualifiers/
+        env:
+          VITE_IMAGERY_URL: "https://epprestodesign.github.io/presto-ds-imagery"
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+
+      - name: Nest Team Name Qualifiers under Storybook
+        run: cp -r prototype-team-qualifiers/dist storybook-static/prototype-team-qualifiers
+
       # Widgets & Embeds R&D — Spartan × Eventpipe hotel add-ons (4 concepts).
       # A Spartan host page + an embedded Presto widget page (presto.html) that
       # uses the real library. Relative base ('./' in its vite.config), so it runs
