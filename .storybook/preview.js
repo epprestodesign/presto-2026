@@ -166,6 +166,26 @@ const preview = {
           'Manage Booking', [
             'Account',
           ],
+          // Feature workstream — forked team-name touchpoints. Pinned to the very
+          // bottom so it reads as a separate R&D area, not part of the rigid flow.
+          'Team Name Qualifiers', [
+            'Overview',
+            'Book Reservation', [
+              'Booking Widget',
+              'Add a Team',
+              'Team Name Select',
+              'Checkout Contact & Qualifiers',
+              'Order Rail Summary',
+              'Confirmation',
+            ],
+            'Group Block', [
+              'Booking Widget',
+              'Add a Team',
+              'Contact & Teams',
+              'Group Block Details',
+              'Confirmation',
+            ],
+          ],
         ],
       },
     },
