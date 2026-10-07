@@ -6,7 +6,7 @@
 // scope also catches TELEPORTED nodes (the cart fly-out, menus) that render
 // outside the active screen's DOM subtree.
 import { onMounted, onBeforeUnmount, watch, nextTick, computed, reactive } from 'vue'
-import { journey, holdTimer, nav, startFlow, openHotel, addActiveToCart, setRoomInHold, removeRoomFromHold, clearCart, cartRoomCount, backToBrowse, goToCheckout, resetJourney, setRoomsNeeded } from './store.js'
+import { journey, holdTimer, nav, startFlow, openHotel, addActiveToCart, setRoomInHold, removeRoomFromHold, clearCart, cartRoomCount, backToBrowse, goToCheckout, resetJourney, setRoomsNeeded, teamSettings, setTeamSetting } from './store.js'
 import { getHotelByName, getHotel } from './hotels.js'
 import { loadImagery } from '@lib/lib/imagery'
 import HoldTimerPill from '@lib/components/HoldTimerPill.vue'
@@ -309,6 +309,26 @@ onBeforeUnmount(() => { document.removeEventListener('click', onClickCapture, tr
         <span class="tnq-bar__sub">Walkthrough — team-name touchpoints are outlined per screen.</span>
         <span v-if="tnq.msg" class="tnq-bar__msg">{{ tnq.msg }}</span>
       </div>
+      <!-- Event setup (DES-461): which workflow + which qualifiers -->
+      <div class="tnq-bar__settings">
+        <span class="tnq-bar__group">Team qualifiers</span>
+        <label class="tnq-toggle">
+          <input type="checkbox" :checked="teamSettings.askAgeDivision" @change="setTeamSetting('askAgeDivision', $event.target.checked)" />
+          <span class="tnq-toggle__track"><span class="tnq-toggle__thumb"></span></span>
+          <span class="tnq-toggle__label">Age Division</span>
+        </label>
+        <label class="tnq-toggle">
+          <input type="checkbox" :checked="teamSettings.askGender" @change="setTeamSetting('askGender', $event.target.checked)" />
+          <span class="tnq-toggle__track"><span class="tnq-toggle__thumb"></span></span>
+          <span class="tnq-toggle__label">Gender</span>
+        </label>
+        <span class="tnq-bar__group">Registration</span>
+        <label class="tnq-toggle">
+          <input type="checkbox" :checked="teamSettings.listHidden" @change="setTeamSetting('listHidden', $event.target.checked)" />
+          <span class="tnq-toggle__track"><span class="tnq-toggle__thumb"></span></span>
+          <span class="tnq-toggle__label">Hidden team list</span>
+        </label>
+      </div>
       <div class="tnq-bar__controls">
         <label class="tnq-toggle">
           <input type="checkbox" v-model="tnq.highlight" @change="setTeamHighlights(tnq.highlight)" />
@@ -475,7 +495,10 @@ body { background: var(--ds-palette-slate-100, #f1f2f4); }
 }
 
 /* Team Name Qualifiers walkthrough — intro bar + touchpoint highlights. */
-.tnq-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #01113E; color: #fff; padding: 10px 20px; font-size: 0.875rem; }
+.tnq-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; background: #01113E; color: #fff; padding: 10px 20px; font-size: 0.875rem; }
+.tnq-bar__settings { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 4px 14px; border-left: 1px solid rgba(255,255,255,0.18); border-right: 1px solid rgba(255,255,255,0.18); }
+.tnq-bar__group { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.7; }
+.tnq-bar__group + .tnq-toggle { margin-left: -6px; }
 .tnq-bar__main { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
 .tnq-bar__main strong { font-weight: 700; }
 .tnq-bar__main span { opacity: 0.85; }

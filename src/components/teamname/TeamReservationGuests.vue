@@ -11,6 +11,8 @@ import { reactive, computed, watch } from 'vue'
 import PhoneField from '../checkout/PhoneField.vue'
 import TeamSelectField from './TeamSelectField.vue'
 
+const NOT_WITH_TEAM = "I'm not with a team"
+
 const props = defineProps({
   // Booking-widget selection: one entry per room (a single reservation).
   rooms: { type: Array, default: () => [{ adults: 1, children: 0 }] },
@@ -20,6 +22,10 @@ const props = defineProps({
   modelValue: { type: Array, default: () => [] },
   // Event-configurable extra fields.
   teamName: { type: Boolean, default: false },
+  // Team Name Qualifiers — event setup (DES-461 / DES-462):
+  teamListHidden: { type: Boolean, default: false }, // team list not shown → type the team
+  askAgeDivision: { type: Boolean, default: true },
+  askGender: { type: Boolean, default: true },
   // [{ key?, label, type: 'select' | 'text', options?: string[], required?, optional? }]
   customFields: { type: Array, default: () => [] },
   showErrors: { type: Boolean, default: false },
@@ -63,6 +69,8 @@ const makeRoom = (room, i) => {
     hotelRewards: saved?.hotelRewards ?? '',
     specialRequests: saved?.specialRequests ?? '',
     teamName: saved?.teamName ?? '',
+    teamAgeDivision: saved?.teamAgeDivision ?? '',
+    teamGender: saved?.teamGender ?? '',
     custom,
     additionalGuests: saved?.additionalGuests?.length ? saved.additionalGuests.map((g) => reactive({ ...blank(), ...g })) : seeded,
   })
@@ -103,6 +111,10 @@ const roomValid = (r) => {
   // DES-94: US/Canada require a full address; "Other" requires nothing.
   if (collectsAddress(r.country) && (!r.address1 || !r.city || !r.state || !r.postal)) return false
   if (props.teamName && !r.teamName) return false
+  if (props.teamName && r.teamName && r.teamName !== NOT_WITH_TEAM) {
+    if (props.askAgeDivision && !r.teamAgeDivision) return false
+    if (props.askGender && !r.teamGender) return false
+  }
   for (let ci = 0; ci < props.customFields.length; ci++) {
     const cf = props.customFields[ci]
     if (cf.required && !r.custom[cfKey(cf, ci)]) return false
@@ -177,18 +189,23 @@ watch(valid, (v) => emit('update:valid', v), { immediate: true })
 
         <div v-if="teamName" class="cgf__field cgf__field--full">
           <span>Team name <i class="cgf__req">*</i></span>
-          <team-select-field v-model="room.teamName" :error="!!reqErr(i, 'teamName', room.teamName)" @blur="touch(i, 'teamName')" />
-          <small v-if="reqErr(i, 'teamName', room.teamName)" class="cgf__err">Required</small>
+          <team-select-field
+            v-model="room.teamName" v-model:age-division="room.teamAgeDivision" v-model:gender="room.teamGender"
+            :list-hidden="teamListHidden" :ask-age-division="askAgeDivision" :ask-gender="askGender"
+            :error="!!reqErr(i, 'teamName', room.teamName)" :show-errors="showErr(i, 'teamName')"
+            @blur="touch(i, 'teamName')"
+          />
+          <small v-if="reqErr(i, 'teamName', room.teamName)" class="cgf__err">{{ teamListHidden ? 'Add your team, or choose “I\'m not with a team”' : 'Required' }}</small>
         </div>
 
         <label class="cgf__field cgf__field--full">
-          <span>Hotel rewards #</span>
-          <input v-model="room.hotelRewards" placeholder="Optional" />
+          <span>Special requests <em class="rg__opt">(optional)</em></span>
+          <textarea v-model="room.specialRequests" rows="3" placeholder="Adjoining rooms, accessibility needs, late check-in, etc." />
         </label>
 
         <label class="cgf__field cgf__field--full">
-          <span>Special requests <em class="rg__opt">(optional)</em></span>
-          <textarea v-model="room.specialRequests" rows="3" placeholder="Early check-in, accessibility needs, bed preferences…" />
+          <span>Hotel rewards # <em class="rg__opt">(optional)</em></span>
+          <input v-model="room.hotelRewards" placeholder="Enter your loyalty / rewards number" />
         </label>
 
         <!-- Address — DES-94: United States / Canada collect a full address;
