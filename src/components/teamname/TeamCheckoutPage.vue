@@ -101,9 +101,11 @@ const paymentLabel = computed(() => {
 const contactSummary = computed(() => 'Contact details')
 
 // Team Name Qualifiers — summary card at the top of the order rail.
+// The teams the organizer actually added (no demo fallback) — the rail card
+// only shows once at least one team is in the block.
 const railTeams = computed(() => {
   const t = contact.value && contact.value.teams
-  return (Array.isArray(t) && t.length) ? t : ['Team 1', 'Team 2', 'Arsenal U12 Boys Select']
+  return Array.isArray(t) ? t : []
 })
 const railRoomsAdded = computed(() => {
   let n = 0
@@ -212,8 +214,8 @@ const confirm = () => $q.notify({ message: 'Reservation confirmed — a confirma
            leads the page for the individual flows (DES-421) and is dropped for
            group blocks, whose step 1 already reviews the order (DES-424). -->
       <aside v-if="showRailOrder" class="ck__railwrap" :class="{ 'ck__railwrap--lead': !isGroup }">
-        <team-group-block-card v-if="isGroup" class="ck__teamcard" :teams="railTeams" :rooms-added="railRoomsAdded" :initial-open="true" />
-        <team-qualifier-summary v-else-if="railHasTeam" class="ck__teamcard" :team-name="railTeam.name" :age-division="railTeam.age" :gender="railTeam.gender" :initial-open="true" />
+        <team-group-block-card v-if="isGroup && railTeams.length" class="ck__teamcard" :teams="railTeams" :rooms-added="railRoomsAdded" :initial-open="true" />
+        <team-qualifier-summary v-else-if="!isGroup && railHasTeam" class="ck__teamcard" :team-name="railTeam.name" :age-division="railTeam.age" :gender="railTeam.gender" :initial-open="true" />
         <cart-review :mode="cartMode" :cart="liveCart" :currency="currency" readonly bind :show-requests="false" cards :order-title="(isGroup || isMulti) ? 'Review your order' : ''" />
       </aside>
     </div>

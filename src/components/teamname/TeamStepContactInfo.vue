@@ -39,7 +39,7 @@ const onNext = () => { if (valid.value) emit('next'); else { showErrors.value = 
 
 <template>
   <div class="step">
-    <team-group-contact-block v-if="mode === 'group'" :model-value="modelValue" :show-teams="showTeams" :show-errors="showErrors" @update:model-value="emit('update:modelValue', $event)" />
+    <team-group-contact-block v-if="mode === 'group'" :model-value="modelValue" :show-teams="showTeams" :show-errors="showErrors" :list-hidden="teamListHidden" :ask-age-division="askAgeDivision" :ask-gender="askGender" @update:model-value="emit('update:modelValue', $event)" />
     <team-reservation-guests
       v-else
       :rooms="rooms" :reservations="reservations" :team-name="teamName" :custom-fields="customFields" :team-list-hidden="teamListHidden" :ask-age-division="askAgeDivision" :ask-gender="askGender"

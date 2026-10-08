@@ -32,7 +32,7 @@ const RULES = [
   { find: () => [...document.querySelectorAll('.cr__groupcard, .gbd__head')].map((el) => el.closest('.cr__pricecard') || el), label: 'Team summary' },
 ]
 
-let enabled = true
+let enabled = false // off by default — turned on from the top-bar toggle
 
 export function clearTeamHighlights() {
   document.querySelectorAll('.tnq-hl').forEach((el) => {
