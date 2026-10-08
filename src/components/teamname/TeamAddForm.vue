@@ -16,6 +16,8 @@ const props = defineProps({
   // Prefill when editing an already-added team: { name, ageDivision, gender }.
   initial: { type: Object, default: () => ({}) },
   submitLabel: { type: String, default: 'Add Team' },
+  // Group hidden-list flow hides the "Team will be saved as" preview.
+  showPreview: { type: Boolean, default: true },
 })
 const emit = defineEmits(['submit'])
 
@@ -71,7 +73,7 @@ defineExpose({ focus: () => nameInput.value?.focus() })
       </label>
     </div>
 
-    <div class="taf__saved">
+    <div v-if="showPreview" class="taf__saved">
       <span class="taf__saved-h">TEAM WILL BE SAVED AS</span>
       <span class="taf__saved-v" :class="{ 'taf__saved-v--empty': !savedAs }">{{ savedAs || 'Fill in the fields above...' }}</span>
     </div>

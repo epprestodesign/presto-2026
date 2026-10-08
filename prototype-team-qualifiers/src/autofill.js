@@ -72,22 +72,43 @@ function fillNativeFields(root) {
   return n
 }
 
-// Group hold: best-effort click-through to add one team (count → list → confirm),
-// since team selection uses custom buttons rather than form fields.
-function tryGroupTeams(root) {
+// Group hold (DES-464/466/467): enter a team count, then either check teams from
+// the list or — when the list is hidden — add each team one at a time.
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+const GROUP_TEAMS = ['Augusta Arsenal VBC', 'Eagles SC 15 Premier', 'Falcons U10 Boys', 'Phoenix 16 National', 'Bulls U12 Gold', 'A3 18 Heat']
+async function tryGroupTeams(root) {
   try {
     const flow = root.querySelector('.gtb__flow')
     if (!flow) return
-    const next = flow.querySelector('.gtb__nextbtn:not(.is-disabled)')
-    if (next) next.click()
-    setTimeout(() => {
-      const first = flow.querySelector('.gtb__team:not(.is-disabled)')
-      if (first) first.click()
-      setTimeout(() => {
-        const confirm = flow.querySelector('.gtb__confirm:not(.is-disabled)')
-        if (confirm) confirm.click()
-      }, 140)
-    }, 140)
+    const count = flow.querySelector('.gtb__countinput')
+    if (count) {
+      if (!count.value) setNativeValue(count, '2')
+      await sleep(80)
+      const next = flow.querySelector('.gtb__nextbtn:not(.is-disabled)')
+      if (next) next.click()
+      await sleep(180)
+    }
+    if (flow.querySelector('.gtb__teamlist')) {
+      for (let i = 0; i < 12; i++) {
+        const t = flow.querySelector('.gtb__team:not(.is-disabled):not(.is-on)')
+        if (!t) break
+        t.click(); await sleep(60)
+      }
+      const confirm = flow.querySelector('.gtb__confirm:not(.is-disabled)')
+      if (confirm) confirm.click()
+      return
+    }
+    for (let i = 0; i < 12 && flow.querySelector('.gtb__seq-eyebrow'); i++) {
+      const form = flow.querySelector('.taf')
+      if (!form) break
+      const name = form.querySelector('input')
+      if (name) setNativeValue(name, GROUP_TEAMS[i % GROUP_TEAMS.length])
+      form.querySelectorAll('select').forEach((sel) => { const o = [...sel.options].find((x) => x.value && !x.disabled); if (o) setNativeValue(sel, o.value) })
+      await sleep(80)
+      const add = form.querySelector('.taf__add:not(:disabled)')
+      if (!add) break
+      add.click(); await sleep(180)
+    }
   } catch (e) { /* best effort */ }
 }
 
