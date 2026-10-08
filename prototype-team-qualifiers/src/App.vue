@@ -14,7 +14,7 @@ import AddedToCartToast from '@lib/components/AddedToCartToast.vue'
 // Team Name Qualifiers walkthrough — touchpoint highlight overlay.
 import { initTeamHighlights, setTeamHighlights } from './teamHighlight.js'
 import { autofillScreen } from './autofill.js'
-const tnq = reactive({ highlight: true, msg: '' })
+const tnq = reactive({ highlight: false, msg: '', adminOpen: true })
 let tnqMsgTimer = null
 function runAutofill () {
   tnq.msg = autofillScreen(journey.screen)
@@ -306,28 +306,8 @@ onBeforeUnmount(() => { document.removeEventListener('click', onClickCapture, tr
         <div class="tnq-bar">
       <div class="tnq-bar__main">
         <strong>Team Name Qualifiers</strong>
-        <span class="tnq-bar__sub">Walkthrough — team-name touchpoints are outlined per screen.</span>
+        <span class="tnq-bar__sub">Prototype 3 — Group Block checkout. Event setup toggles are in the Admin settings panel.</span>
         <span v-if="tnq.msg" class="tnq-bar__msg">{{ tnq.msg }}</span>
-      </div>
-      <!-- Event setup (DES-461): which workflow + which qualifiers -->
-      <div class="tnq-bar__settings">
-        <span class="tnq-bar__group">Team qualifiers</span>
-        <label class="tnq-toggle">
-          <input type="checkbox" :checked="teamSettings.askAgeDivision" @change="setTeamSetting('askAgeDivision', $event.target.checked)" />
-          <span class="tnq-toggle__track"><span class="tnq-toggle__thumb"></span></span>
-          <span class="tnq-toggle__label">Age Division</span>
-        </label>
-        <label class="tnq-toggle">
-          <input type="checkbox" :checked="teamSettings.askGender" @change="setTeamSetting('askGender', $event.target.checked)" />
-          <span class="tnq-toggle__track"><span class="tnq-toggle__thumb"></span></span>
-          <span class="tnq-toggle__label">Gender</span>
-        </label>
-        <span class="tnq-bar__group">Registration</span>
-        <label class="tnq-toggle">
-          <input type="checkbox" :checked="teamSettings.listHidden" @change="setTeamSetting('listHidden', $event.target.checked)" />
-          <span class="tnq-toggle__track"><span class="tnq-toggle__thumb"></span></span>
-          <span class="tnq-toggle__label">Hidden team list</span>
-        </label>
       </div>
       <div class="tnq-bar__controls">
         <label class="tnq-toggle">
@@ -338,6 +318,34 @@ onBeforeUnmount(() => { document.removeEventListener('click', onClickCapture, tr
         <button type="button" class="tnq-fill" @click="runAutofill">⚡ Auto-fill this page</button>
       </div>
     </div>
+    <!-- Admin settings (design doc): event setup toggles live OUTSIDE the
+         checkout UI in a floating panel — review-only, not part of the guest UI. -->
+    <aside class="tnq-admin" :class="{ 'is-collapsed': !tnq.adminOpen }" aria-label="Admin settings — review only">
+      <button type="button" class="tnq-admin__head" :aria-expanded="tnq.adminOpen" @click="tnq.adminOpen = !tnq.adminOpen">
+        <span class="tnq-admin__title"><span class="tnq-admin__icon">⚙</span> Admin settings <em>Review only</em></span>
+        <span class="tnq-admin__chev">{{ tnq.adminOpen ? '▾' : '▴' }}</span>
+      </button>
+      <div v-show="tnq.adminOpen" class="tnq-admin__body">
+        <span class="tnq-admin__group">Team qualifiers</span>
+        <label class="tnq-toggle">
+          <input type="checkbox" :checked="teamSettings.askAgeDivision" @change="setTeamSetting('askAgeDivision', $event.target.checked)" />
+          <span class="tnq-toggle__track"><span class="tnq-toggle__thumb"></span></span>
+          <span class="tnq-toggle__label">Age Division</span>
+        </label>
+        <label class="tnq-toggle">
+          <input type="checkbox" :checked="teamSettings.askGender" @change="setTeamSetting('askGender', $event.target.checked)" />
+          <span class="tnq-toggle__track"><span class="tnq-toggle__thumb"></span></span>
+          <span class="tnq-toggle__label">Gender</span>
+        </label>
+        <span class="tnq-admin__group">Registration Settings</span>
+        <label class="tnq-toggle">
+          <input type="checkbox" :checked="teamSettings.listHidden" @change="setTeamSetting('listHidden', $event.target.checked)" />
+          <span class="tnq-toggle__track"><span class="tnq-toggle__thumb"></span></span>
+          <span class="tnq-toggle__label">Hidden/No Team List</span>
+        </label>
+        <p class="tnq-admin__note">Changes apply instantly.</p>
+      </div>
+    </aside>
     <div class="proto__stage">
       <component :is="screens[journey.screen]" />
     </div>
@@ -496,9 +504,6 @@ body { background: var(--ds-palette-slate-100, #f1f2f4); }
 
 /* Team Name Qualifiers walkthrough — intro bar + touchpoint highlights. */
 .tnq-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; background: #01113E; color: #fff; padding: 10px 20px; font-size: 0.875rem; }
-.tnq-bar__settings { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 4px 14px; border-left: 1px solid rgba(255,255,255,0.18); border-right: 1px solid rgba(255,255,255,0.18); }
-.tnq-bar__group { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.7; }
-.tnq-bar__group + .tnq-toggle { margin-left: -6px; }
 .tnq-bar__main { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
 .tnq-bar__main strong { font-weight: 700; }
 .tnq-bar__main span { opacity: 0.85; }
@@ -521,4 +526,14 @@ body { background: var(--ds-palette-slate-100, #f1f2f4); }
 .tnq-fill { background: #fff; color: #01113E; border: 0; border-radius: 8px; padding: 8px 14px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; white-space: nowrap; }
 .tnq-fill:hover { background: #e9edf5; }
 @media (max-width: 600px) { .tnq-bar { flex-wrap: wrap; gap: 8px; } .tnq-bar__sub { display: none; } }
+/* Admin settings — floating panel, outside the checkout UI (design doc). */
+.tnq-admin { position: fixed; left: 20px; bottom: 20px; z-index: 3000; width: 248px; background: #01113E; color: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(1, 17, 62, 0.35); font-size: 0.875rem; overflow: hidden; }
+.tnq-admin__head { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 12px 14px; border: 0; background: none; color: #fff; font-family: inherit; font-size: 0.875rem; cursor: pointer; text-align: left; }
+.tnq-admin__title { font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+.tnq-admin__title em { font-style: normal; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; background: #f59e0b; color: #01113E; border-radius: 999px; padding: 1px 8px; }
+.tnq-admin__chev { opacity: 0.8; }
+.tnq-admin__body { display: flex; flex-direction: column; gap: 10px; padding: 2px 14px 14px; border-top: 1px solid rgba(255,255,255,0.15); }
+.tnq-admin__group { margin-top: 8px; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.7; }
+.tnq-admin__note { margin: 4px 0 0; font-size: 0.75rem; opacity: 0.7; }
+@media (max-width: 600px) { .tnq-admin { left: 12px; right: 12px; bottom: 12px; width: auto; } }
 </style>

@@ -88,17 +88,20 @@ async function tryGroupTeams(root) {
       if (next) next.click()
       await sleep(180)
     }
-    if (flow.querySelector('.gtb__teamlist')) {
-      for (let i = 0; i < 12; i++) {
-        const t = flow.querySelector('.gtb__team:not(.is-disabled):not(.is-on)')
-        if (!t) break
-        t.click(); await sleep(60)
-      }
-      const confirm = flow.querySelector('.gtb__confirm:not(.is-disabled)')
-      if (confirm) confirm.click()
-      return
-    }
+    // One team at a time: list shown → pick from the dropdown; list hidden
+    // (or "type it in") → fill the add-team form.
     for (let i = 0; i < 12 && flow.querySelector('.gtb__seq-eyebrow'); i++) {
+      const trigger = flow.querySelector('.gtb__pick-trigger')
+      if (trigger) {
+        if (!flow.querySelector('.gtb__pick-menu')) { trigger.click(); await sleep(80) }
+        const opt = flow.querySelector('.gtb__pick-opt')
+        if (!opt) break
+        opt.click(); await sleep(60)
+        const add = flow.querySelector('.gtb__pick-add:not(:disabled)')
+        if (!add) break
+        add.click(); await sleep(180)
+        continue
+      }
       const form = flow.querySelector('.taf')
       if (!form) break
       const name = form.querySelector('input')
