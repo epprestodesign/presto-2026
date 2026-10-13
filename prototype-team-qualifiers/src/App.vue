@@ -306,7 +306,7 @@ onBeforeUnmount(() => { document.removeEventListener('click', onClickCapture, tr
         <div class="tnq-bar">
       <div class="tnq-bar__main">
         <strong>Team Name Qualifiers</strong>
-        <span class="tnq-bar__sub">Prototype 3 — Group Block checkout. Event setup toggles are in the Admin settings panel.</span>
+        <span class="tnq-bar__sub">Book Reservation + Group Block. Event setup toggles are in the Admin settings panel.</span>
         <span v-if="tnq.msg" class="tnq-bar__msg">{{ tnq.msg }}</span>
       </div>
       <div class="tnq-bar__controls">

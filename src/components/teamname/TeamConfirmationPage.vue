@@ -33,6 +33,8 @@ const props = defineProps({
 
 const noTeamTitle = computed(() => (props.teamFlow === 'group' ? 'No team hold' : 'Booked as an individual'))
 const noTeamSub = computed(() => (props.teamFlow === 'group' ? "This block isn't tied to a specific team — rooms were held without team assignment." : 'No team was selected for this reservation.'))
+// DES-469: a guest without a team still gives the organizer's qualifiers.
+const noTeamMeta = computed(() => (props.teamFlow === 'reserve' ? [props.team?.ageDivision, props.team?.gender].filter(Boolean).join(' · ') : ''))
 
 const isHold = computed(() => props.mode === 'hold')
 const d = computed(() => props.data || {})
@@ -223,7 +225,7 @@ const showTotals = (h) => !isHold.value && !!h?.totals
         <h2 class="conf__sectionlabel">Team</h2>
         <section v-if="noTeam" class="conf__card conf__noteam">
           <q-icon name="info" size="20px" />
-          <div><strong>{{ noTeamTitle }}</strong><p>{{ noTeamSub }}</p></div>
+          <div><strong>{{ noTeamTitle }}</strong><p>{{ noTeamSub }}</p><p v-if="noTeamMeta" class="conf__noteam-meta">Team qualifiers: <b>{{ noTeamMeta }}</b></p></div>
         </section>
         <team-group-block-card v-else-if="teamFlow === 'group'" class="conf__teamblock" :teams="teams" :rooms-added="roomsAdded" :initial-open="true" />
         <team-qualifier-summary v-else class="conf__teamblock" :team-name="team.name" :age-division="team.ageDivision" :gender="team.gender" :initial-open="true" />
@@ -320,6 +322,7 @@ const showTotals = (h) => !isHold.value && !!h?.totals
 .conf__noteam .q-icon { color: var(--ds-color-text-subtle); flex: none; margin-top: 2px; }
 .conf__noteam strong { display: block; font-size: 1rem; color: var(--ds-color-text); }
 .conf__noteam p { margin: 4px 0 0; color: var(--ds-color-text-subtle); font-size: 0.9375rem; line-height: 1.5; }
+.conf__noteam .conf__noteam-meta b { color: var(--ds-color-text); }
 
 /* policies */
 .conf__policyhotel + .conf__policyhotel { margin-top: 24px; }
