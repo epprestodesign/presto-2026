@@ -4,8 +4,9 @@
 // group block's teams flow:
 //   1) How many teams? — a typeable number field with up/down (DES-466).
 //   2) Add the teams one at a time ("Team k of N") —
-//        • team list SHOWN  → select the team from a searchable dropdown, or
-//          "My team isn't listed — type it in" (design doc wording).
+//        • team list SHOWN  → the shared TeamCombobox (type in the Team name
+//          field to search — DES-477), or "My team isn't listed — type it in"
+//          (design doc wording).
 //        • team list HIDDEN → type each team's name + the organizer's
 //          qualifiers, no dropdown (DES-467).
 //   Once every team is in, the step collapses to a confirmed summary with
@@ -14,6 +15,7 @@
 import { ref, reactive, computed, watch } from 'vue'
 import PhoneField from '../checkout/PhoneField.vue'
 import TeamAddForm from './TeamAddForm.vue'
+import TeamCombobox from './TeamCombobox.vue'
 
 const props = defineProps({
   modelValue: { type: Object, default: () => ({}) },
@@ -52,7 +54,6 @@ const expected = ref(props.modelValue.expected ?? props.initialExpected ?? '')
 const additionalEmails = ref([...(props.modelValue.additionalEmails || [])])
 const addEmail = () => additionalEmails.value.push('')
 const removeEmail = (i) => additionalEmails.value.splice(i, 1)
-const query = ref('')
 
 const clubs = ['Arsenal', 'Chelsea', 'Liverpool', 'Manchester City', 'Tottenham', 'Everton', 'Leeds United', 'Newcastle', 'Aston Villa', 'Brighton']
 const teamAges = ['U10', 'U12', 'U14', 'U16']
@@ -96,11 +97,21 @@ const removeTeam = (name) => { added.value = added.value.filter((t) => t.name !=
 // List shown → pick from the registered-team dropdown, or type it in.
 const seqMode = ref(props.listHidden ? 'type' : 'pick') // pick | type
 const seqPick = ref('')
-const pickerOpen = ref(false)
-const pickOptions = computed(() => available.filter((t) => t.name.toLowerCase().includes(query.value.toLowerCase()) && !addedNames.value.includes(t.name)))
-function choosePick (name) { seqPick.value = name; pickerOpen.value = false; query.value = '' }
-function useTypeMode () { seqMode.value = 'type'; pickerOpen.value = false; query.value = ''; seqPick.value = '' }
-function usePickMode () { seqMode.value = 'pick'; seqDraft.value = {}; seqKey.value++ }
+const pickOptions = computed(() => available.map((t) => t.name).filter((n) => !addedNames.value.includes(n)))
+function useTypeMode (close) { close?.(); seqMode.value = 'type'; seqPick.value = '' }
+function usePickMode () { seqMode.value = 'pick'; seqDraft.value = {}; seqKey.value++; liveTeam.value = null }
+
+// DES-476: just 1 team and it's typed in → no Add button; the team saves with
+// the group block (live form). 2+ teams keep Add & Continue / Add & Confirm.
+const liveTeam = ref(null)
+const isTyping = computed(() => props.listHidden || seqMode.value === 'type')
+const liveMode = computed(() => expectedN.value === 1 && added.value.length === 0 && isTyping.value)
+const liveValid = computed(() => liveMode.value && !!liveTeam.value?.valid)
+function onLive (t) { liveTeam.value = t }
+watch(liveMode, (on) => { if (!on) liveTeam.value = null })
+const allTeams = computed(() => (liveValid.value
+  ? [...added.value, { name: liveTeam.value.name, ageDivision: liveTeam.value.ageDivision, gender: liveTeam.value.gender, custom: true }]
+  : added.value))
 function onPickAdd () {
   if (!seqPick.value) return
   added.value.push(toTeam(seqPick.value))
@@ -141,7 +152,6 @@ const editList = () => { view.value = 'seq' }
 watch(() => props.listHidden, (hidden) => {
   seqMode.value = hidden ? 'type' : 'pick'
   seqPick.value = ''
-  pickerOpen.value = false
 })
 
 // ── "I am not holding for a team" (DES-465) ──
@@ -166,15 +176,15 @@ const cErr = (f) => {
   if (f === 'email' && !emailOk.value) return 'Enter a valid email'
   return ''
 }
-const teamsErr = computed(() => (props.showErrors && added.value.length === 0 ? 'Add at least one team' : ''))
+const teamsErr = computed(() => (props.showErrors && allTeams.value.length === 0 ? 'Add at least one team' : ''))
 const blockNameErr = computed(() => (props.showErrors && !groupBlockName.value.trim() ? 'Required' : ''))
 
-watch([added, expected, contact, notHolding, groupBlockName, additionalEmails], () => emit('update:modelValue', {
+watch([allTeams, expected, contact, notHolding, groupBlockName, additionalEmails], () => emit('update:modelValue', {
   expected: expectedN.value,
   // Display labels ("Name · U17 · Girls") feed the rail card + Confirmation;
   // teamDetails keeps the structured values.
-  teams: added.value.map(teamLabel),
-  teamDetails: added.value.map((t) => ({ ...t })),
+  teams: allTeams.value.map(teamLabel),
+  teamDetails: allTeams.value.map((t) => ({ ...t })),
   contact: { ...contact },
   notHolding: notHolding.value,
   groupBlockName: groupBlockName.value,
@@ -330,34 +340,23 @@ watch([added, expected, contact, notHolding, groupBlockName, additionalEmails], 
             </div>
             <div class="gtb__seq-hint">{{ seqHint }}</div>
 
-            <!-- list shown: select a registered team from the dropdown -->
+            <!-- list shown: the shared team dropdown — type in the field to search (DES-477) -->
             <div v-if="!listHidden && seqMode === 'pick'" class="gtb__pick">
               <span class="gtb__pick-label">Team name <i class="gtb__req">*</i></span>
-              <button type="button" class="gtb__pick-trigger" :class="{ 'is-open': pickerOpen, 'is-empty': !seqPick }" aria-haspopup="listbox" :aria-expanded="pickerOpen" @click="pickerOpen = !pickerOpen" @keydown.esc="pickerOpen = false">
-                <span>{{ seqPick || 'Select a team' }}</span>
-                <q-icon :name="pickerOpen ? 'expand_less' : 'expand_more'" size="20px" />
-              </button>
-              <div v-if="pickerOpen" class="gtb__pick-menu" @keydown.esc="pickerOpen = false">
-                <div class="gtb__search gtb__pick-search">
-                  <q-icon name="search" size="20px" />
-                  <input v-model="query" placeholder="Search teams" aria-label="Search teams" />
-                  <button v-if="query" type="button" aria-label="Clear" @click="query = ''"><q-icon name="close" size="18px" /></button>
-                </div>
-                <div class="gtb__pick-list" role="listbox">
-                  <button v-for="t in pickOptions" :key="t.name" type="button" role="option" class="gtb__pick-opt" :class="{ 'is-on': seqPick === t.name }" :aria-selected="seqPick === t.name" @click="choosePick(t.name)">
-                    {{ t.name }}<q-icon v-if="seqPick === t.name" name="check" size="18px" />
-                  </button>
-                  <p v-if="!pickOptions.length" class="gtb__empty">No teams match “{{ query }}”.</p>
-                </div>
-                <button type="button" class="gtb__pick-unlisted" @click="useTypeMode"><q-icon name="add_circle" size="20px" /> My team isn't listed — type it in</button>
-              </div>
+              <team-combobox v-model="seqPick" :options="pickOptions">
+                <template #footer="{ close }">
+                  <button type="button" class="tcb__action gtb__pick-unlisted" @mousedown.prevent @click="useTypeMode(close)"><q-icon name="add_circle" size="20px" /> My team isn't listed — type it in</button>
+                </template>
+              </team-combobox>
               <button type="button" class="gtb__pick-add" :class="{ 'is-disabled': !seqPick }" :disabled="!seqPick" @click="onPickAdd">{{ seqLabel }}</button>
             </div>
 
             <!-- list hidden, or "My team isn't listed": enter the team name -->
             <template v-else>
               <button v-if="!listHidden" type="button" class="gtb__pick-switch" @click="usePickMode"><q-icon name="list" size="18px" /> Pick from the team list instead</button>
-              <team-add-form :key="seqKey" :ask-age-division="askAgeDivision" :ask-gender="askGender" :initial="seqDraft" :show-preview="false" :submit-label="seqLabel" @submit="onSeqAdd" />
+              <!-- DES-475: "Team will be saved as" preview · DES-476: 1 team → no button -->
+              <team-add-form v-if="liveMode" :key="'live-' + seqKey" live :ask-age-division="askAgeDivision" :ask-gender="askGender" :initial="seqDraft" :show-errors="showErrors" @update="onLive" />
+              <team-add-form v-else :key="seqKey" :ask-age-division="askAgeDivision" :ask-gender="askGender" :initial="seqDraft" :submit-label="seqLabel" @submit="onSeqAdd" />
             </template>
             <p v-if="teamsErr" class="gtb__errmsg gtb__errmsg--block">{{ teamsErr }}</p>
           </template>
@@ -407,8 +406,9 @@ watch([added, expected, contact, notHolding, groupBlockName, additionalEmails], 
 .gtb__selectwrap .q-icon { position: absolute; right: 12px; color: var(--ds-color-text-subtle); pointer-events: none; }
 
 /* Teams flow card */
-.gtb__flow { border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); overflow: hidden; margin-top: 24px; }
-.gtb__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--ds-color-background-brand-bold); color: #fff; padding: 14px 18px; font-weight: 600; }
+/* No overflow: hidden — the team dropdown must be able to drop past the card. */
+.gtb__flow { border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-lg); margin-top: 24px; }
+.gtb__bar { border-radius: calc(var(--ds-radius-lg) - 1px) calc(var(--ds-radius-lg) - 1px) 0 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--ds-color-background-brand-bold); color: #fff; padding: 14px 18px; font-weight: 600; }
 .gtb__changecount { background: none; border: 0; color: #fff; font-weight: 600; cursor: pointer; }
 .gtb__changecount:hover { text-decoration: underline; }
 .gtb__panel { padding: 20px; }
@@ -430,13 +430,10 @@ watch([added, expected, contact, notHolding, groupBlockName, additionalEmails], 
 .gtb__notholding { display: block; width: 100%; text-align: center; background: none; border: 0; padding: 16px 0 0; color: var(--ds-color-text-subtle); font-weight: 600; font-size: 0.9375rem; cursor: pointer; }
 .gtb__notholding:hover { color: var(--ds-color-text); }
 
-/* Chips · search · buttons */
+/* Chips · buttons */
 .gtb__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .gtb__chip { display: inline-flex; align-items: center; gap: 6px; background: var(--ds-palette-slate-100); border-radius: var(--ds-radius-pill); padding: 6px 6px 6px 12px; font-size: 0.875rem; font-weight: 500; color: var(--ds-color-text); }
 .gtb__chip button { width: 20px; height: 20px; border: 0; border-radius: 50%; background: var(--ds-palette-slate-200); color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.gtb__search { display: flex; align-items: center; gap: 10px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-pill); padding: 0 14px; height: 46px; color: var(--ds-color-text-subtle); }
-.gtb__search input { flex: 1; border: 0; outline: none; background: none; font-family: inherit; font-size: 0.9375rem; color: var(--ds-color-text); height: auto; }
-.gtb__search button { border: 0; background: none; color: var(--ds-color-text-subtle); cursor: pointer; display: flex; }
 .gtb__empty { color: var(--ds-color-text-subtle); font-size: 0.875rem; padding: 12px 4px; margin: 0; }
 .gtb__confirm { height: 44px; padding: 0 22px; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-weight: 600; }
 .gtb__confirm.is-disabled { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtlest); pointer-events: none; }
@@ -488,17 +485,6 @@ watch([added, expected, contact, notHolding, groupBlockName, additionalEmails], 
 /* List shown — per-team dropdown (design doc) */
 .gtb__pick { display: flex; flex-direction: column; gap: 6px; }
 .gtb__pick-label { font-size: 0.8125rem; font-weight: 600; color: var(--ds-color-text); }
-.gtb__pick-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 46px; padding: 0 12px 0 14px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); color: var(--ds-color-text); font-family: inherit; font-size: 0.9375rem; text-align: left; cursor: pointer; }
-.gtb__pick-trigger.is-empty span { color: var(--ds-color-text-subtlest); }
-.gtb__pick-trigger.is-open, .gtb__pick-trigger:focus-visible { border-color: var(--ds-color-border-focused); outline: none; box-shadow: 0 0 0 1px var(--ds-color-border-focused); }
-.gtb__pick-trigger .q-icon { color: var(--ds-color-text-subtle); }
-.gtb__pick-menu { border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); box-shadow: var(--ds-shadow-raised, 0 4px 14px rgba(15, 23, 42, 0.1)); padding: 10px; background: var(--ds-color-surface); }
-.gtb__pick-list { max-height: 240px; overflow-y: auto; margin-top: 6px; }
-.gtb__pick-opt { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px 8px; border: 0; border-radius: var(--ds-radius-sm); background: none; color: var(--ds-color-text); font-family: inherit; font-size: 0.9375rem; text-align: left; cursor: pointer; }
-.gtb__pick-opt:hover { background: var(--ds-palette-slate-100); }
-.gtb__pick-opt.is-on { color: var(--ds-color-text-brand); font-weight: 600; }
-.gtb__pick-unlisted { display: flex; align-items: center; gap: 8px; width: 100%; margin-top: 6px; padding: 12px 8px 4px; border: 0; border-top: 1px solid var(--ds-color-border); background: none; color: var(--ds-color-text); font-family: inherit; font-weight: 700; font-size: 0.9375rem; cursor: pointer; }
-.gtb__pick-unlisted:hover { text-decoration: underline; }
 .gtb__pick-add { width: 100%; height: 52px; margin-top: 14px; border: 0; border-radius: var(--ds-radius-button); background: var(--ds-color-background-brand-bold); color: #fff; font-family: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; }
 .gtb__pick-add:hover { background: var(--ds-palette-navy-800); }
 .gtb__pick-add.is-disabled { background: var(--ds-palette-slate-200); color: var(--ds-color-text-subtlest); cursor: not-allowed; }

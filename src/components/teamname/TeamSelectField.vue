@@ -12,15 +12,20 @@ const DEFAULT_TEAMS = [
 <script setup>
 // TeamSelectField — the Team name field on the Book Reservation contact step.
 // Supports both event setups (DES-461):
-//   • team list SHOWN  → searchable dropdown (radio list) + "My team isn't
-//     listed" (add form) + "I'm not with a team".
+//   • team list SHOWN  → the shared TeamCombobox (type in the field to search,
+//     ✓ on the chosen team — same as Group Block, DES-470/471) + "My team isn't
+//     listed" + "I'm not with a team".
 //   • team list HIDDEN → the add form renders inline as the field.
-// Whenever a team is chosen, the organizer's qualifiers are still asked —
-// Age division · Gender, each toggleable (DES-462). Choosing "I'm not with a
-// team" adds one confirmation step that nudges toward entering a team (DES-463).
+// "My team isn't listed" swaps the field for the add form (DES-472) with "Pick
+// from the team list instead" to go back (DES-468). No Add Team button — the
+// typed team is saved with the reservation (DES-473).
+// The organizer's qualifiers (Age division · Gender, toggleable, stacked —
+// DES-474) are asked for a listed team (DES-462) AND when the guest says
+// "I'm not with a team" (DES-469). "I'm not with a team" asks once more (DES-463).
 // v-model = team name · v-model:age-division · v-model:gender.
-import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import TeamAddForm from './TeamAddForm.vue'
+import TeamCombobox from './TeamCombobox.vue'
 
 const AGE_DIVISIONS = ['U8', 'U9', 'U10', 'U11', 'U12', 'U13', 'U14', 'U15', 'U16', 'U17', 'U18', 'U19', 'Open']
 const GENDERS = ['Boys', 'Girls', 'Coed']
@@ -31,7 +36,7 @@ const props = defineProps({
   ageDivision: { type: String, default: '' },
   gender: { type: String, default: '' },
   teams: { type: Array, default: () => DEFAULT_TEAMS },
-  // Team name missing (red trigger / panel).
+  // Team name missing (red field / panel).
   error: { type: [Boolean, String], default: false },
   // Surface "Required" on empty qualifier fields.
   showErrors: { type: Boolean, default: false },
@@ -46,27 +51,19 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue', 'update:ageDivision', 'update:gender', 'blur'])
 
-const open = ref(props.initialOpen)
-const view = ref(props.initialView === 'add' ? 'add' : 'list') // list | add
-const confirming = ref(props.initialView === 'confirm') // DES-463 confirmation step
-const editing = ref(false) // list hidden: re-open the inline form after saving
-const query = ref('')
-const localTeams = ref([...props.teams])
 const selected = ref(props.modelValue || '')
 watch(() => props.modelValue, (v) => { selected.value = v || '' })
-watch(() => props.listHidden, () => { open.value = false; view.value = 'list'; confirming.value = false; editing.value = false })
-
 const isNoTeam = computed(() => selected.value === NOT_WITH_TEAM)
 const hasTeam = computed(() => !!selected.value && !isNoTeam.value)
 const askAny = computed(() => props.askAgeDivision || props.askGender)
-const askedCount = computed(() => (props.askAgeDivision ? 1 : 0) + (props.askGender ? 1 : 0))
-const filtered = computed(() => localTeams.value.filter((t) => t.toLowerCase().includes(query.value.trim().toLowerCase())))
-const displayValue = computed(() => selected.value || 'Search or select your team...')
-const meta = computed(() => [props.askAgeDivision ? props.ageDivision : '', props.askGender ? props.gender : ''].filter(Boolean).join(' · '))
 
-// DES-462 — qualifiers below the field once a team is picked from the list.
-const showDetails = computed(() => !props.listHidden && hasTeam.value && askAny.value)
-const missing = (key) => props.showErrors && !props[key]
+// "My team isn't listed" (list shown) → the add form replaces the field.
+const isCustom = (v) => !!v && v !== NOT_WITH_TEAM && !props.teams.includes(v)
+const custom = ref(props.initialView === 'add' || isCustom(props.modelValue))
+const confirming = ref(props.initialView === 'confirm') // DES-463 confirmation step
+const formKey = ref(0)
+const addForm = ref(null)
+watch(() => props.listHidden, () => { custom.value = false; confirming.value = false })
 
 function setDetails (age, gender) {
   emit('update:ageDivision', age || '')
@@ -76,191 +73,142 @@ function commit (name) {
   selected.value = name
   emit('update:modelValue', name)
 }
-function close () {
-  open.value = false; view.value = 'list'; query.value = ''; confirming.value = false
-  emit('blur')
-}
-function toggle () { open.value ? close() : (open.value = true) }
-
 // Picking a different listed team clears the old qualifiers — they belong to
 // the team, so the guest confirms them again.
 function pick (name) {
   if (name !== selected.value) setDetails('', '')
+  confirming.value = false
   commit(name)
-  close()
 }
-function chooseNoTeam () {
+// Setting `custom` unmounts the dropdown, so it closes without a blur.
+function startCustom () {
+  confirming.value = false
+  commit(''); setDetails('', '')
+  custom.value = true
+  formKey.value++
+  nextTick(() => addForm.value?.focus())
+}
+function backToList () { custom.value = false; commit(''); setDetails('', '') }
+// Live add form → the typed team + qualifiers are the field's value (DES-473).
+function onLive ({ name, ageDivision, gender }) { commit(name); setDetails(ageDivision, gender) }
+
+// "I'm not with a team" → still ask the qualifiers (DES-469).
+function chooseNoTeam (close) {
   commit(NOT_WITH_TEAM)
   setDetails('', '')
-  editing.value = false
-  close()
-}
-
-// Add form (custom team) — both workflows.
-const addForm = ref(null)
-const addInitial = computed(() => (hasTeam.value ? { name: selected.value, ageDivision: props.ageDivision, gender: props.gender } : {}))
-function onAdd ({ name, ageDivision, gender }) {
-  if (!localTeams.value.includes(name)) localTeams.value.unshift(name)
-  commit(name)
-  setDetails(ageDivision, gender)
-  editing.value = false
-  close()
+  confirming.value = false
+  close?.()
 }
 // "Enter my team name" on the confirmation step → back to entering a team.
 function enterTeamName () {
   confirming.value = false
-  if (props.listHidden) editing.value = true
-  else view.value = 'add'
-  nextTick(() => addForm.value?.focus())
+  if (props.listHidden) nextTick(() => addForm.value?.focus())
+  else startCustom()
 }
+function addTeamInstead () { commit(''); setDetails('', ''); formKey.value++; nextTick(() => addForm.value?.focus()) }
 
-// List hidden: show the inline form until a team is saved (or on Edit).
-const showInlineForm = computed(() => !selected.value || editing.value)
-function editTeam () { editing.value = true; confirming.value = false; nextTick(() => addForm.value?.focus()) }
-
-// Close the dropdown on an outside click.
-function onDocClick (e) { if (open.value && !e.target.closest('.tsf')) close() }
-watch(open, (v) => {
-  if (v) document.addEventListener('mousedown', onDocClick)
-  else document.removeEventListener('mousedown', onDocClick)
-}, { immediate: true })
-onBeforeUnmount(() => document.removeEventListener('mousedown', onDocClick))
+// Qualifiers below the field — listed team (DES-462) or no team (DES-469).
+const showDetails = computed(() => askAny.value && (isNoTeam.value || (!props.listHidden && !custom.value && hasTeam.value)))
+const missing = (key) => props.showErrors && !props[key]
+const formInitial = computed(() => (hasTeam.value ? { name: selected.value, ageDivision: props.ageDivision, gender: props.gender } : {}))
+const comboOptions = computed(() => props.teams)
+// Only flag "Required" when the list is dismissed empty — not right after a
+// pick, so the follow-up qualifiers don't light up red before they're seen.
+function onComboClose () { confirming.value = false; if (!selected.value) emit('blur') }
 </script>
 
 <template>
   <div class="tsf" :class="{ 'tsf--hidden': listHidden }">
     <!-- ── TEAM LIST SHOWN (scenario 1) ─────────────────────────────── -->
-    <template v-if="!listHidden">
-      <button type="button" class="tsf__trigger" :class="{ 'is-open': open, 'is-error': error && !open }" @click="toggle">
-        <span class="tsf__value" :class="{ 'tsf__value--ph': !selected }">{{ displayValue }}</span>
-        <q-icon :name="open ? 'arrow_drop_up' : 'arrow_drop_down'" size="22px" class="tsf__caret" />
-      </button>
-
-      <div v-if="open" class="tsf__panel">
-        <template v-if="view === 'list'">
-          <div class="tsf__search">
-            <input v-model="query" type="text" placeholder="Search teams..." />
-            <q-icon name="search" size="20px" />
-          </div>
-          <div class="tsf__list">
-            <button
-              v-for="t in filtered" :key="t" type="button"
-              class="tsf__opt" :class="{ 'is-on': t === selected }" @click="pick(t)"
-            >
-              <span class="tsf__radio" :class="{ 'is-on': t === selected }"><span v-if="t === selected" class="tsf__dot" /></span>
-              <span class="tsf__optlabel">{{ t }}</span>
-            </button>
-            <p v-if="!filtered.length" class="tsf__empty">No teams match “{{ query }}”.</p>
-          </div>
-          <button type="button" class="tsf__notlisted" @click="enterTeamName">My team isn't listed</button>
+    <template v-if="!listHidden && !custom">
+      <team-combobox :model-value="selected" :options="comboOptions" :error="error" :initial-open="initialOpen" @update:model-value="pick" @close="onComboClose">
+        <template #footer="{ close }">
+          <button type="button" class="tcb__action tsf__notlisted" @mousedown.prevent @click="startCustom"><q-icon name="add_circle" size="20px" /> My team isn't listed</button>
           <!-- DES-463: one confirmation step before "no team" -->
           <div v-if="confirming" class="tsf__confirm" role="alert">
             <p>Most guests are supporting a team. Please enter a team name if possible.</p>
             <div class="tsf__confirm-actions">
-              <button type="button" class="tsf__confirm-btn tsf__confirm-btn--primary" @click="enterTeamName">Enter my team name</button>
-              <button type="button" class="tsf__confirm-btn" @click="chooseNoTeam">No, I'm not with a team</button>
+              <button type="button" class="tsf__confirm-btn tsf__confirm-btn--primary" @mousedown.prevent @click="enterTeamName()">Enter my team name</button>
+              <button type="button" class="tsf__confirm-btn" @mousedown.prevent @click="chooseNoTeam(close)">No, I'm not with a team</button>
             </div>
           </div>
-          <button v-else type="button" class="tsf__noteam" @click="confirming = true">I'm not with a team</button>
+          <button v-else type="button" class="tcb__subaction tsf__noteam" @mousedown.prevent @click="confirming = true">I'm not with a team</button>
         </template>
-
-        <template v-else>
-          <button type="button" class="tsf__back" aria-label="Back to team list" @click="view = 'list'"><q-icon name="arrow_back" size="22px" /></button>
-          <team-add-form ref="addForm" :ask-age-division="askAgeDivision" :ask-gender="askGender" @submit="onAdd" />
-        </template>
-      </div>
-
-      <!-- DES-462: still ask Age division · Gender for a listed team -->
-      <div v-if="showDetails" class="tsf__details">
-        <div class="tsf__details-h">Additional team details</div>
-        <p class="tsf__details-sub">This event's organizer needs a few more details to identify your team in their records.</p>
-        <div class="tsf__grid" :class="{ 'tsf__grid--one': askedCount === 1 }">
-          <label v-if="askAgeDivision" class="tsf__field">
-            <span>Age division <i class="tsf__req">*</i></span>
-            <div class="tsf__selectwrap">
-              <select :value="ageDivision" :class="{ 'is-error': missing('ageDivision') }" @change="emit('update:ageDivision', $event.target.value)">
-                <option value="" disabled>Select...</option>
-                <option v-for="a in AGE_DIVISIONS" :key="a" :value="a">{{ a }}</option>
-              </select>
-              <q-icon name="unfold_more" size="18px" />
-            </div>
-            <small v-if="missing('ageDivision')" class="tsf__err">Required</small>
-          </label>
-          <label v-if="askGender" class="tsf__field">
-            <span>Gender <i class="tsf__req">*</i></span>
-            <div class="tsf__selectwrap">
-              <select :value="gender" :class="{ 'is-error': missing('gender') }" @change="emit('update:gender', $event.target.value)">
-                <option value="" disabled>Select...</option>
-                <option v-for="g in GENDERS" :key="g" :value="g">{{ g }}</option>
-              </select>
-              <q-icon name="unfold_more" size="18px" />
-            </div>
-            <small v-if="missing('gender')" class="tsf__err">Required</small>
-          </label>
-        </div>
-      </div>
+      </team-combobox>
     </template>
+
+    <!-- "My team isn't listed" — the add form replaces the field (DES-472) -->
+    <div v-else-if="!listHidden && custom" class="tsf__custom">
+      <button type="button" class="tsf__pickswitch" @click="backToList"><q-icon name="list" size="18px" /> Pick from the team list instead</button>
+      <team-add-form :key="formKey" ref="addForm" live :ask-age-division="askAgeDivision" :ask-gender="askGender" :initial="formInitial" :show-errors="showErrors" @update="onLive" />
+    </div>
 
     <!-- ── TEAM LIST HIDDEN (scenario 2) ────────────────────────────── -->
     <template v-else>
-      <div v-if="showInlineForm" class="tsf__inline" :class="{ 'is-error': error }">
-        <button v-if="editing && selected" type="button" class="tsf__back" aria-label="Cancel edit" @click="editing = false"><q-icon name="arrow_back" size="22px" /></button>
-        <team-add-form :key="editing ? 'edit' : 'new'" ref="addForm" :ask-age-division="askAgeDivision" :ask-gender="askGender" :initial="addInitial" :submit-label="hasTeam && editing ? 'Save Team' : 'Add Team'" @submit="onAdd" />
+      <div v-if="!isNoTeam" class="tsf__inline" :class="{ 'is-error': error }">
+        <team-add-form :key="formKey" ref="addForm" live :ask-age-division="askAgeDivision" :ask-gender="askGender" :initial="formInitial" :show-errors="showErrors" @update="onLive" />
         <div v-if="confirming" class="tsf__confirm" role="alert">
           <p>Most guests are supporting a team. Please enter a team name if possible.</p>
           <div class="tsf__confirm-actions">
-            <button type="button" class="tsf__confirm-btn tsf__confirm-btn--primary" @click="enterTeamName">Enter my team name</button>
-            <button type="button" class="tsf__confirm-btn" @click="chooseNoTeam">No, I'm not with a team</button>
+            <button type="button" class="tsf__confirm-btn tsf__confirm-btn--primary" @click="enterTeamName()">Enter my team name</button>
+            <button type="button" class="tsf__confirm-btn" @click="chooseNoTeam()">No, I'm not with a team</button>
           </div>
         </div>
         <button v-else type="button" class="tsf__noteam" @click="confirming = true">I'm not with a team</button>
       </div>
 
-      <!-- Saved: the added team (or "not with a team") + Edit -->
+      <!-- Not with a team + a way back -->
       <div v-else class="tsf__savedrow">
-        <q-icon :name="isNoTeam ? 'person' : 'groups'" size="20px" class="tsf__savedrow-icon" />
-        <div class="tsf__savedrow-text">
-          <strong>{{ isNoTeam ? 'Not with a team' : selected }}</strong>
-          <span v-if="meta && !isNoTeam">{{ meta }}</span>
-        </div>
-        <button type="button" class="tsf__edit" @click="editTeam">{{ isNoTeam ? 'Add a team' : 'Edit' }}</button>
+        <q-icon name="person" size="20px" class="tsf__savedrow-icon" />
+        <div class="tsf__savedrow-text"><strong>Not with a team</strong></div>
+        <button type="button" class="tsf__edit" @click="addTeamInstead">Add a team instead</button>
       </div>
     </template>
+
+    <!-- Qualifiers — a listed team (DES-462) or no team (DES-469); stacked (DES-474) -->
+    <div v-if="showDetails" class="tsf__details">
+      <div class="tsf__details-h">{{ isNoTeam ? 'Guest details' : 'Additional team details' }}</div>
+      <p class="tsf__details-sub">{{ isNoTeam ? "This event's organizer still needs these details, even without a team." : "This event's organizer needs a few more details to identify your team in their records." }}</p>
+      <div class="tsf__stack">
+        <label v-if="askAgeDivision" class="tsf__field">
+          <span>Age division <i class="tsf__req">*</i></span>
+          <div class="tsf__selectwrap">
+            <select :value="ageDivision" :class="{ 'is-error': missing('ageDivision') }" @change="emit('update:ageDivision', $event.target.value)">
+              <option value="" disabled>Select...</option>
+              <option v-for="a in AGE_DIVISIONS" :key="a" :value="a">{{ a }}</option>
+            </select>
+            <q-icon name="unfold_more" size="18px" />
+          </div>
+          <small v-if="missing('ageDivision')" class="tsf__err">Required</small>
+        </label>
+        <label v-if="askGender" class="tsf__field">
+          <span>Gender <i class="tsf__req">*</i></span>
+          <div class="tsf__selectwrap">
+            <select :value="gender" :class="{ 'is-error': missing('gender') }" @change="emit('update:gender', $event.target.value)">
+              <option value="" disabled>Select...</option>
+              <option v-for="g in GENDERS" :key="g" :value="g">{{ g }}</option>
+            </select>
+            <q-icon name="unfold_more" size="18px" />
+          </div>
+          <small v-if="missing('gender')" class="tsf__err">Required</small>
+        </label>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .tsf { position: relative; }
-.tsf__trigger { width: 100%; height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 10px 0 14px; border: 1px solid var(--ds-color-border-bold); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); font-family: inherit; font-size: 0.9375rem; color: var(--ds-color-text); cursor: pointer; text-align: left; }
-.tsf__trigger.is-open { border-color: var(--ds-color-border-focused); box-shadow: 0 0 0 1px var(--ds-color-border-focused); }
-.tsf__trigger.is-error { border-color: var(--ds-color-text-danger); }
-.tsf__value { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tsf__value--ph { font-weight: 400; color: var(--ds-color-text-subtlest); }
-.tsf__caret { color: var(--ds-color-text-subtle); flex: none; }
 
-.tsf__panel { position: absolute; z-index: 60; top: calc(100% + 6px); left: 0; right: 0; border: 1px solid var(--ds-color-border-focused); border-radius: var(--ds-radius-md); background: var(--ds-color-surface); box-shadow: var(--ds-shadow-2); padding: 14px; }
 
-/* search + list */
-.tsf__search { position: relative; display: flex; align-items: center; margin-bottom: 8px; }
-.tsf__search input { width: 100%; height: 44px; border: 1px solid var(--ds-color-border-focused); border-radius: var(--ds-radius-md); padding: 0 40px 0 14px; font-family: inherit; font-size: 0.9375rem; color: var(--ds-color-text); outline: none; }
-.tsf__search .q-icon { position: absolute; right: 12px; color: var(--ds-color-text-subtle); pointer-events: none; }
-.tsf__list { max-height: 260px; overflow-y: auto; margin: 4px 0 8px; }
-.tsf__opt { width: 100%; display: flex; align-items: center; gap: 12px; padding: 11px 10px; border: 0; border-radius: var(--ds-radius-md); background: none; cursor: pointer; text-align: left; font-family: inherit; }
-.tsf__opt:hover { background: var(--ds-palette-slate-100); }
-.tsf__opt.is-on { background: var(--ds-color-background-brand-subtle, var(--ds-palette-navy-50)); }
-.tsf__radio { width: 20px; height: 20px; flex: none; border: 2px solid var(--ds-color-border-bold); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.tsf__radio.is-on { border-color: var(--ds-color-background-brand-bold); }
-.tsf__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ds-color-background-brand-bold); }
-.tsf__optlabel { font-size: 1rem; color: var(--ds-color-text); }
-.tsf__opt.is-on .tsf__optlabel { color: var(--ds-color-text-brand); font-weight: 700; }
-.tsf__empty { color: var(--ds-color-text-subtle); font-size: 0.875rem; padding: 10px; margin: 0; }
 
-/* footer actions */
-.tsf__notlisted { width: 100%; height: 48px; border: 1px solid var(--ds-color-border-brand); border-radius: var(--ds-radius-md); background: var(--ds-color-background-brand-subtle, var(--ds-palette-navy-50)); color: var(--ds-color-text-brand); font-family: inherit; font-weight: 700; font-size: 0.9375rem; cursor: pointer; }
-.tsf__notlisted:hover { background: var(--ds-palette-navy-100, #e2e8f5); }
+
+/* list hidden — "I'm not with a team" link */
 .tsf__noteam { width: 100%; height: 40px; margin-top: 6px; border: 0; background: none; color: var(--ds-color-text-subtle); font-family: inherit; font-size: 0.9375rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .tsf__noteam:hover { color: var(--ds-color-text); }
-.tsf__back { width: 36px; height: 36px; border: 0; background: none; color: var(--ds-color-text); cursor: pointer; display: flex; align-items: center; margin-bottom: 4px; }
+/* DES-468 — "Pick from the team list instead" (same as Group Block) */
+.tsf__pickswitch { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; padding: 0; border: 0; background: none; color: var(--ds-color-link); font-family: inherit; font-weight: 700; font-size: 0.875rem; cursor: pointer; }
+.tsf__pickswitch:hover { text-decoration: underline; }
 
 /* DES-463 confirmation step */
 .tsf__confirm { margin-top: 10px; padding: 14px 16px; border: 1px solid var(--ds-palette-amber-200); border-radius: var(--ds-radius-md); background: var(--ds-palette-amber-50); text-align: center; }
@@ -274,9 +222,8 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onDocClick))
 .tsf__details { margin-top: 16px; }
 .tsf__details-h { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ds-color-text-subtle); }
 .tsf__details-sub { margin: 4px 0 10px; color: var(--ds-color-text-subtle); font-size: 0.8125rem; line-height: 1.45; }
-.tsf__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.tsf__grid--one { grid-template-columns: 1fr; }
-@media (max-width: 560px) { .tsf__grid { grid-template-columns: 1fr; } }
+/* DES-474: stacked vertically */
+.tsf__stack { display: flex; flex-direction: column; gap: 14px; }
 .tsf__field { display: flex; flex-direction: column; gap: 6px; }
 .tsf__field span { font-size: 0.8125rem; font-weight: 600; color: var(--ds-color-text); }
 .tsf__req { color: var(--ds-color-text-danger); font-style: normal; }

@@ -11,7 +11,6 @@ import { reactive, computed, watch } from 'vue'
 import PhoneField from '../checkout/PhoneField.vue'
 import TeamSelectField from './TeamSelectField.vue'
 
-const NOT_WITH_TEAM = "I'm not with a team"
 
 const props = defineProps({
   // Booking-widget selection: one entry per room (a single reservation).
@@ -111,7 +110,8 @@ const roomValid = (r) => {
   // DES-94: US/Canada require a full address; "Other" requires nothing.
   if (collectsAddress(r.country) && (!r.address1 || !r.city || !r.state || !r.postal)) return false
   if (props.teamName && !r.teamName) return false
-  if (props.teamName && r.teamName && r.teamName !== NOT_WITH_TEAM) {
+  // DES-469: qualifiers are asked even for "I'm not with a team".
+  if (props.teamName && r.teamName) {
     if (props.askAgeDivision && !r.teamAgeDivision) return false
     if (props.askGender && !r.teamGender) return false
   }

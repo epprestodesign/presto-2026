@@ -1,9 +1,10 @@
 // TEAM NAME QUALIFIERS / Book Reservation / Team Name Select — the Team name
 // field on the Book Reservation contact step, covering both event setups:
-//   • team list SHOWN  → searchable dropdown (DES-461 scenario 1)
-//   • team list HIDDEN → inline add-team form   (DES-461 scenario 2)
-// plus the qualifiers still asked for a listed team (DES-462) and the extra
-// confirmation step on "I'm not with a team" (DES-463).
+//   • team list SHOWN  → the shared team dropdown (DES-461 scenario 1)
+//   • team list HIDDEN → inline add-team form     (DES-461 scenario 2)
+// plus the qualifiers still asked for a listed team (DES-462) or no team
+// (DES-469), and the extra confirmation step on "I'm not with a team" (DES-463).
+// Josh's 10/13 feedback: DES-468, 470–474.
 import { ref } from 'vue'
 import TeamSelectField from '../../components/teamname/TeamSelectField.vue'
 
@@ -23,14 +24,17 @@ export default {
 The **Team name** field on the Book Reservation contact step. The event's setup
 decides which workflow the guest sees:
 
-- **Team list shown** — a searchable dropdown of registered teams, with **My
-  team isn't listed** (add form) and **I'm not with a team**.
-- **Team list hidden** — no dropdown; the add-team form *is* the field
-  (Org / Team name + qualifiers + *Team will be saved as* + **Add Team**).
+- **Team list shown** — the shared team dropdown (same as Group Block): type
+  right in the field to search, ✓ on the chosen team, no radio buttons
+  (DES-470/471). Footer: **My team isn't listed** and **I'm not with a team**.
+- **My team isn't listed** — the dropdown is swapped for the add form
+  (DES-472), with **Pick from the team list instead** to go back (DES-468).
+- **Team list hidden** — no dropdown; the add form *is* the field.
 
-Either way, a chosen team still needs the organizer's **qualifiers** — *Age
-division* and *Gender*, each switchable (DES-462). **I'm not with a team** adds
-one confirmation step that nudges the guest to enter a team (DES-463).
+The add form has **no Add Team button** — what the guest types is saved with
+the reservation (DES-473). *Age division* and *Gender* stack vertically
+(DES-474) and are asked for a listed team (DES-462) **and** for "I'm not with
+a team" (DES-469). **I'm not with a team** asks once more first (DES-463).
 
 Use the **Event Setup Playground** controls to flip the three settings.
 ` } } },
@@ -72,10 +76,16 @@ export const ListedTeamDetails = {
   render: render({ team: 'A3 16 Elite' }),
 }
 
-/** "My team isn't listed" — the add form inside the dropdown. */
+/** DES-472/468 — "My team isn't listed": the add form replaces the dropdown. */
 export const NotListed = {
   name: "My Team Isn't Listed",
-  render: render({}, { minHeight: 520, props: { initialOpen: true, initialView: 'add' } }),
+  render: render({}, { minHeight: 520, props: { initialView: 'add' } }),
+}
+
+/** DES-469 — not with a team, but the organizer's qualifiers are still asked. */
+export const NoTeamQualifiers = {
+  name: 'Not With a Team — Still Asks Qualifiers',
+  render: render({ team: "I'm not with a team" }),
 }
 
 /** DES-463 — "I'm not with a team" asks once more before accepting it. */
@@ -100,9 +110,9 @@ export const ListHiddenNoTeam = {
   render: render({}, { props: { initialView: 'confirm' } }),
 }
 
-/** List hidden, team already added — collapses to the saved team + Edit. */
+/** List hidden, filled in — no Add Team button; saved with the reservation (DES-473). */
 export const ListHiddenSaved = {
-  name: 'List Hidden — Team Added',
+  name: 'List Hidden — Filled In',
   args: { listHidden: true },
   render: render({ team: 'Augusta Arsenal VBC', age: 'U13', gender: 'Girls' }),
 }

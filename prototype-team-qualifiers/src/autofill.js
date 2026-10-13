@@ -60,7 +60,8 @@ function fillNativeFields(root) {
     if (el.disabled || el.readOnly) return
     if (['hidden', 'checkbox', 'radio', 'file', 'number'].includes(el.type)) return
     // Skip fields inside teleported popovers / filter menus (not this form).
-    if (el.closest('.q-menu, .bw-menu, .tsf__search')) return
+    // …and the shared team dropdown's search field (picked by click below).
+    if (el.closest('.q-menu, .bw-menu, .tcb')) return
     if (el.tagName === 'SELECT') {
       const opt = [...el.options].find((o) => o.value && !o.disabled)
       if (opt && el.value !== opt.value) { setNativeValue(el, opt.value); n++ }
@@ -91,10 +92,10 @@ async function tryGroupTeams(root) {
     // One team at a time: list shown → pick from the dropdown; list hidden
     // (or "type it in") → fill the add-team form.
     for (let i = 0; i < 12 && flow.querySelector('.gtb__seq-eyebrow'); i++) {
-      const trigger = flow.querySelector('.gtb__pick-trigger')
-      if (trigger) {
-        if (!flow.querySelector('.gtb__pick-menu')) { trigger.click(); await sleep(80) }
-        const opt = flow.querySelector('.gtb__pick-opt')
+      const combo = flow.querySelector('.gtb__pick .tcb__input')
+      if (combo) {
+        if (!flow.querySelector('.tcb__menu')) { combo.click(); await sleep(80) }
+        const opt = flow.querySelector('.tcb__opt')
         if (!opt) break
         opt.click(); await sleep(60)
         const add = flow.querySelector('.gtb__pick-add:not(:disabled)')
@@ -109,24 +110,23 @@ async function tryGroupTeams(root) {
       form.querySelectorAll('select').forEach((sel) => { const o = [...sel.options].find((x) => x.value && !x.disabled); if (o) setNativeValue(sel, o.value) })
       await sleep(80)
       const add = form.querySelector('.taf__add:not(:disabled)')
-      if (!add) break
+      if (!add) break // live form (1 team) — saved with the block, no button
       add.click(); await sleep(180)
     }
   } catch (e) { /* best effort */ }
 }
 
-// Book Reservation team field (DES-461/462): list hidden → commit the inline
-// add form; list shown → pick the first listed team, then fill its qualifiers.
+// Book Reservation team field (DES-461/462): typed-in teams are live forms
+// (already filled above); list shown → pick the first listed team from the
+// shared dropdown, then fill its qualifiers.
 function tryTeamSelect(root) {
   try {
     ;[...root.querySelectorAll(".tsf")].forEach((tsf, idx) => setTimeout(() => {
-      const add = tsf.querySelector(".taf__add:not(:disabled)")
-      if (add) { add.click(); return }
-      const trigger = tsf.querySelector(".tsf__trigger")
-      if (trigger && tsf.querySelector(".tsf__value--ph")) {
-        trigger.click()
+      const combo = tsf.querySelector(".tcb__input")
+      if (combo && !combo.value) {
+        combo.click()
         setTimeout(() => {
-          const opt = tsf.querySelector(".tsf__opt")
+          const opt = tsf.querySelector(".tcb__opt")
           if (opt) opt.click()
           setTimeout(() => fillNativeFields(tsf), 140)
         }, 140)
