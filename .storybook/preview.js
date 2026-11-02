@@ -166,6 +166,16 @@ const preview = {
           'Manage Booking', [
             'Account',
           ],
+          // Corporate-events exploration (Christine, 11/2): 3–5 brand templates
+          // using IMEX America as the starting brand. Concept only.
+          "Landing Page Concepts '27", [
+            'Overview',
+            'Concepts', ['Heartbeat', 'After Dark', "Planner's Desk", 'Design Matters', 'Agenda First'],
+            'Components', [
+              'Booking Widget', 'Booking Modal', 'Stay Planner', 'Hotels & Map', 'Countdown',
+              'Stats Band', 'Block Meter', 'Sticky Bar & Floating Button', 'Logo Strip', 'FAQ', 'Add to Calendar',
+            ],
+          ],
           // Feature workstream — forked team-name touchpoints. Pinned to the very
           // bottom so it reads as a separate R&D area, not part of the rigid flow.
           'Team Name Qualifiers', [

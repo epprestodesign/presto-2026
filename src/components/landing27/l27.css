@@ -1,0 +1,65 @@
+/* Landing Page Concepts '27 — IMEX America brand layer.
+   Scoped to `.l27` so nothing leaks into the rest of the Presto design system.
+   Figtree stands in for IMEX's licensed Azo Sans (similar geometric humanist). */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
+
+.l27 {
+  --l27-red: #E30613;
+  --l27-red-dark: #B8050F;
+  --l27-coral: #ED6B6C;
+  --l27-blue: #4D92CF;
+  --l27-orange: #F08006;
+  --l27-green: #086029;
+  --l27-navy: #191D4E;
+  --l27-navy-deep: #0E1033;
+  --l27-yellow: #FFD100;
+  --l27-pink: #FBE3EA;
+  --l27-cream: #FFF8F0;
+  --l27-ink: #1D1D1B;
+  --l27-muted: #5B5B66;
+  --l27-line: #E6E3EA;
+  --l27-radius: 14px;
+  --l27-radius-sm: 8px;
+  --l27-shadow: 0 18px 40px -18px rgba(25, 29, 78, 0.35);
+  --l27-font: 'Figtree', 'PT Sans', system-ui, sans-serif;
+
+  font-family: var(--l27-font);
+  color: var(--l27-ink);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+.l27 *, .l27 *::before, .l27 *::after { box-sizing: border-box; }
+.l27 h1, .l27 h2, .l27 h3, .l27 h4 { font-family: var(--l27-font); margin: 0; letter-spacing: -0.02em; }
+.l27 p { margin: 0; }
+.l27 a { color: inherit; }
+
+/* Layout helpers */
+.l27-wrap { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 640px) { .l27-wrap { padding: 0 16px; } }
+.l27-eyebrow { font-size: 0.8125rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.l27-h2 { font-size: clamp(1.9rem, 3.4vw, 2.75rem); font-weight: 900; line-height: 1.05; }
+.l27-lead { font-size: 1.125rem; line-height: 1.55; color: var(--l27-muted); }
+
+/* Buttons */
+.l27-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 22px; border: 0; border-radius: 8px; font-family: var(--l27-font); font-size: 1rem; font-weight: 700; cursor: pointer; text-decoration: none; transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease; white-space: nowrap; }
+.l27-btn:focus-visible { outline: 3px solid var(--l27-blue); outline-offset: 2px; }
+.l27-btn:hover { transform: translateY(-1px); }
+.l27-btn--primary { background: var(--l27-red); color: #fff; }
+.l27-btn--primary:hover { background: var(--l27-red-dark); }
+.l27-btn--dark { background: var(--l27-ink); color: #fff; }
+.l27-btn--yellow { background: var(--l27-yellow); color: var(--l27-ink); }
+.l27-btn--ghost { background: transparent; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }
+.l27-btn--lg { height: 56px; padding: 0 28px; font-size: 1.0625rem; }
+.l27-btn--pill { border-radius: 999px; }
+
+/* The multicolor IMEX headline treatment */
+.l27-c-coral { color: var(--l27-coral); }
+.l27-c-blue { color: var(--l27-blue); }
+.l27-c-orange { color: var(--l27-orange); }
+.l27-c-green { color: var(--l27-green); }
+.l27-c-red { color: var(--l27-red); }
+.l27-c-yellow { color: var(--l27-yellow); }
+
+@media (prefers-reduced-motion: reduce) {
+  .l27 *, .l27 *::before, .l27 *::after { animation: none !important; transition: none !important; }
+}
