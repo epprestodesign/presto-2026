@@ -9,5 +9,5 @@ export default {
   parameters: { layout: 'fullscreen', docs: { description: { component: `## FAQ
 Housing questions — including the anti-scam note planners care about.` } } },
 }
-export const Light = { name: 'Light', render: () => ({ components: { L27Faq }, template: frame('<div style="max-width') }) }
-export const Dark = { name: 'Dark', render: () => ({ components: { L27Faq }, template: frame('760px"><l27-faq /></div>:<div style="max-width:760px"><l27-faq tone="dark" /></div>', { dark: true }) }) }
+export const Light = { name: 'Light', render: () => ({ components: { L27Faq }, template: frame('<div style="max-width:760px"><l27-faq /></div>') }) }
+export const Dark = { name: 'Dark', render: () => ({ components: { L27Faq }, template: frame('<div style="max-width:760px"><l27-faq tone="dark" /></div>', { dark: true }) }) }
