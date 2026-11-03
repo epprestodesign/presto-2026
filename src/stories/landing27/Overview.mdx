@@ -1,0 +1,94 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Landing Page Concepts '27/Overview" />
+
+<div className="l27" style={{ fontFamily: 'Figtree, PT Sans, sans-serif' }}>
+
+# Landing Page Concepts '27
+
+> **Concept only.** An EventPipe / Presto design exploration that uses the
+> **IMEX America 2027** brand as a starting point. Not affiliated with or
+> endorsed by IMEX. Hotel rates, room-block numbers and organizations are
+> sample data.
+
+## Why
+
+From the **Weekly Check In (Nov 2, 2026)** with Christine:
+
+- Build **Presto homepage variants for the corporate events vertical**:
+  conferences, meeting planners, CVBs and big group travel. Corporate clients
+  care more about design than sports clients do.
+- Aim for **3–5 brand templates** as conversation starters for when Josh takes
+  them to customers.
+- **IMEX** is the reference. Its audience is meeting planners, CVBs and
+  non-sports clients who need hotel blocks.
+- Repurpose the booking widget: **the team selector becomes a company /
+  department field**.
+
+## The five concepts
+
+Each concept reaches the booking widget a different way, so we can compare them side by side.
+
+| Concept | Look | How guests reach booking |
+| --- | --- | --- |
+| **Heartbeat** | Closest to IMEX's own site; light and editorial | Widget **pinned to the hero**, plus a **sticky top bar** after scrolling |
+| **After Dark** | Dark, cinematic, oversized type | **Floating "Book your hotel" badge** and hero CTA open the **booking modal** |
+| **Planner's Desk** | Corporate and practical | **Corporate widget in the hero**, attendee-type tabs, rate comparison, group-block request |
+| **Design Matters** | Bold geometric tiles in IMEX colors | **Schedule → your stay** planner opens booking in a **side panel** |
+| **Agenda First** | Editorial conference site | **"Book for this day"** on every agenda day, a **sticky bottom bar**, and a widget in the venue section |
+
+## Shared components
+
+Every component sits under **Components**, uses the brand layer (`.l27`) and is aimed at getting guests to book:
+
+- **Booking Widget (corporate).** Company / organization, Attending as
+  (Exhibitor, Hosted buyer, Buyer / planner, Speaker, Media, Staff), an
+  event-aware **Your stay** picker with Smart Monday and the show days
+  marked, and Rooms & guests. It has a *bar* layout and a *stacked* layout.
+- **Booking Modal.** Shows the form, then "Finding rooms near Mandalay
+  Bay…", then a results preview. Built on the design system's DsModal.
+- **Stay Planner.** Pick the days you'll attend and it works out check-in and check-out.
+- **Hotels & Map.** Walk time to the venue, block rate vs. public rate, rooms
+  left, and pins on a stylized map of the Strip.
+- **Countdown**, **Stats Band**, **Block Meter**, **Sticky Bar**, **Floating
+  Button**, **Logo Strip**, **FAQ** (including the anti-scam housing note), and
+  **Add to Calendar**.
+
+## Putting booking on outside templates (Framer, Webflow, Squarespace…)
+
+Many organizers already have an event site, such as the Framer templates
+[Confarex](https://confarex.framer.website/),
+[Plenary](https://plenary-conference.framer.website/) and
+[Conflux](https://conflux.framer.ai/), or
+[Adobe 99U](https://event.adobe.com/adobe99u). Rather than asking them to
+rebuild it, Presto would give them **one snippet**. Any button they mark with
+`data-presto-book` then opens the **Booking Modal** over their page:
+
+```html
+<!-- 1. Anywhere on the page: the button (organizers can style it however they like) -->
+<a href="https://book.presto.events/imex-america-2027" data-presto-book>Book your hotel</a>
+
+<!-- 2. Once, before </body> -->
+<script src="https://book.presto.events/embed.js" data-event="imex-america-2027" async></script>
+```
+
+- **No script, or the script is blocked?** The link still goes to the Presto
+  booking page. It falls back cleanly.
+- **With the script:** the click opens the modal, and the organizer's page stays put.
+- **Optional:** `data-presto-stay="2027-09-27/2027-10-01"` fills in the stay
+  dates, which is how "Book for this day" works on the agenda.
+
+The **Widgets & Embeds** R&D area (Spartan × Eventpipe) already prototypes the
+embed pattern in more depth. These concepts reuse the same idea for corporate events.
+
+## Brand notes
+
+- **Colors** (from the IMEX logo and site): coral `#ED6B6C`, blue `#4D92CF`,
+  orange `#F08006`, green `#086029`, CTA red `#E30613`, navy `#191D4E`, yellow
+  `#FFD100`, soft pink `#FBE3EA`.
+- **Type:** IMEX uses Azo Sans, which is licensed. **Figtree** stands in for
+  it in these concepts.
+- **Photos:** IMEX event photography from america.imexevents.com. Hotel
+  photos come from the Presto library.
+
+</div>
