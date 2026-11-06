@@ -1,0 +1,25 @@
+<script setup>
+// Stage 1 — Browse Hotels. Renders the REAL library HotelListPage (the same
+// responsive page shown in Storybook) so mobile styling stays in one place.
+// Card name/CTA clicks → that hotel's Details page (intercepted in App.vue).
+import { computed } from 'vue'
+import { journey, holdTimer, cartMode, cartVisible, checkoutMode } from '../store.js'
+import { cartFor, EVENT } from '../fixtures.js'
+import { CITIES } from '@lib/components/des478/des478.js'
+import PageFrame from '@lib/components/PageFrame.vue'
+import HoldTimerBanner from '@lib/components/HoldTimerBanner.vue'
+import HotelListPage from '@lib/components/browse/HotelListPage.vue'
+
+const isGroup = computed(() => journey.flow === 'group')
+const navCart = computed(() => (journey.cart.length ? cartFor(journey.cart, checkoutMode.value) : {}))
+</script>
+
+<template>
+  <page-frame brand="Presto" :cart-mode="cartMode" :show-cart="cartVisible" :cart="navCart">
+    <hold-timer-banner v-if="holdTimer.active" :seconds="holdTimer.remaining" />
+    <hotel-list-page
+      :flow="isGroup ? 'group' : 'reserve'" :show-teams="false"
+      :event-name="EVENT.name" :event-dates="EVENT.dates" :cities="CITIES" :venue-label="EVENT.venue"
+    />
+  </page-frame>
+</template>
