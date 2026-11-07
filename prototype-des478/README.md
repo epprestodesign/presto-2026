@@ -14,7 +14,7 @@ What's different from `../prototype/`:
 - **Confirmation email.** "Preview confirmation email" (bottom right on the
   confirmation screen) opens the email mockup with the same offer.
 
-Text only, no partner logo, and the join link is a placeholder.
+XNow logo only (the card keeps Presto colors), and the join link is a placeholder.
 
 ## Run it
 

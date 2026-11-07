@@ -6,6 +6,7 @@
 #   /mobile/       device-frame showcase, embeds the above
 #   /custom-fees/  Custom Fees Request (fork of the booking journey)
 #   /spartan-widgets/  Widgets & Embeds R&D — Spartan × Eventpipe hotel add-ons
+#   /des478/       DES-478 XNow partner offer (fork of the booking journey)
 #
 # `/` redirects to /prototype/, which is what the site root served before the
 # mobile prototype was added.
@@ -42,4 +43,9 @@
 [[redirects]]
   from = "/custom-fees/*"
   to = "/custom-fees/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/des478/*"
+  to = "/des478/index.html"
   status = 200

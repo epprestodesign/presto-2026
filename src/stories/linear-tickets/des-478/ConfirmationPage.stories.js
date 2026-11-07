@@ -24,7 +24,7 @@ export default {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'DES-478 · The booking confirmation page with the **Experience Now** partner offer. It sits after the reservation summary and before the policies, in every flow. Text only; the link is a placeholder.',
+        component: 'DES-478 · The booking confirmation page with the **Experience Now** partner offer. It sits after the reservation summary and before the policies, in every flow. Logo only (XNow); the link is a placeholder.',
       },
     },
   },

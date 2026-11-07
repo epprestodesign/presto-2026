@@ -1,6 +1,6 @@
 <script setup>
 // ConfirmationEmail (DES-478) — mockup of the booking confirmation email with
-// the Experience Now partner offer in the body. Shown inside a simple mail
+// the XNow (Experience Now) partner offer in the body. Shown inside a simple mail
 // "window" (subject / from / to) so it reads as an email, not a web page.
 //
 // Same `mode` + `data` shape as ConfirmationPage:
@@ -19,7 +19,8 @@ const props = defineProps({
   mode: { type: String, default: 'reserve' }, // reserve | reservations | hold
   data: { type: Object, default: () => ({}) },
   event: { type: Object, default: () => EVENT },
-  copy: { type: String, default: 'ticket' }, // offer copy key (see des478.js)
+  copy: { type: String, default: '' }, // offer copy key (see des478.js); '' = the look's default
+  look: { type: String, default: 'presto' }, // offer look (see LOOKS in des478.js)
   device: { type: String, default: 'desktop' }, // desktop | mobile
   showOffer: { type: Boolean, default: true },
 })
@@ -88,18 +89,18 @@ const cancelNote = (i) => d.value.policies?.[i]?.items?.[0]?.body || ''
           <p class="xe__p">Hi {{ firstName }},</p>
           <p class="xe__p">{{ intro }}</p>
 
-          <table class="xe__ids" role="presentation">
+          <table class="xe__ids" role="presentation"><tbody>
             <tr><td>{{ idLabel }}</td><td><strong>{{ bookingId }}</strong></td></tr>
             <tr v-if="d.reservedOn"><td>Reserved on</td><td>{{ d.reservedOn }}</td></tr>
             <tr v-if="isHold && d.releaseDate"><td>Block release date</td><td>{{ d.releaseDate }}</td></tr>
             <tr><td>Event</td><td>{{ event.dates }} · {{ event.venue }}</td></tr>
-          </table>
+          </tbody></table>
         </section>
 
         <section v-for="(h, i) in hotels" :key="i" class="xe__section xe__hotel">
           <h2 class="xe__hotelname">{{ h.name }}</h2>
           <p class="xe__muted">{{ h.address }}</p>
-          <table class="xe__rows" role="presentation">
+          <table class="xe__rows" role="presentation"><tbody>
             <tr><td>Check in</td><td>{{ h.checkIn }}</td></tr>
             <tr><td>Check out</td><td>{{ h.checkOut }}</td></tr>
             <tr><td>Room</td><td>{{ roomLine(h) }}</td></tr>
@@ -107,7 +108,7 @@ const cancelNote = (i) => d.value.policies?.[i]?.items?.[0]?.body || ''
               <tr class="xe__rule"><td>Paid today</td><td><strong>{{ money(h.totals.amountPaid) }}</strong></td></tr>
               <tr><td>Due at hotel</td><td><strong>{{ money(h.totals.balanceDue) }}</strong></td></tr>
             </template>
-          </table>
+          </tbody></table>
           <p v-if="cancelNote(i)" class="xe__fine">{{ cancelNote(i) }}</p>
         </section>
 
@@ -117,7 +118,7 @@ const cancelNote = (i) => d.value.policies?.[i]?.items?.[0]?.body || ''
 
         <!-- DES-478: partner offer — after the booking details + main button. -->
         <section v-if="showOffer" class="xe__section xe__offer">
-          <experience-now-offer variant="email" :city="event.city" :copy="copy" @open="emit('offer', $event)" />
+          <experience-now-offer variant="email" :look="look" :city="event.city" :copy="copy" @open="emit('offer', $event)" />
         </section>
 
         <footer class="xe__footer">

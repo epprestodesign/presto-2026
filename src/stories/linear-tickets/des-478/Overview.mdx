@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 **Ticket:** [DES-478 — Mockup: Experience Now partner offer on booking confirmation page and email](https://linear.app/eventpipe/issue/DES-478)
 
-**Goal:** show guests an offer from our partner, Experience Now, right after they
+**Goal:** show guests an offer from our partner, Experience Now (**XNow**, [xnow.com](https://www.xnow.com/)), right after they
 book a hotel. These mockups are for talking through the idea with the partner
 and the team.
 
@@ -44,7 +44,8 @@ All three flows get the offer: single reservation, multiple reservations and gro
 The offer sits **after the reservation summary and before the policies**.
 
 - **Noticeable:** a tinted card with a colored edge, unlike the white summary cards around it.
-- **Doesn't compete:** it comes after the booking details, uses smaller type than the summary, and has no logo or big button.
+- **Doesn't compete:** it comes after the booking details, uses smaller type than the summary, and has no big button.
+- **Logo only:** a small XNow logo marks who the offer is from. The card keeps Presto colors and type, so it reads as a partner add-on, not an XNow ad.
 
 See **Confirmation Page** (desktop + mobile).
 
@@ -55,16 +56,33 @@ The email order is: booking details → **View your reservation** button →
 second button, so the main action stays clear. See **Confirmation Email**
 (desktop + mobile).
 
+## XNow looks (explorations)
+
+Six ways the callout could look, from quiet to fully XNow-branded. See **XNow Explorations**,
+or switch looks live in the prototype with the **XNow look** chips (or `?look=` in the URL).
+
+| # | Look | XNow elements used |
+| --- | --- | --- |
+| 1 | **Logo only** (current) | Logo |
+| 2 | **Verify banner** | Red→orange "Verify now" bar, pill button, Poppins |
+| 3 | **Gradient accent** | Pink gradient edge, "Experience**Now!**" headline, outlined pill |
+| 4 | **Dark card** | #141414 tile, "Member exclusive" tag, orange gradient button |
+| 5 | **Sunset card** | Sign-up screen gradient, big Poppins headline |
+| 6 | **Split + who qualifies** | Sunset panel + the groups who can verify |
+
+XNow's gradients are darkened slightly where text sits on them so text passes WCAG AA.
+In email, gradients fall back to a solid color (Outlook doesn't support them).
+
 ## Copy
 
-Ticket copy, word for word:
+Ticket copy, with the partner name switched to **XNow** to match their site and logo:
 
-> You're going to Baltimore! Our partners at Experience Now have special offers on some fun activities while you are there. **Click here to join and learn more!**
+> You're going to Baltimore! Our partners at XNow have special offers on some fun activities while you are there. **Click here to join and learn more!**
 
 Two shorter options are in **Experience Now Offer → Copy Options**:
 
-- **Option A:** Make the most of Baltimore. Our partners at Experience Now have member deals on things to do while you're in town. **Join free and see the offers**
-- **Option B:** Heading to Baltimore? Save on tours, food and fun with our partner Experience Now. **See local offers**
+- **Option A:** Make the most of Baltimore. Our partners at XNow have member deals on things to do while you're in town. **Join free and see the offers**
+- **Option B:** Heading to Baltimore? Save on tours, food and fun with our partner XNow. **See local offers**
 
 ## Assumptions (open questions from the ticket)
 
@@ -73,8 +91,14 @@ Two shorter options are in **Experience Now Offer → Copy Options**:
 | Does the city change by event? | **Yes.** The city comes from the event (`des478.js`). |
 | Which booking flow? | **All three:** single, multiple and group block. |
 | Where does the link go? | **Placeholder** (`#experience-now`). In the prototype it shows a "link goes here" message. |
-| Logos or brand guidelines? | **None yet**, so the offer is text only. |
-| Is the copy final? | The ticket copy is used as written; two shorter options are shown. |
+| Logos or brand guidelines? | **Logo only.** XNow's current orange logo from xnow.com; the card keeps Presto colors. |
+| Is the copy final? | The ticket copy is used with "XNow" as the partner name; two shorter options are shown. |
+
+## Notes from xnow.com
+
+- The partner calls itself **XNow**; "ExperienceNow" is only a tagline.
+- XNow discounts are for **verified groups** (students, teachers, healthcare workers, first responders, alumni). Not every guest will qualify, so "special offers" may overpromise.
+- XNow also sells **hotels** ("Save up to 40%"), which could compete with the booking the guest just made.
 
 ## Files
 

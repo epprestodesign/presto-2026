@@ -23,32 +23,91 @@ export const CITIES = [
   'Glen Burnie', 'Owings Mills', 'Ellicott City', 'Pikesville', 'Essex', 'Annapolis Junction',
 ]
 
-// Placeholder until Experience Now gives us the real join link.
+// Experience Now goes by "XNow" on its site (xnow.com), so the guest-facing
+// copy uses XNow. The link stays a placeholder until we get the real join URL.
 export const PARTNER = {
-  name: 'Experience Now',
+  name: 'XNow',
+  fullName: 'Experience Now',
   href: '#experience-now',
 }
 
-// Offer copy. `ticket` is Christine's suggested copy, word for word; the two
-// alternatives are shorter options for her to pick from. Text only — no logo
-// until we have Experience Now brand guidelines.
+// Offer copy. `ticket` is Christine's suggested copy (partner name switched to
+// XNow to match their site and logo); the two alternatives are shorter options
+// for her to pick from.
 export const COPY = {
   ticket: {
     label: 'Ticket copy',
-    message: (city) => `You're going to ${city}! Our partners at Experience Now have special offers on some fun activities while you are there.`,
+    message: (city) => `You're going to ${city}! Our partners at XNow have special offers on some fun activities while you are there.`,
     link: 'Click here to join and learn more!',
   },
   short: {
     label: 'Option A · Shorter',
-    message: (city) => `Make the most of ${city}. Our partners at Experience Now have member deals on things to do while you're in town.`,
+    message: (city) => `Make the most of ${city}. Our partners at XNow have member deals on things to do while you're in town.`,
     link: 'Join free and see the offers',
   },
   shortest: {
     label: 'Option B · Shortest',
-    message: (city) => `Heading to ${city}? Save on tours, food and fun with our partner Experience Now.`,
+    message: (city) => `Heading to ${city}? Save on tours, food and fun with our partner XNow.`,
     link: 'See local offers',
   },
 }
+
+// ── XNow callout looks (explorations) ───────────────────────────────────────
+// How far the offer leans into XNow's brand (crawled from xnow.com 2026-11-07:
+// orange gradient logo, Poppins, pill buttons, #141414, the "sunset" sign-up
+// gradient and the red→orange "Verify now" banner). Brand gradients are
+// darkened slightly where text sits on them so white text passes WCAG AA.
+// `copy` = the default COPY key for that look; `cta` = button text.
+export const LOOKS = {
+  presto: {
+    label: 'Logo only',
+    note: 'Presto card + XNow logo. The quietest option; reads as a Presto message.',
+    copy: 'ticket',
+  },
+  banner: {
+    label: 'Verify banner',
+    note: 'Pill banner in the red→orange gradient from XNow\'s "Verify now" bar. One line + a white pill button.',
+    copy: 'shortest',
+    cta: 'Join free',
+  },
+  ribbon: {
+    label: 'Gradient accent',
+    note: 'White card with XNow\'s pink gradient edge, "ExperienceNow!" headline and an outlined pill button. Branded but light.',
+    copy: 'short',
+    headline: (city) => `Start your Experience<em>Now!</em> in ${city}`,
+    cta: 'Join free & see offers',
+  },
+  dark: {
+    label: 'Dark card',
+    note: 'XNow\'s #141414 surface, "Member Exclusive" tag and orange gradient button. Looks like an XNow tile.',
+    copy: 'ticket',
+    headline: (city) => `Save on things to do in ${city}`,
+    cta: 'Create free account',
+  },
+  sunset: {
+    label: 'Sunset card',
+    note: 'The purple→magenta→orange gradient from XNow\'s sign-up screen with a big Poppins headline. The loudest option.',
+    copy: 'ticket',
+    headline: (city) => `Unlock exclusive deals in ${city}`,
+    cta: 'Join free',
+  },
+  split: {
+    label: 'Split + who qualifies',
+    note: 'Sunset panel + white panel that lists who can verify (students, teachers, healthcare, first responders, military). Sets the right expectation.',
+    copy: 'short',
+    headline: () => 'Unlock your exclusive deals',
+    cta: 'Join free',
+  },
+}
+
+// Who can verify on XNow (their sign-up screen lists these and more).
+export const GROUPS = [
+  { icon: 'school', label: 'Students & alumni' },
+  { icon: 'menu_book', label: 'Teachers & staff' },
+  { icon: 'medical_services', label: 'Healthcare workers' },
+  { icon: 'local_police', label: 'First responders' },
+  { icon: 'military_tech', label: 'Military' },
+]
 
 // ── Sample confirmations (ConfirmationPage `data` shape) ────────────────────
 export const SAMPLE_HOTELS = [
