@@ -90,6 +90,19 @@ jobs:
       - name: Nest Team Name Qualifiers under Storybook
         run: cp -r prototype-team-qualifiers/dist storybook-static/prototype-team-qualifiers
 
+      # DES-478 - a fork of the booking journey for a Baltimore event with the
+      # Experience Now partner offer on the confirmation page + email preview;
+      # served at /presto-2026/prototype-des478/.
+      - name: Build prototype (DES-478 Experience Now offer)
+        working-directory: prototype-des478
+        run: node ../node_modules/vite/bin/vite.js build --base=/presto-2026/prototype-des478/
+        env:
+          VITE_IMAGERY_URL: "https://epprestodesign.github.io/presto-ds-imagery"
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+
+      - name: Nest DES-478 prototype under Storybook
+        run: cp -r prototype-des478/dist storybook-static/prototype-des478
+
       # Widgets & Embeds R&D — Spartan × Eventpipe hotel add-ons (4 concepts).
       # A Spartan host page + an embedded Presto widget page (presto.html) that
       # uses the real library. Relative base ('./' in its vite.config), so it runs

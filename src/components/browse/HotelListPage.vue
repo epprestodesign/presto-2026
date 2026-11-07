@@ -32,6 +32,13 @@ const props = defineProps({
   //   'error'   — results failed to load
   //   'loading' — skeleton placeholders
   state: { type: String, default: 'full' },
+  // Optional event context — defaults keep the standard sample event. A forked
+  // prototype can re-skin the hero + results for another event (e.g. DES-478's
+  // Baltimore event) without copying this page.
+  eventName: { type: String, default: 'Summer Soccer Classic 2027' },
+  eventDates: { type: String, default: 'Wed, 6/16/2027 - Sat, 6/19/2027' },
+  cities: { type: Array, default: null }, // replaces the sample cities, in order
+  venueLabel: { type: String, default: 'Main Arena' },
 })
 
 const isGroup = computed(() => props.flow === 'group')
@@ -71,8 +78,6 @@ const gridStyle = computed(() =>
 )
 
 // Hero content.
-const EVENT_NAME = 'Summer Soccer Classic 2027'
-const EVENT_DATES = 'Wed, 6/16/2027 - Sat, 6/19/2027'
 const scrim = 'linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5))'
 const heroStyle = {
   backgroundImage: `${scrim}, url(${defaultBg})`,
@@ -159,7 +164,8 @@ const sortHotels = (list) => {
 // for both; reserve availability keys pass straight through).
 const toCard = (h) => ({
   name: h.name, flow: props.flow, ctaLabel: isGroup.value ? 'Select Rooms' : 'Choose Your Room',
-  city: h.city, stars: h.stars, distance: `${h.distanceMi} mi from Main Arena`, preferred: h.preferred, seed: h.seed,
+  city: props.cities?.length ? props.cities[h.seed % props.cities.length] : h.city,
+  stars: h.stars, distance: `${h.distanceMi} mi from ${props.venueLabel}`, preferred: h.preferred, seed: h.seed,
   startingPrice: isGroup.value ? h.nightly + 40 : h.nightly,
   fromNightly: h.nightly, total: h.nightly * 4,
   availability: isGroup.value ? (h.baseAvail === 'available' ? 'matches' : h.baseAvail === 'unmatched' ? 'partial' : 'unavailable') : h.baseAvail,
@@ -235,8 +241,8 @@ const searchGuests = computed(() =>
     <section class="hlp__hero" :style="heroStyle">
       <div class="hlp__hero-inner">
         <img :src="epLogoWhite" alt="EventPipe" class="hlp__hero-logo" />
-        <div class="text-h5 hlp__event">{{ EVENT_NAME }}</div>
-        <div class="text-body1 hlp__dates">{{ EVENT_DATES }}</div>
+        <div class="text-h5 hlp__event">{{ eventName }}</div>
+        <div class="text-body1 hlp__dates">{{ eventDates }}</div>
       </div>
     </section>
 

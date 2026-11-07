@@ -5,6 +5,7 @@
 #   dist-netlify/mobile/       device-frame showcase, embeds the above
 #   dist-netlify/custom-fees/  Custom Fees Request (fork of the booking journey)
 #   dist-netlify/spartan-widgets/  Widgets & Embeds R&D (Spartan × Eventpipe, relative base)
+#   dist-netlify/des478/       DES-478 Experience Now offer (fork of the booking journey)
 #
 # This mirrors the "Build prototype" steps in .github/workflows/deploy.yml —
 # the difference is the base paths. GitHub Pages serves the repo under
@@ -28,8 +29,10 @@ mkdir -p dist-netlify
 (cd prototype-mobile && node "$VITE" build --base=/mobile/)
 (cd prototype-custom-fees && node "$VITE" build --base=/custom-fees/)
 (cd spartanRace-ticketsocket-ep-demo-v1 && node "$VITE" build)
+(cd prototype-des478 && node "$VITE" build --base=/des478/)
 
 cp -r prototype/dist dist-netlify/prototype
 cp -r prototype-mobile/dist dist-netlify/mobile
 cp -r prototype-custom-fees/dist dist-netlify/custom-fees
 cp -r spartanRace-ticketsocket-ep-demo-v1/dist dist-netlify/spartan-widgets
+cp -r prototype-des478/dist dist-netlify/des478

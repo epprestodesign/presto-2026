@@ -1,0 +1,107 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Linear Tickets/DES-478/Overview" />
+
+# DES-478 · Experience Now partner offer
+
+**Ticket:** [DES-478 — Mockup: Experience Now partner offer on booking confirmation page and email](https://linear.app/eventpipe/issue/DES-478)
+
+**Goal:** show guests an offer from our partner, Experience Now (**XNow**, [xnow.com](https://www.xnow.com/)), right after they
+book a hotel. These mockups are for talking through the idea with the partner
+and the team.
+
+<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap', background: '#01113E', borderRadius: '12px', padding: '20px 24px', margin: '24px 0' }}>
+  <div>
+    <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#fff' }}>▶ DES-478 booking flow</div>
+    <div style={{ marginTop: '4px', maxWidth: '62ch' }}>
+      <span style={{ color: '#fff' }}>A copy of the clickable booking prototype for a <strong style={{ color: '#fff' }}>Baltimore</strong> event. Book a hotel, land on the confirmation page with the offer, then tap <strong style={{ color: '#fff' }}>Preview confirmation email</strong>.</span>
+    </div>
+  </div>
+  <a href="https://epprestodesign.github.io/presto-2026/prototype-des478/" target="_blank" rel="noopener"
+     style={{ background: '#fff', color: '#01113E', fontWeight: 700, padding: '12px 20px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+    Launch prototype ↗
+  </a>
+</div>
+
+Running locally: `cd prototype-des478 && npm run dev` → http://localhost:6478
+
+## 1 · The booking flow
+
+The same five steps as the main prototype, ending on the confirmation page:
+
+| Step | What the guest does |
+| --- | --- |
+| **Landing** | Picks dates and "Book Reservations" (or "Hold Rooms" for a group) on the Baltimore event page. |
+| **Browse Hotels** | Compares Baltimore-area hotels on a list and map. |
+| **Hotel Details** | Picks a room and reserves it. |
+| **Checkout** | Enters contact info and payment. |
+| **Confirmation** | Sees the booking, **then the Experience Now offer**. |
+
+All three flows get the offer: single reservation, multiple reservations and group block hold.
+
+## 2 · Confirmation page
+
+The offer sits **after the reservation summary and before the policies**.
+
+- **Noticeable:** a tinted card with a colored edge, unlike the white summary cards around it.
+- **Doesn't compete:** it comes after the booking details, uses smaller type than the summary, and has no big button.
+- **Logo only:** a small XNow logo marks who the offer is from. The card keeps Presto colors and type, so it reads as a partner add-on, not an XNow ad.
+
+See **Confirmation Page** (desktop + mobile).
+
+## 3 · Confirmation email
+
+The email order is: booking details → **View your reservation** button →
+**Experience Now offer** → help and footer. The offer is a text link, not a
+second button, so the main action stays clear. See **Confirmation Email**
+(desktop + mobile).
+
+## XNow looks (explorations)
+
+Six ways the callout could look, from quiet to fully XNow-branded. See **XNow Explorations**,
+or switch looks live in the prototype with the **XNow look** chips (or `?look=` in the URL).
+
+| # | Look | XNow elements used |
+| --- | --- | --- |
+| 1 | **Logo only** (current) | Logo |
+| 2 | **Verify banner** | Red→orange "Verify now" bar, pill button, Poppins |
+| 3 | **Gradient accent** | Pink gradient edge, "Experience**Now!**" headline, outlined pill |
+| 4 | **Dark card** | #141414 tile, "Member exclusive" tag, orange gradient button |
+| 5 | **Sunset card** | Sign-up screen gradient, big Poppins headline |
+| 6 | **Split + who qualifies** | Sunset panel + the groups who can verify |
+
+XNow's gradients are darkened slightly where text sits on them so text passes WCAG AA.
+In email, gradients fall back to a solid color (Outlook doesn't support them).
+
+## Copy
+
+Ticket copy, with the partner name switched to **XNow** to match their site and logo:
+
+> You're going to Baltimore! Our partners at XNow have special offers on some fun activities while you are there. **Click here to join and learn more!**
+
+Two shorter options are in **Experience Now Offer → Copy Options**:
+
+- **Option A:** Make the most of Baltimore. Our partners at XNow have member deals on things to do while you're in town. **Join free and see the offers**
+- **Option B:** Heading to Baltimore? Save on tours, food and fun with our partner XNow. **See local offers**
+
+## Assumptions (open questions from the ticket)
+
+| Question | What the mockup assumes |
+| --- | --- |
+| Does the city change by event? | **Yes.** The city comes from the event (`des478.js`). |
+| Which booking flow? | **All three:** single, multiple and group block. |
+| Where does the link go? | **Placeholder** (`#experience-now`). In the prototype it shows a "link goes here" message. |
+| Logos or brand guidelines? | **Logo only.** XNow's current orange logo from xnow.com; the card keeps Presto colors. |
+| Is the copy final? | The ticket copy is used with "XNow" as the partner name; two shorter options are shown. |
+
+## Notes from xnow.com
+
+- The partner calls itself **XNow**; "ExperienceNow" is only a tagline.
+- XNow discounts are for **verified groups** (students, teachers, healthcare workers, first responders, alumni). Not every guest will qualify, so "special offers" may overpromise.
+- XNow also sells **hotels** ("Save up to 40%"), which could compete with the booking the guest just made.
+
+## Files
+
+- `src/components/des478/`: `ExperienceNowOffer.vue`, `ConfirmationEmail.vue`, `des478.js` (event, copy, sample data)
+- `prototype-des478/`: the clickable copy (port 6478)
+- Shared components, non-breaking: `ConfirmationPage` gained an optional `after-summary` slot; `HotelListPage` gained optional `eventName` / `eventDates` / `cities` / `venueLabel` props (defaults unchanged).

@@ -204,6 +204,10 @@ const showTotals = (h) => !isHold.value && !!h?.totals
         </div>
       </section>
 
+      <!-- Optional content between the summary and the policies, e.g. a
+           partner offer (DES-478). Renders nothing when the slot is unused. -->
+      <slot name="after-summary" />
+
       <!-- POLICIES -->
       <section v-if="policies.length" class="conf__card conf__policies">
         <div v-for="(p, pi) in policies" :key="pi" class="conf__policyhotel">
