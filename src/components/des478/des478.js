@@ -47,8 +47,24 @@ export const COPY = {
   },
   shortest: {
     label: 'Option B · Shortest',
-    message: (city) => `Heading to ${city}? Save on tours, food and fun with our partner XNow.`,
+    message: (city) => `Heading to ${city}? Save on games, museums and more with our partner XNow.`,
     link: 'See local offers',
+  },
+  // Verified-groups copy (feedback 2026-11-07): XNow verifies you belong to a
+  // group (military, student, etc.) and gives discounts on experiences like
+  // sports events and museums. These say WHO qualifies and WHAT they get.
+  // `cta` replaces a look's button text when this copy is picked.
+  verified: {
+    label: 'Option C · Verified groups',
+    message: (city) => `You're going to ${city}! Students, teachers, military, healthcare workers and first responders can save on sports games, museums and more with XNow.`,
+    link: 'Verify & see deals',
+    cta: 'Verify & see deals',
+  },
+  verifiedShort: {
+    label: 'Option D · Verified groups, short',
+    message: (city) => `Heading to ${city}? Verified groups save on games, museums & more with XNow.`,
+    link: 'Verify free',
+    cta: 'Verify free',
   },
 }
 
@@ -108,6 +124,54 @@ export const GROUPS = [
   { icon: 'local_police', label: 'First responders' },
   { icon: 'military_tech', label: 'Military' },
 ]
+
+// ── Verified-groups alts (feedback 2026-11-07) ──────────────────────────────
+// What verified members get: experiences, not hotels. Generic categories, so
+// we don't promise a deal XNow may not have in every city.
+export const PERKS = [
+  { icon: 'stadium', label: 'Sports' },
+  { icon: 'museum', label: 'Museums' },
+  { icon: 'theater_comedy', label: 'Shows' },
+  { icon: 'attractions', label: 'Attractions' },
+]
+export const STEPS = ['Verify who you are', 'Pick a deal', 'Save on your trip']
+export const FINE_PRINT = 'Verification by XNow. Deals vary by city.'
+
+// Alt versions built on three of the looks above (`base` = which look's layout).
+// Kept apart from LOOKS so the six looks already shared stay unchanged.
+// Flags: perks = "what you get" chips · steps = how-it-works row ·
+// fine = fine-print line · sub = panel subline (split only).
+export const ALT_LOOKS = {
+  'v-banner': {
+    base: 'banner',
+    label: 'Alt A · Verified banner',
+    note: 'Verify banner with copy that says who saves and on what. Smallest change.',
+    copy: 'verifiedShort',
+    cta: 'Verify free',
+  },
+  'v-card': {
+    base: 'sunset',
+    label: 'Alt B · Verified card',
+    note: 'Sunset card: group-discount headline, the new copy, "what you get" chips and fine print.',
+    copy: 'verified',
+    headline: (city) => `Your group discount works in ${city}`,
+    cta: 'Verify & see deals',
+    perks: true,
+    fine: true,
+  },
+  'v-split': {
+    base: 'split',
+    label: 'Alt C · Verified split',
+    note: 'Split card: a 3-step "how it works", who can verify, and fine print. Explains XNow best.',
+    copy: 'verified',
+    headline: () => 'Unlock your group discount',
+    sub: (city) => `Sports, museums & more in ${city}`,
+    cta: 'Verify & see deals',
+    steps: true,
+    whoLabel: 'Who can verify',
+    fine: true,
+  },
+}
 
 // ── Sample confirmations (ConfirmationPage `data` shape) ────────────────────
 export const SAMPLE_HOTELS = [

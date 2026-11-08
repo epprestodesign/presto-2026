@@ -11,10 +11,12 @@
 //   dark    — #141414 XNow tile with "Member Exclusive" tag + orange button
 //   sunset  — XNow's sign-up gradient with a big headline
 //   split   — sunset panel + who-can-verify list
+// ALT_LOOKS (v-banner, v-card, v-split) reuse one of those layouts (`base`)
+// and add verified-groups extras: perks chips, how-it-works steps, fine print.
 // Logo is XNow's current mark from xnow.com. Poppins (XNow's font) is loaded
 // from Google Fonts for the branded looks only.
 import { computed } from 'vue'
-import { COPY, EVENT, GROUPS, LOOKS, PARTNER } from './des478.js'
+import { ALT_LOOKS, COPY, EVENT, FINE_PRINT, GROUPS, LOOKS, PARTNER, PERKS, STEPS } from './des478.js'
 import xnowLogo from '../../assets/partners/xnow-logo.svg'
 
 // Load Poppins once (mockup only — the real build would self-host it).
@@ -29,8 +31,10 @@ if (typeof document !== 'undefined' && !document.getElementById('xn-poppins')) {
 const props = defineProps({
   city: { type: String, default: EVENT.city },
   // 'presto' | 'banner' | 'ribbon' | 'dark' | 'sunset' | 'split'
+  // or an alt: 'v-banner' | 'v-card' | 'v-split'
   look: { type: String, default: 'presto' },
-  // 'ticket' | 'short' | 'shortest' — see COPY. Empty = the look's default.
+  // 'ticket' | 'short' | 'shortest' | 'verified' | 'verifiedShort' — see COPY.
+  // Empty = the look's default.
   copy: { type: String, default: '' },
   href: { type: String, default: PARTNER.href },
   // 'page' = confirmation-page card · 'email' = block inside the email body
@@ -41,11 +45,14 @@ const props = defineProps({
 })
 const emit = defineEmits(['open'])
 
-const lookKey = computed(() => (LOOKS[props.look] ? props.look : 'presto'))
-const lk = computed(() => LOOKS[lookKey.value])
+const ALL = { ...LOOKS, ...ALT_LOOKS }
+const lookKey = computed(() => (ALL[props.look] ? props.look : 'presto'))
+const lk = computed(() => ALL[lookKey.value])
+const base = computed(() => lk.value.base || lookKey.value) // which layout to draw
 const text = computed(() => COPY[props.copy || lk.value.copy] || COPY.ticket)
 const headline = computed(() => lk.value.headline?.(props.city) || '')
-const cta = computed(() => lk.value.cta || text.value.link)
+// An explicitly picked copy with its own button text (verified copy) wins.
+const cta = computed(() => (props.copy && text.value.cta) || lk.value.cta || text.value.link)
 const onClick = (e) => {
   // Placeholder link: stay on the page and let the host react (toast, etc.).
   if (props.href.startsWith('#')) e.preventDefault()
@@ -55,11 +62,11 @@ const onClick = (e) => {
 
 <template>
   <aside
-    class="xn" :class="[`xn--${variant}`, `xn--${lookKey}`]"
+    class="xn" :class="[`xn--${variant}`, `xn--${base}`, { 'xn--alt': lk.base }]"
     :aria-label="label || `Partner offer from ${PARTNER.name}`"
   >
     <!-- 1 · Logo only (Presto card) -->
-    <template v-if="lookKey === 'presto'">
+    <template v-if="base === 'presto'">
       <div class="xn__head">
         <img :src="xnowLogo" :alt="PARTNER.name" class="xn__logo" width="60" height="22" />
         <p class="xn__label">Partner offer</p>
@@ -69,14 +76,14 @@ const onClick = (e) => {
     </template>
 
     <!-- 2 · Verify banner -->
-    <template v-else-if="lookKey === 'banner'">
+    <template v-else-if="base === 'banner'">
       <span class="xn__badge" aria-hidden="true"><q-icon name="auto_awesome" size="18px" /></span>
       <p class="xn__message">{{ text.message(city) }}</p>
       <a class="xn__pill xn__pill--white" :href="href" @click="onClick">{{ cta }}</a>
     </template>
 
     <!-- 3 · Gradient accent -->
-    <template v-else-if="lookKey === 'ribbon'">
+    <template v-else-if="base === 'ribbon'">
       <div class="xn__head">
         <img :src="xnowLogo" :alt="PARTNER.name" class="xn__logo" width="60" height="22" />
         <p class="xn__label">Partner offer</p>
@@ -88,7 +95,7 @@ const onClick = (e) => {
     </template>
 
     <!-- 4 · Dark card -->
-    <template v-else-if="lookKey === 'dark'">
+    <template v-else-if="base === 'dark'">
       <div class="xn__head">
         <img :src="xnowLogo" :alt="PARTNER.name" class="xn__logo xn__logo--lg" width="76" height="28" />
         <span class="xn__tag">Member exclusive</span>
@@ -99,27 +106,35 @@ const onClick = (e) => {
     </template>
 
     <!-- 5 · Sunset card -->
-    <template v-else-if="lookKey === 'sunset'">
+    <template v-else-if="base === 'sunset'">
       <span class="xn__logochip"><img :src="xnowLogo" :alt="PARTNER.name" class="xn__logo" width="60" height="22" /></span>
       <p class="xn__title">{{ headline }}</p>
       <p class="xn__message">{{ text.message(city) }}</p>
+      <ul v-if="lk.perks" class="xn__perks" aria-label="Deals on">
+        <li v-for="p in PERKS" :key="p.label"><q-icon :name="p.icon" size="18px" aria-hidden="true" /> {{ p.label }}</li>
+      </ul>
       <a class="xn__pill xn__pill--white" :href="href" @click="onClick">{{ cta }}</a>
+      <p v-if="lk.fine" class="xn__fine">{{ FINE_PRINT }}</p>
     </template>
 
     <!-- 6 · Split + who qualifies -->
-    <template v-else-if="lookKey === 'split'">
+    <template v-else-if="base === 'split'">
       <div class="xn__panel">
         <span class="xn__logochip"><img :src="xnowLogo" :alt="PARTNER.name" class="xn__logo" width="60" height="22" /></span>
         <p class="xn__title">{{ headline }}</p>
-        <p class="xn__sub">in {{ city }} and beyond</p>
+        <p class="xn__sub">{{ lk.sub ? lk.sub(city) : `in ${city} and beyond` }}</p>
       </div>
       <div class="xn__body">
-        <p class="xn__message">{{ text.message(city) }}</p>
-        <p class="xn__label xn__label--dark">Verify as one of these to save</p>
+        <ol v-if="lk.steps" class="xn__steps" aria-label="How it works">
+          <li v-for="(st, i) in STEPS" :key="st"><span class="xn__num" aria-hidden="true">{{ i + 1 }}</span> {{ st }}</li>
+        </ol>
+        <p v-else class="xn__message">{{ text.message(city) }}</p>
+        <p class="xn__label xn__label--dark">{{ lk.whoLabel || 'Verify as one of these to save' }}</p>
         <ul class="xn__groups">
           <li v-for="g in GROUPS" :key="g.label"><q-icon :name="g.icon" size="18px" aria-hidden="true" /> {{ g.label }}</li>
         </ul>
         <a class="xn__pill xn__pill--outline" :href="href" @click="onClick">{{ cta }}</a>
+        <p v-if="lk.fine" class="xn__fine xn__fine--dark">{{ FINE_PRINT }}</p>
       </div>
     </template>
   </aside>
@@ -235,11 +250,37 @@ const onClick = (e) => {
 }
 .xn__groups li .q-icon { color: #b02a6e; }
 
+/* ── verified-groups alts (v-*) ─────────────────────────────────────────── */
+.xn__perks { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.xn__perks li {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
+  background: #fff; color: #141414; font-size: 0.8125rem; font-weight: 600;
+}
+.xn__perks li .q-icon { color: #b02a6e; }
+/* fine print on the gradient sits on a dark strip so it passes AA anywhere */
+.xn__fine {
+  margin: 18px -28px -26px; padding: 8px 28px; font-size: 0.75rem; font-weight: 500; color: #fff;
+  background: rgba(20, 20, 20, 0.45); border-radius: 0 0 var(--ds-radius-lg) var(--ds-radius-lg);
+}
+.xn__fine--dark { margin: 12px 0 0; padding: 0; background: none; color: #5c5c5c; border-radius: 0; }
+.xn__steps {
+  list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.xn__steps li {
+  display: flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 600; color: #141414; line-height: 1.3;
+}
+.xn__num {
+  flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  color: #fff; font-size: 0.8125rem; font-weight: 700; background: #b02a6e;
+  background-image: linear-gradient(135deg, #c2410c, #b02a6e);
+}
+
 /* ── email: flatter; gradients fall back to a solid color in Outlook ──── */
 .xn--email { margin: 0; }
 .xn--email.xn--presto { border-radius: 6px; padding: 16px 20px; }
 .xn--email.xn--banner { border-radius: 14px; }
 .xn--email .xn__pill { white-space: normal; }
+.xn--email .xn__steps { grid-template-columns: 1fr; gap: 8px; }
 
 /* ── phone ──────────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
@@ -248,6 +289,8 @@ const onClick = (e) => {
   .xn--banner .xn__message { flex-basis: calc(100% - 48px); }
   .xn--sunset { padding: 22px 20px; }
   .xn--sunset .xn__title { font-size: 1.5rem; }
+  .xn--sunset .xn__fine { margin: 18px -20px -22px; padding: 8px 20px; }
+  .xn__steps { grid-template-columns: 1fr; gap: 8px; }
   .xn--split { grid-template-columns: 1fr; }
   .xn__pill { width: 100%; white-space: normal; }
 }
