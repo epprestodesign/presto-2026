@@ -13,10 +13,18 @@
 //   split   — sunset panel + who-can-verify list
 // ALT_LOOKS (v-banner, v-card, v-split) reuse one of those layouts (`base`)
 // and add verified-groups extras: perks chips, how-it-works steps, fine print.
+// FAMILY_LOOKS (f-card, f-note, f-split, f-banner) do the same for the
+// youth-sports-family positioning (Christine, 2026-11-09): a "Youth sports
+// family offer" badge, the tournament name, family chips and "See my offers".
+// Any `family` copy also swaps verify-group lists/labels for family ones, so
+// Christine's copy can be dropped into the original six looks.
 // Logo is XNow's current mark from xnow.com. Poppins (XNow's font) is loaded
 // from Google Fonts for the branded looks only.
 import { computed } from 'vue'
-import { ALT_LOOKS, COPY, EVENT, FINE_PRINT, GROUPS, LOOKS, PARTNER, PERKS, STEPS } from './des478.js'
+import {
+  ALT_LOOKS, COPY, EVENT, FAMILY_BADGE, FAMILY_FINE, FAMILY_LOOKS, FAMILY_PERKS, FAMILY_STEPS,
+  FINE_PRINT, GROUPS, LOOKS, PARTNER, PERKS, STEPS,
+} from './des478.js'
 import xnowLogo from '../../assets/partners/xnow-logo.svg'
 
 // Load Poppins once (mockup only — the real build would self-host it).
@@ -30,10 +38,14 @@ if (typeof document !== 'undefined' && !document.getElementById('xn-poppins')) {
 
 const props = defineProps({
   city: { type: String, default: EVENT.city },
+  // Tournament name + dates for the "For families at …" line (family looks).
+  eventName: { type: String, default: EVENT.short },
+  eventDates: { type: String, default: EVENT.shortDates },
   // 'presto' | 'banner' | 'ribbon' | 'dark' | 'sunset' | 'split'
-  // or an alt: 'v-banner' | 'v-card' | 'v-split'
+  // or an alt: 'v-banner' | 'v-card' | 'v-split' | 'f-card' | 'f-note' | 'f-split' | 'f-banner'
   look: { type: String, default: 'presto' },
-  // 'ticket' | 'short' | 'shortest' | 'verified' | 'verifiedShort' — see COPY.
+  // 'ticket' | 'short' | 'shortest' | 'verified' | 'verifiedShort' |
+  // 'family' | 'familyFriendly' | 'familyShort' | … — see COPY.
   // Empty = the look's default.
   copy: { type: String, default: '' },
   href: { type: String, default: PARTNER.href },
@@ -45,11 +57,17 @@ const props = defineProps({
 })
 const emit = defineEmits(['open'])
 
-const ALL = { ...LOOKS, ...ALT_LOOKS }
+const ALL = { ...LOOKS, ...ALT_LOOKS, ...FAMILY_LOOKS }
 const lookKey = computed(() => (ALL[props.look] ? props.look : 'presto'))
 const lk = computed(() => ALL[lookKey.value])
 const base = computed(() => lk.value.base || lookKey.value) // which layout to draw
-const text = computed(() => COPY[props.copy || lk.value.copy] || COPY.ticket)
+// Picked copy wins; otherwise the email can use its own copy (emailCopy).
+const copyKey = computed(() => props.copy || (props.variant === 'email' && lk.value.emailCopy) || lk.value.copy)
+const text = computed(() => COPY[copyKey.value] || COPY.ticket)
+const isFamily = computed(() => !!text.value.family)
+const perks = computed(() => (isFamily.value ? FAMILY_PERKS : PERKS))
+const fine = computed(() => (isFamily.value ? FAMILY_FINE : FINE_PRINT))
+const steps = computed(() => (isFamily.value ? FAMILY_STEPS(props.city) : STEPS))
 const headline = computed(() => lk.value.headline?.(props.city) || '')
 // An explicitly picked copy with its own button text (verified copy) wins.
 const cta = computed(() => (props.copy && text.value.cta) || lk.value.cta || text.value.link)
@@ -77,7 +95,7 @@ const onClick = (e) => {
 
     <!-- 2 · Verify banner -->
     <template v-else-if="base === 'banner'">
-      <span class="xn__badge" aria-hidden="true"><q-icon name="auto_awesome" size="18px" /></span>
+      <span class="xn__badge" aria-hidden="true"><q-icon :name="isFamily ? 'verified' : 'auto_awesome'" size="18px" /></span>
       <p class="xn__message">{{ text.message(city) }}</p>
       <a class="xn__pill xn__pill--white" :href="href" @click="onClick">{{ cta }}</a>
     </template>
@@ -88,8 +106,10 @@ const onClick = (e) => {
         <img :src="xnowLogo" :alt="PARTNER.name" class="xn__logo" width="60" height="22" />
         <p class="xn__label">Partner offer</p>
       </div>
+      <p v-if="lk.badge" class="xn__fam"><q-icon name="verified" size="16px" aria-hidden="true" /> {{ FAMILY_BADGE }}</p>
       <!-- headline is static copy from des478.js (has an <em> for "Now!") -->
       <p class="xn__title" v-html="headline" />
+      <p v-if="lk.event" class="xn__event">For families at the {{ eventName }} · {{ eventDates }}</p>
       <p class="xn__message">{{ text.message(city) }}</p>
       <a class="xn__pill xn__pill--outline" :href="href" @click="onClick">{{ cta }}</a>
     </template>
@@ -98,7 +118,7 @@ const onClick = (e) => {
     <template v-else-if="base === 'dark'">
       <div class="xn__head">
         <img :src="xnowLogo" :alt="PARTNER.name" class="xn__logo xn__logo--lg" width="76" height="28" />
-        <span class="xn__tag">Member exclusive</span>
+        <span class="xn__tag">{{ isFamily ? 'Youth sports family' : 'Member exclusive' }}</span>
       </div>
       <p class="xn__title">{{ headline }}</p>
       <p class="xn__message">{{ text.message(city) }}</p>
@@ -107,34 +127,50 @@ const onClick = (e) => {
 
     <!-- 5 · Sunset card -->
     <template v-else-if="base === 'sunset'">
-      <span class="xn__logochip"><img :src="xnowLogo" :alt="PARTNER.name" class="xn__logo" width="60" height="22" /></span>
+      <div class="xn__toprow">
+        <span class="xn__logochip"><img :src="xnowLogo" :alt="PARTNER.name" class="xn__logo" width="60" height="22" /></span>
+        <p v-if="lk.badge" class="xn__fam"><q-icon name="verified" size="16px" aria-hidden="true" /> {{ FAMILY_BADGE }}</p>
+      </div>
       <p class="xn__title">{{ headline }}</p>
+      <p v-if="lk.event" class="xn__event">For families at the {{ eventName }} · {{ eventDates }}</p>
       <p class="xn__message">{{ text.message(city) }}</p>
-      <ul v-if="lk.perks" class="xn__perks" aria-label="Deals on">
-        <li v-for="p in PERKS" :key="p.label"><q-icon :name="p.icon" size="18px" aria-hidden="true" /> {{ p.label }}</li>
+      <ul v-if="lk.perks" class="xn__perks" :aria-label="isFamily ? 'Offers on' : 'Deals on'">
+        <li v-for="p in perks" :key="p.label"><q-icon :name="p.icon" size="18px" aria-hidden="true" /> {{ p.label }}</li>
       </ul>
       <a class="xn__pill xn__pill--white" :href="href" @click="onClick">{{ cta }}</a>
-      <p v-if="lk.fine" class="xn__fine">{{ FINE_PRINT }}</p>
+      <p v-if="lk.fine" class="xn__fine">{{ fine }}</p>
     </template>
 
     <!-- 6 · Split + who qualifies -->
     <template v-else-if="base === 'split'">
       <div class="xn__panel">
         <span class="xn__logochip"><img :src="xnowLogo" :alt="PARTNER.name" class="xn__logo" width="60" height="22" /></span>
+        <p v-if="lk.badge" class="xn__fam xn__fam--block"><q-icon name="verified" size="16px" aria-hidden="true" /> {{ FAMILY_BADGE }}</p>
         <p class="xn__title">{{ headline }}</p>
         <p class="xn__sub">{{ lk.sub ? lk.sub(city) : `in ${city} and beyond` }}</p>
       </div>
       <div class="xn__body">
         <ol v-if="lk.steps" class="xn__steps" aria-label="How it works">
-          <li v-for="(st, i) in STEPS" :key="st"><span class="xn__num" aria-hidden="true">{{ i + 1 }}</span> {{ st }}</li>
+          <li v-for="(st, i) in steps" :key="st">
+            <span v-if="isFamily && i === 0" class="xn__num xn__num--done"><q-icon name="check" size="16px" aria-hidden="true" /><span class="xn__sr">Done:</span></span>
+            <span v-else class="xn__num" aria-hidden="true">{{ i + 1 }}</span> {{ st }}
+          </li>
         </ol>
         <p v-else class="xn__message">{{ text.message(city) }}</p>
-        <p class="xn__label xn__label--dark">{{ lk.whoLabel || 'Verify as one of these to save' }}</p>
-        <ul class="xn__groups">
-          <li v-for="g in GROUPS" :key="g.label"><q-icon :name="g.icon" size="18px" aria-hidden="true" /> {{ g.label }}</li>
-        </ul>
+        <template v-if="isFamily">
+          <p class="xn__label xn__label--dark">Offers on</p>
+          <ul class="xn__groups">
+            <li v-for="p in FAMILY_PERKS" :key="p.label"><q-icon :name="p.icon" size="18px" aria-hidden="true" /> {{ p.label }}</li>
+          </ul>
+        </template>
+        <template v-else>
+          <p class="xn__label xn__label--dark">{{ lk.whoLabel || 'Verify as one of these to save' }}</p>
+          <ul class="xn__groups">
+            <li v-for="g in GROUPS" :key="g.label"><q-icon :name="g.icon" size="18px" aria-hidden="true" /> {{ g.label }}</li>
+          </ul>
+        </template>
         <a class="xn__pill xn__pill--outline" :href="href" @click="onClick">{{ cta }}</a>
-        <p v-if="lk.fine" class="xn__fine xn__fine--dark">{{ FINE_PRINT }}</p>
+        <p v-if="lk.fine" class="xn__fine xn__fine--dark">{{ fine }}</p>
       </div>
     </template>
   </aside>
@@ -274,6 +310,23 @@ const onClick = (e) => {
   color: #fff; font-size: 0.8125rem; font-weight: 700; background: #b02a6e;
   background-image: linear-gradient(135deg, #c2410c, #b02a6e);
 }
+
+/* ── youth sports family alts (f-*) ─────────────────────────────────────── */
+/* Solid white badge with dark text so it passes AA on any gradient stop. */
+.xn__toprow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; }
+.xn__toprow .xn__logochip { margin-bottom: 0; }
+.xn__fam {
+  display: inline-flex; align-items: center; gap: 6px; margin: 0; padding: 5px 12px; border-radius: 999px;
+  background: #fff; color: #141414; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.02em;
+}
+.xn__fam .q-icon { color: #15803d; }
+.xn__fam--block { display: flex; width: max-content; max-width: 100%; margin: -4px 0 12px; }
+.xn--ribbon .xn__fam { background: #effaf2; border: 1px solid #b7e4c4; margin-bottom: 10px; }
+.xn__event { margin: -2px 0 8px; font-size: 0.875rem; font-weight: 600; }
+.xn--sunset .xn__event { color: #fff; }
+.xn--ribbon .xn__event { color: #5c5c5c; }
+.xn__num--done { background: #15803d; background-image: none; }
+.xn__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ── email: flatter; gradients fall back to a solid color in Outlook ──── */
 .xn--email { margin: 0; }

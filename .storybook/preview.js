@@ -198,7 +198,7 @@ const preview = {
           ],
           // One folder per Linear ticket that needs a mockup — pinned last.
           'Linear Tickets', [
-            'DES-478', ['Overview', 'XNow Explorations', 'XNow Verified Groups', 'Confirmation Page', 'Confirmation Email', 'Experience Now Offer'],
+            'DES-478', ['Overview', 'XNow Youth Sports Families', 'XNow Explorations', 'XNow Verified Groups', 'Confirmation Page', 'Confirmation Email', 'Experience Now Offer'],
           ],
         ],
       },

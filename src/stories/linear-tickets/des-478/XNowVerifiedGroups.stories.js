@@ -34,7 +34,7 @@ export default {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'DES-478 · Alt versions after the feedback that XNow **verifies you belong to a group** (military, student, teacher, healthcare, first responder) and gives **discounts on experiences** like sports games and museums. Each alt says who qualifies and what they get. The six looks in **XNow Explorations** are unchanged.',
+        component: '**Replaced by XNow Youth Sports Families (2026-11-09).** DES-478 · Alt versions after the feedback that XNow **verifies you belong to a group** (military, student, teacher, healthcare, first responder) and gives **discounts on experiences** like sports games and museums. Each alt says who qualifies and what they get. The six looks in **XNow Explorations** are unchanged.',
       },
     },
   },

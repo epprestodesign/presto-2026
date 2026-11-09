@@ -17,7 +17,7 @@ import ConfirmationPage from '@lib/components/confirmation/ConfirmationPage.vue'
 import DsModal from '@lib/components/DsModal.vue'
 import ExperienceNowOffer from '@lib/components/des478/ExperienceNowOffer.vue'
 import ConfirmationEmail from '@lib/components/des478/ConfirmationEmail.vue'
-import { LOOKS } from '@lib/components/des478/des478.js'
+import { FAMILY_LOOKS, LOOKS } from '@lib/components/des478/des478.js'
 
 const $q = useQuasar()
 const data = computed(() => confirmationData(journey.cart, confirmationMode.value))
@@ -25,9 +25,13 @@ const data = computed(() => confirmationData(journey.cart, confirmationMode.valu
 // `?email=1` opens the email preview on load (deep links / screenshots).
 const emailOpen = ref(typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('email') === '1')
 
-// `?look=banner|ribbon|dark|sunset|split` picks the XNow callout look.
+// `?look=f-card|f-note|f-split|f-banner|presto|banner|ribbon|dark|sunset|split`
+// picks the XNow callout look. Default = the youth-sports-family card
+// (Christine, 2026-11-09); the original six looks stay in the switcher.
 const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams()
-const look = ref(LOOKS[params.get('look')] ? params.get('look') : 'presto')
+const ALL = { ...FAMILY_LOOKS, ...LOOKS }
+const look = ref(ALL[params.get('look')] ? params.get('look') : 'f-card')
+const familyLooks = Object.entries(FAMILY_LOOKS)
 const looks = Object.entries(LOOKS)
 
 const onOffer = () => $q.notify({
@@ -46,6 +50,13 @@ const onOffer = () => $q.notify({
 
     <div class="des478-looks" role="group" aria-label="XNow callout look (prototype only)">
       <span class="des478-looks__label">XNow look</span>
+      <button
+        v-for="[key, l] in familyLooks" :key="key" type="button"
+        class="des478-chip" :class="{ 'is-active': look === key }" :aria-pressed="look === key"
+        :title="l.note" @click="look = key"
+      >{{ l.label }}</button>
+      <span class="des478-looks__sep" aria-hidden="true" />
+      <span class="des478-looks__label">Earlier</span>
       <button
         v-for="([key, l], i) in looks" :key="key" type="button"
         class="des478-chip" :class="{ 'is-active': look === key }" :aria-pressed="look === key"
@@ -88,6 +99,7 @@ const onOffer = () => $q.notify({
   border: 1px solid var(--ds-color-border); box-shadow: 0 10px 24px -12px rgba(1, 16, 63, 0.45);
 }
 .des478-looks__label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ds-color-text-subtle); padding: 0 4px; }
+.des478-looks__sep { width: 1px; height: 22px; background: var(--ds-color-border); margin: 0 4px; }
 .des478-chip {
   height: 32px; padding: 0 12px; border-radius: 999px; cursor: pointer;
   border: 1px solid var(--ds-color-border); background: #fff; color: var(--ds-color-text);
