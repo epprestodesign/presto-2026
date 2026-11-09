@@ -9,6 +9,9 @@ export const EVENT = {
   name: 'Baltimore Summer Soccer Classic 2027',
   dates: 'Wed, 6/16/2027 - Sat, 6/19/2027',
   city: 'Baltimore',
+  // Short name + dates for the "For families at …" line on the family looks.
+  short: 'Baltimore Summer Soccer Classic',
+  shortDates: 'Jun 16–19',
   venue: 'Baltimore Convention Center',
   // Landing-page description (LandingPage `intro`).
   intro: [
@@ -65,6 +68,38 @@ export const COPY = {
     message: (city) => `Heading to ${city}? Verified groups save on games, museums & more with XNow.`,
     link: 'Verify free',
     cta: 'Verify free',
+  },
+  // Youth-sports-family copy (Christine, 2026-11-09): the offer is given
+  // because the guest is "verified" as a youth sports family — their
+  // tournament booking IS the proof, so there's nothing to verify and the
+  // button just opens the offers. Copy says "Experience Now", as she wrote it.
+  // `family: true` swaps verify-group lists for family-friendly chips.
+  family: {
+    label: 'Christine #1 · Benefit first',
+    message: (city) => `Make it more than a tournament weekend. Our partner Experience Now has special offers on events and experiences in ${city}, created with youth sports families in mind.`,
+    link: 'See my offers', cta: 'See my offers', family: true,
+  },
+  familyFriendly: {
+    label: 'Christine #2 · Friendly & personal',
+    message: (city) => `Heading to ${city} for the big weekend? When the games are over, our partner Experience Now has special offers on local events and attractions to help your family make the most of the trip.`,
+    link: 'See my offers', cta: 'See my offers', family: true,
+  },
+  familyShort: {
+    label: 'Short · banner & phone',
+    message: (city) => `Make it more than a tournament weekend. Special offers in ${city} for youth sports families.`,
+    link: 'See my offers', cta: 'See my offers', family: true,
+  },
+  // Body-only halves of Christine's copy, for looks whose headline already
+  // carries the first sentence (so it isn't said twice).
+  familyBody1: {
+    label: 'Christine #1 · body under headline',
+    message: (city) => `Our partner Experience Now has special offers on events and experiences in ${city}, created with youth sports families in mind.`,
+    link: 'See my offers', cta: 'See my offers', family: true,
+  },
+  familyBody2: {
+    label: 'Christine #2 · body under headline',
+    message: () => 'When the games are over, our partner Experience Now has special offers on local events and attractions to help your family make the most of the trip.',
+    link: 'See my offers', cta: 'See my offers', family: true,
   },
 }
 
@@ -170,6 +205,64 @@ export const ALT_LOOKS = {
     steps: true,
     whoLabel: 'Who can verify',
     fine: true,
+  },
+}
+
+// ── Youth sports family alts (Christine, 2026-11-09) ────────────────────────
+// No verify step and no group lists: a badge says the offer is already
+// unlocked by their booking, the tournament name makes it personal, and the
+// chips are things a team family would do between games.
+export const FAMILY_BADGE = 'Youth sports family offer'
+export const FAMILY_PERKS = [
+  { icon: 'attractions', label: 'Family attractions' },
+  { icon: 'sports_baseball', label: 'Ballgames' },
+  { icon: 'museum', label: 'Museums' },
+  { icon: 'icecream', label: 'Food & treats' },
+]
+// Step 1 is already done (their booking) — drawn with a check, not a number.
+export const FAMILY_STEPS = (city) => ['You booked your stay', 'Pick an offer', `Enjoy ${city}`]
+export const FAMILY_FINE = 'Offers by Experience Now. Deals vary by city.'
+
+// Family alts reuse four of the looks above (`base`). Flags: badge = "Youth
+// sports family offer" pill · event = "For families at {event} · {dates}" ·
+// perks = family chips · steps = done/next/next row · fine = fine print ·
+// emailCopy = copy used in the email instead (Christine's friendlier #2).
+export const FAMILY_LOOKS = {
+  'f-card': {
+    base: 'sunset',
+    label: 'Fam A · Family card',
+    note: 'Her #1 as a big headline, the family badge, the tournament name and family chips. Uses her #2 in the email.',
+    copy: 'familyBody1',
+    emailCopy: 'familyBody2',
+    headline: () => 'Make it more than a tournament weekend',
+    cta: 'See my offers',
+    badge: true, event: true, perks: true, fine: true,
+  },
+  'f-note': {
+    base: 'ribbon',
+    label: 'Fam B · Friendly note',
+    note: 'Her #2 on the light white card: a question headline, then the "when the games are over" line. Best fit for the email.',
+    copy: 'familyBody2',
+    headline: (city) => `Heading to ${city} for the big weekend?`,
+    cta: 'See my offers',
+    badge: true, event: true,
+  },
+  'f-split': {
+    base: 'split',
+    label: 'Fam C · Family split',
+    note: 'Shows the booking already counts: step 1 is checked off. Family chips replace the old "who can verify" list.',
+    copy: 'familyBody1',
+    headline: () => 'Your family offers are unlocked',
+    sub: (city) => `Events & attractions in ${city}`,
+    cta: 'See my offers',
+    badge: true, steps: true, perks: true, fine: true,
+  },
+  'f-banner': {
+    base: 'banner',
+    label: 'Fam D · Family banner',
+    note: 'The banner with the short version of her #1. Smallest change.',
+    copy: 'familyShort',
+    cta: 'See my offers',
   },
 }
 
