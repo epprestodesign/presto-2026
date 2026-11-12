@@ -305,10 +305,11 @@ const onClick = (e) => {
 .xn__steps li {
   display: flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 600; color: #141414; line-height: 1.3;
 }
+/* Steps still to do: outlined circle (no fill), so only the done step is solid. */
 .xn__num {
   flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
-  color: #fff; font-size: 0.8125rem; font-weight: 700; background: #b02a6e;
-  background-image: linear-gradient(135deg, #c2410c, #b02a6e);
+  box-sizing: border-box; border: 2px solid #767676; background: #fff;
+  color: #141414; font-size: 0.8125rem; font-weight: 700;
 }
 
 /* ── youth sports family alts (f-*) ─────────────────────────────────────── */
@@ -325,7 +326,7 @@ const onClick = (e) => {
 .xn__event { margin: -2px 0 8px; font-size: 0.875rem; font-weight: 600; }
 .xn--sunset .xn__event { color: #fff; }
 .xn--ribbon .xn__event { color: #5c5c5c; }
-.xn__num--done { background: #15803d; background-image: none; }
+.xn__num--done { background: #15803d; border-color: #15803d; color: #fff; }
 .xn__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ── email: flatter; gradients fall back to a solid color in Outlook ──── */
