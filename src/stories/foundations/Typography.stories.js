@@ -1,8 +1,24 @@
 /**
  * FOUNDATIONS / Typography (the scale & tokens)
- * Companion to "Data Display / Typography" (which shows applying it).
- * Quasar has no Typography component — classes + tokens (typography.scss).
+ * Companion to Design System › Components › Typography & Content › Typography,
+ * which shows it applied. Quasar has no Typography component: classes + tokens
+ * (src/css/typography.scss, src/css/tokens.scss). The Tokens story reads each
+ * value from the live CSS, so this page can't drift from the code.
  */
+import { ref, onMounted } from 'vue'
+
+const TOKENS = [
+  '--ds-font-family',
+  '--ds-font-weight-medium',
+  '--ds-font-weight-bold',
+  '--ds-font-size-sm',
+  '--ds-font-size-md',
+  '--ds-font-size-lg',
+  '--ds-text-display',
+  '--ds-text-display-weight',
+  '--ds-text-lead',
+]
+
 const meta = {
   title: 'Design System/Foundations/Typography',
   id: 'foundations-typography',
@@ -12,12 +28,26 @@ const meta = {
       description: {
         component: `
 ## Overview
-The type system: one font, a fixed scale, tokenized weights. Defined in
-\`src/css/typography.scss\` and applied with classes. See
-**Data Display / Typography** for usage patterns.
+The type system is one font, a fixed scale and two weights. It is defined in
+\`src/css/typography.scss\` and \`src/css/tokens.scss\` and applied with classes.
+See **Design System › Components › Typography & Content › Typography** for how
+it is used.
 
 ## Family
-\`--ds-font-family: 'Inter', system-ui, …\` (set via \`$typography-font-family\`).
+**PT Sans**, the same font as the live EventPipe and Presto sites:
+\`--ds-font-family: 'PT Sans', -apple-system, BlinkMacSystemFont, …\`, set through
+\`$typography-font-family\` in \`quasar.variables.scss\`.
+
+## Weights
+PT Sans ships two weights, so the system uses two:
+
+| Token | Value | Use |
+| --- | --- | --- |
+| \`--ds-font-weight-medium\` | 400 | body copy, labels |
+| \`--ds-font-weight-bold\` | 700 | headings, buttons, emphasis |
+
+Asking for 500, 600 or 800 doesn't give a new weight. The browser rounds to 400
+or 700, or fakes a bold. Use one of the two tokens.
 
 ## Scale
 | Class | Role |
@@ -30,8 +60,7 @@ The type system: one font, a fixed scale, tokenized weights. Defined in
 | \`.text-caption\` | helper / metadata |
 | \`.text-overline\` | eyebrow labels |
 
-## Weights
-\`.text-weight-{light,regular,medium,bold}\` → tokens \`--ds-font-weight-*\`.
+The Tokens story reads every value from the live CSS.
 `,
       },
     },
@@ -52,5 +81,29 @@ export const Scale = {
         <div class="text-caption">Caption — helper text.</div>
         <div class="text-overline">OVERLINE</div>
       </div>`,
+  }),
+}
+
+/** Every type token, read from the live CSS. */
+export const Tokens = {
+  render: () => ({
+    setup() {
+      const rows = ref([])
+      onMounted(() => {
+        const css = getComputedStyle(document.documentElement)
+        rows.value = TOKENS.map((t) => ({ token: t, value: css.getPropertyValue(t).trim() || 'not set' }))
+      })
+      return { rows }
+    },
+    template: `
+      <table class="text-body2" style="border-collapse:collapse;max-width:720px">
+        <thead><tr><th style="text-align:left;padding:6px 16px 6px 0">Token</th><th style="text-align:left;padding:6px 0">Value</th></tr></thead>
+        <tbody>
+          <tr v-for="r in rows" :key="r.token" style="border-top:1px solid var(--ds-color-border)">
+            <td style="padding:6px 16px 6px 0"><code>{{ r.token }}</code></td>
+            <td style="padding:6px 0">{{ r.value }}</td>
+          </tr>
+        </tbody>
+      </table>`,
   }),
 }
