@@ -18,6 +18,11 @@ export const STATUSES = {
 export const STATUS_BY_FOLDER = {
   // Design Requests
   'DES-478 · Experience Now': 'in-review',
+  'Team Name Qualifiers': 'approved',
+  'Custom Fees': 'approved',
+  // Other Requests
+  "Landing Concepts '27": 'in-review',
+  'Partner Widgets': 'in-review',
   // Eventpipe Labs: everything here is a concept until it becomes a request.
   'Checkout All at Once': 'concept',
   'Booking Widget Ideas': 'concept',
