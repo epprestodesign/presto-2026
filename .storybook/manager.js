@@ -64,6 +64,10 @@ const MOVED = {
   'checkout-experience-group-block-hold-timer-pill--urgent': 'story/edge-cases-checkout-hold-timer--under-a-minute',
   'app-shell-cart-flyout--empty': 'story/edge-cases-cart-cart-flyout--empty',
   'app-shell-added-to-cart--no-photo': 'story/edge-cases-cart-added-to-cart--no-photo',
+  // Older ids from before Payment Dialogs moved to "Old Designs" (still linked from DES-66)
+  'checkout-experience-components-payment-dialogs--docs': 'docs/checkout-experience-old-designs-payment-dialogs--docs',
+  'checkout-experience-components-payment-dialogs--payment-method': 'story/checkout-experience-old-designs-payment-dialogs--payment-method',
+  'checkout-experience-components-payment-dialogs--add-payment': 'story/checkout-experience-old-designs-payment-dialogs--add-payment',
 }
 
 try {
