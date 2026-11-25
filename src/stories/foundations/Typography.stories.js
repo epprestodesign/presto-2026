@@ -49,7 +49,7 @@ PT Sans ships two weights, so the system uses two:
 Asking for 500, 600 or 800 doesn't give a new weight. The browser rounds to 400
 or 700, or fakes a bold. Use one of the two tokens.
 
-## Scale
+## Type scale
 | Class | Role |
 | --- | --- |
 | \`.text-display\` | hero headline (DS token) |

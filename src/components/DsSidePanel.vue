@@ -3,7 +3,11 @@
 // slides in from a side, with a header (title + close), scrollable body, and an
 // optional footer. Standardizes the cart fly-out, saved-hotels fly-out, and the
 // profile edit modal. Controlled via v-model.
-import { watch, onBeforeUnmount } from 'vue'
+import { watch, onBeforeUnmount, inject } from 'vue'
+
+// On Storybook docs pages (dsInline) the panel renders in place, inside its
+// example box, and doesn't lock page scroll, so the page stays usable.
+const inline = inject('dsInline', false)
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
@@ -21,16 +25,16 @@ const onScrim = () => { if (!props.persistent) close() }
 const onKey = (e) => { if (e.key === 'Escape' && !props.persistent) close() }
 watch(() => props.modelValue, (open) => {
   if (typeof document === 'undefined') return
-  document.body.style.overflow = open ? 'hidden' : ''
+  if (!inline) document.body.style.overflow = open ? 'hidden' : ''
   if (open) document.addEventListener('keydown', onKey)
   else document.removeEventListener('keydown', onKey)
 }, { immediate: true })
-onBeforeUnmount(() => { if (typeof document !== 'undefined') { document.body.style.overflow = ''; document.removeEventListener('keydown', onKey) } })
+onBeforeUnmount(() => { if (typeof document !== 'undefined') { if (!inline) document.body.style.overflow = ''; document.removeEventListener('keydown', onKey) } })
 </script>
 
 <template>
-  <teleport to="body">
-    <div v-if="modelValue" class="dsp" :class="`dsp--${side}`">
+  <teleport to="body" :disabled="inline">
+    <div v-if="modelValue" class="dsp" :class="[`dsp--${side}`, { 'dsp--inline': inline }]">
       <div class="dsp__scrim" @click="onScrim" />
       <aside class="dsp__panel" role="dialog" aria-modal="true" :aria-label="ariaLabel || title || 'Panel'" :style="{ width }">
         <header class="dsp__head">

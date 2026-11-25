@@ -9,7 +9,11 @@
 // Usage:
 //   <ds-modal v-model="open" title="Availability" size="lg"> …body… </ds-modal>
 // Slots: default (body), #header (replace the title block), #footer (sticky bar).
-import { computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { computed, watch, onMounted, onBeforeUnmount, inject } from 'vue'
+
+// On Storybook docs pages (dsInline) the modal renders in place, inside its
+// example box, and doesn't lock page scroll, so the page stays usable.
+const inline = inject('dsInline', false)
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
@@ -40,7 +44,7 @@ function onBackdrop () { if (!props.persistent) close() }
 const onKey = (e) => { if (e.key === 'Escape' && !props.persistent && props.modelValue) close() }
 
 function lockScroll (locked) {
-  if (typeof document === 'undefined') return
+  if (typeof document === 'undefined' || inline) return
   document.body.style.overflow = locked ? 'hidden' : ''
 }
 watch(() => props.modelValue, lockScroll)
@@ -52,8 +56,8 @@ onBeforeUnmount(() => { document.removeEventListener('keydown', onKey); lockScro
 </script>
 
 <template>
-  <Teleport to="body">
-    <div v-if="modelValue" class="dsm" :style="{ zIndex }" @click.self="onBackdrop">
+  <Teleport to="body" :disabled="inline">
+    <div v-if="modelValue" class="dsm" :class="{ 'dsm--inline': inline }" :style="{ zIndex }" @click.self="onBackdrop">
       <div class="dsm__card" :class="`dsm__card--${size}`" role="dialog" aria-modal="true" :aria-label="ariaLabelComputed">
         <header v-if="!hideHeader" class="dsm__head" :class="`dsm__head--${headerAlign}`">
           <button v-if="!hideClose && headerAlign === 'center'" type="button" class="dsm__close" aria-label="Close" @click="close"><q-icon name="close" size="22px" /></button>
