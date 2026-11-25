@@ -13,7 +13,7 @@ import tilePipes from './patterns/tile-pipes.svg'
 </div>
 
 <div className="sh-section">
-  <h2 className="sh-h2">Files</h2>
+  <h2 className="sh-h2" id="files">Files</h2>
   <p className="sh-sub">The files you will touch most, all from the repo root.</p>
   <div className="sh-tablewrap"><table className="sh-table">
     <thead><tr><th>File</th><th>What it does</th></tr></thead>
@@ -33,7 +33,7 @@ import tilePipes from './patterns/tile-pipes.svg'
 </div>
 
 <div className="sh-section">
-  <h2 className="sh-h2">Run</h2>
+  <h2 className="sh-h2" id="run">Run</h2>
   <p className="sh-sub">Run <code>pnpm install</code> once at the repo root. The prototypes have no packages of their own, so this one install covers them too.</p>
   <div className="sh-tablewrap"><table className="sh-table">
     <thead><tr><th>Command</th><th>What it does</th><th className="num">Port</th></tr></thead>
@@ -49,7 +49,7 @@ import tilePipes from './patterns/tile-pipes.svg'
 </div>
 
 <div className="sh-section">
-  <h2 className="sh-h2">Prototypes</h2>
+  <h2 className="sh-h2" id="prototypes">Prototypes</h2>
   <p className="sh-sub">Six clickable apps, each in its own folder at the repo root. Run one with <code>pnpm --dir</code> and the folder name. The deploy builds all six, so each is live under <a href="https://epprestodesign.github.io/presto-2026/" target="_blank" rel="noopener">epprestodesign.github.io/presto-2026</a>.</p>
   <div className="sh-tablewrap"><table className="sh-table">
     <thead><tr><th>Prototype</th><th>Run it</th><th className="num">Port</th><th>Live</th></tr></thead>
@@ -70,7 +70,7 @@ import tilePipes from './patterns/tile-pipes.svg'
 </div>
 
 <div className="sh-section">
-  <h2 className="sh-h2">Where things are</h2>
+  <h2 className="sh-h2" id="where-things-are">Where things are</h2>
   <p className="sh-sub">Components live in <code>src/components/</code>. Story files live in <code>src/stories/</code>, in folders that predate the sidebar areas, so a folder name does not always match its area.</p>
   <pre className="sh-code">{`src/components/
   *.vue            shared parts: Ds* primitives, GlobalNav, PageFrame,
@@ -100,7 +100,7 @@ import tilePipes from './patterns/tile-pipes.svg'
 </div>
 
 <div className="sh-section">
-  <h2 className="sh-h2">Check</h2>
+  <h2 className="sh-h2" id="check">Check</h2>
   <p className="sh-sub">Three checks. Run them before you open a pull request.</p>
   <div className="sh-steps">
     <div className="sh-step">
@@ -122,7 +122,7 @@ import tilePipes from './patterns/tile-pipes.svg'
 </div>
 
 <div className="sh-section">
-  <h2 className="sh-h2">Add a part</h2>
+  <h2 className="sh-h2" id="add-a-part">Add a part</h2>
   <p className="sh-sub">Five steps, so a new part lands in the right place and its link never breaks.</p>
   <div className="sh-steps">
     <div className="sh-step">
@@ -154,7 +154,7 @@ import tilePipes from './patterns/tile-pipes.svg'
 </div>
 
 <div className="sh-section">
-  <h2 className="sh-h2">Deploy</h2>
+  <h2 className="sh-h2" id="deploy">Deploy</h2>
   <p className="sh-sub">Merge to <code>main</code> and it deploys. Work on a branch, never on <code>main</code>.</p>
   <ul className="sh-list">
     <li><code>deploy.yml</code> runs on every push to <code>main</code>. You can also start it by hand.</li>

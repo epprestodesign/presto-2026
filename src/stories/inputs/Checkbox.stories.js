@@ -14,7 +14,7 @@ Lets users select zero or more options, or toggle a single setting on/off.
 ## When not to use
 - Single choice from a set → **Radio Group**. Instant-apply setting → **Switch**.
 
-## States
+## Checkbox states
 Checked · unchecked · indeterminate · disabled.
 
 ## Quasar mapping

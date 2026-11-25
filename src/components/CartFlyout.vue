@@ -2,9 +2,13 @@
 // CartFlyout — the right-side slide-over chrome (scrim, top bar / kebab, footer
 // countdown + CTA, special-requests sub-flyout) wrapped around the recyclable
 // <CartReview> body, which is shared with the Checkout "Review order" step.
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, inject } from 'vue'
 import { useQuasar } from 'quasar'
 import CartReview from './CartReview.vue'
+
+// On Storybook docs pages (dsInline) the fly-out renders in place, inside its
+// example box, instead of covering the whole page.
+const inline = inject('dsInline', false)
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
@@ -68,7 +72,7 @@ onBeforeUnmount(() => clearInterval(timer))
 </script>
 
 <template>
-  <teleport to="body">
+  <teleport to="body" :disabled="inline">
     <div v-if="modelValue" class="cf">
       <div class="cf__scrim" @click="close" />
       <aside class="cf__panel" role="dialog" aria-label="Cart">

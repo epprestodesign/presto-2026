@@ -37,6 +37,11 @@ setup((app) => {
 
 /** @type { import('@storybook/vue3-vite').Preview } */
 const preview = {
+  // Docs pages show many stories at once. Tell overlay components (DsModal,
+  // DsSidePanel) to render in place there instead of covering the whole page.
+  decorators: [
+    (story, ctx) => ({ components: { story }, provide: { dsInline: ctx.viewMode === 'docs' }, template: '<story />' }),
+  ],
   parameters: {
     backgrounds: {
       options: {
@@ -80,7 +85,8 @@ const preview = {
     },
     // "On this page" on every docs page (Storybook's built-in table of contents).
     docs: {
-      toc: { title: 'On this page', headingSelector: 'h2, h3', ignoreSelector: '.sh-noc' },
+      // Keep Storybook's own ignore list (headings inside rendered stories, .skip-toc) and add ours.
+      toc: { title: 'On this page', headingSelector: 'h2, h3', ignoreSelector: '.docs-story *, .skip-toc, .sh-noc' },
     },
     // The sidebar reads in the order people work (reorganised 2026-11-25):
     // orientation, the design system, the booking journey step by step, the

@@ -15,3 +15,19 @@
 }
 .sbdocs-toc--custom .toc-link::before { display: none !important; }
 .sbdocs-toc--custom .toc-link.is-active-link { color: #01113E !important; font-weight: 700; border-left-color: #01113E; }
+
+/* Docs pages: a story's fixed-position overlay (an open modal, side panel or
+   map dialog) stays inside its own example box instead of covering the whole
+   page and the "On this page" panel. transform makes the box the containing
+   block for position: fixed children (Storybook's zoom wrapper, the box's
+   first child, also has a transform, so it is the one that actually holds them). */
+.docs-story {
+  transform: translateZ(0);
+  overflow: hidden;
+}
+/* …and give that box room to show the overlay when the story itself is short
+   (e.g. the global nav with its cart fly-out open). */
+.docs-story:has(.cf, .dsm, .dsp),
+.docs-story:has(.cf, .dsm, .dsp) > div {
+  min-height: 720px;
+}
