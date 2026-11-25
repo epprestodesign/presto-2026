@@ -10,7 +10,10 @@ const features = [
 ]
 
 export default {
-  title: 'Hotel Details/Components/Book Reservation/Room Card',
+  title: 'User Journey/03 · Hotel Details/Parts/Book Reservation/Room Card',
+  id: 'hotel-details-components-book-reservation-room-card',
+  // Shown under Edge Cases (src/stories/edge-cases/) so each edge case has one home.
+  excludeStories: ['SoldOut'],
   component: RoomCardReserve,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

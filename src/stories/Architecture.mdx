@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks'
 
-<Meta title="Getting Started/Architecture & Conventions" />
+<Meta title="Start Here/Architecture & Conventions" />
 
 # Architecture & Conventions
 
@@ -10,7 +10,7 @@ system or **building the localized prototype**, read this first — it tells you
 modes map across components** so new work is indistinguishable from existing work.
 
 For the stage-by-stage journey requirements (all flows, all edge cases), read
-**Getting Started → User Journey & Build Spec**.
+**User Journey → Build Spec**.
 
 ---
 
@@ -64,40 +64,40 @@ concern, not a widget one.
 
 | If you need to… | Go to | Reuse |
 | --- | --- | --- |
-| The app shell (nav + footer) around a page | `App Shell / Page Frame` | `PageFrame.vue` (`brand`, `cartMode`, `showCart`, `minimalNav`) |
-| The top nav / cart fly-out | `App Shell / Global Nav & Cart` | `GlobalNav.vue` (+ `CartFlyout`); `minimal` = checkout nav; Contact Us dropdown |
-| The event landing page | `Landing Page / *` | `LandingPage.vue` (`mode`, `showTeams`) |
-| The tournament search widget | `Landing Page / Components` | `BookingWidget.vue` (`mode`, `showTeams`, `showDates`) |
-| A surface card | `Components / Layout & Structure / Card` | `DsCard` |
-| A centered modal / dialog | `Components / Actions / Modal` | `DsModal` (backdrop, ESC, click-out, scroll-lock, header/footer slots, teleported) |
-| A slide-over / drawer | `Components / Actions / Side Panel` | `DsSidePanel` (`side="right" / "left" / "center"`) |
-| A list / setting row | `Components / Layout & Structure / List Item` | `DsListItem` |
-| A review score (★ x/y) | `Components / Media & Visuals / Rating` | `DsRating` |
-| Expand/collapse rows | `Components / Layout & Structure / Accordion` | `DsAccordion` |
-| Chip toggle group | `Components / Forms / Choice Chips` | `DsChoiceChips` |
-| A dual-handle range | `Components / Forms / Range` | `DsRange` |
-| Nested checkboxes | `Components / Forms / Checkbox Tree` | `DsCheckboxTree` |
-| A quantity control | `Components / Forms / Quantity Stepper` | `QuantityStepper.vue` |
-| A phone field w/ country code | `Components / Forms / Phone Field` | `checkout/PhoneField.vue` |
-| A toast / banner | `Components / Feedback & Status / Toast · Banner` | `ds-toast--*` classes; Banner hue map |
-| Filter or sort results | `Browse Hotels / Components / Left Rail` | `browse/Filter.vue` (`type` prop), `browse/AllFiltersDialog.vue`, `browse/SortDropdown.vue` |
-| A consolidated "All filters" modal | `Browse Hotels / Components / Left Rail / Search & Filters` | `browse/AllFiltersDialog.vue` (accordions + live count; on `DsModal`) |
-| A result list w/ states | `Browse Hotels / Components / Results / Result States` | `browse/HotelListPage.vue` (`state`) |
-| A result card | `Browse Hotels / Components / Results / Hotel Listing Card` | `browse/HotelCardReserve.vue`, `browse/HotelCardGroup.vue` |
-| Group availability inventory | `Browse Hotels / Components / Results / Availability Dialog` | `AvailabilityDialog.vue` (summary + hold rooms grid) |
-| A map with pins / search radius | `Browse Hotels / Components / Left Rail / Hotel Map` | `HotelMap.vue` (+ `lib/googleMaps.js`) — native +/- zoom, `clusterMaxZoom`, `searchRadius` (two-way) |
-| A full hotel detail screen | `Hotel Details / *` | `details/HotelDetailPage.vue` (`roomsFlow`) |
-| A room card / rooms grid | `Hotel Details / Components / {Book Reservation,Group Block}` | `details/RoomCardReserve.vue`, `details/RoomCardGroup.vue`, `details/RoomsCarousel.vue` (`flow`) |
-| A hero photo gallery (mosaic + modal) | `Hotel Details / Components / Photo Gallery` | `details/GalleryHero.vue` (+ `DsImageList`) |
-| An amenity (icon + label) / list | `Components / Typography & Content / Amenity` | `Amenity.vue` + `lib/amenities.js` (catalog) |
-| A stepped checkout | `Checkout Experience / *` | `checkout/CheckoutPage.vue` (`mode`) + `checkout/steps/*` |
-| A cart / order summary | `Checkout Experience` & nav | `CartReview` (body — `reserve`/`hold`/`reservations`) + `CartFlyout` (chrome) |
-| An inline card payment form | `Checkout Experience / Components / Book Reservation / Payment` | `checkout/PaymentForm.vue` (+ `lib/paymentLogos.js`) — **not** the old dialogs |
-| Per-room reservation guest info | `Checkout Experience / Components / Book Reservation / Reservation Guests` | `checkout/ReservationGuests.vue` |
-| The group teams block | `Checkout Experience / Components / Group Block / Contact Info / Teams Block` | `checkout/GroupTeamsBlock.vue` |
-| The policies acknowledgement | `Checkout Experience / Components / … / Review Reservation / Policies` | `checkout/PoliciesAgreement.vue` (`flow`) |
-| The success page | `Confirmation / *` | `confirmation/ConfirmationPage.vue` (`mode`) |
-| The account page | `Manage Booking / Account` | `managebooking/ManageBooking.vue` + `ProfileEditModal.vue` |
+| The app shell (nav + footer) around a page | `Design System / App Chrome / Page Frame` | `PageFrame.vue` (`brand`, `cartMode`, `showCart`, `minimalNav`) |
+| The top nav / cart fly-out | `Design System / App Chrome / Global Nav & Cart` | `GlobalNav.vue` (+ `CartFlyout`); `minimal` = checkout nav; Contact Us dropdown |
+| The event landing page | `User Journey / 01 · Landing / *` | `LandingPage.vue` (`mode`, `showTeams`) |
+| The tournament search widget | `User Journey / 01 · Landing / Parts` | `BookingWidget.vue` (`mode`, `showTeams`, `showDates`) |
+| A surface card | `Design System / Components / Layout & Structure / Card` | `DsCard` |
+| A centered modal / dialog | `Design System / Components / Actions / Modal` | `DsModal` (backdrop, ESC, click-out, scroll-lock, header/footer slots, teleported) |
+| A slide-over / drawer | `Design System / Components / Actions / Side Panel` | `DsSidePanel` (`side="right" / "left" / "center"`) |
+| A list / setting row | `Design System / Components / Layout & Structure / List Item` | `DsListItem` |
+| A review score (★ x/y) | `Design System / Components / Media & Visuals / Rating` | `DsRating` |
+| Expand/collapse rows | `Design System / Components / Layout & Structure / Accordion` | `DsAccordion` |
+| Chip toggle group | `Design System / Components / Forms / Choice Chips` | `DsChoiceChips` |
+| A dual-handle range | `Design System / Components / Forms / Range` | `DsRange` |
+| Nested checkboxes | `Design System / Components / Forms / Checkbox Tree` | `DsCheckboxTree` |
+| A quantity control | `Design System / Components / Forms / Quantity Stepper` | `QuantityStepper.vue` |
+| A phone field w/ country code | `Design System / Components / Forms / Phone Field` | `checkout/PhoneField.vue` |
+| A toast / banner | `Design System / Components / Feedback & Status / Toast · Banner` | `ds-toast--*` classes; Banner hue map |
+| Filter or sort results | `User Journey / 02 · Browse Hotels / Parts / Left Rail` | `browse/Filter.vue` (`type` prop), `browse/AllFiltersDialog.vue`, `browse/SortDropdown.vue` |
+| A consolidated "All filters" modal | `User Journey / 02 · Browse Hotels / Parts / Left Rail / Search & Filters` | `browse/AllFiltersDialog.vue` (accordions + live count; on `DsModal`) |
+| A result list w/ states | `Edge Cases / 02 · Browse Hotels / Result States` | `browse/HotelListPage.vue` (`state`) |
+| A result card | `User Journey / 02 · Browse Hotels / Parts / Results / Hotel Listing Card` | `browse/HotelCardReserve.vue`, `browse/HotelCardGroup.vue` |
+| Group availability inventory | `User Journey / 02 · Browse Hotels / Parts / Results / Availability Dialog` | `AvailabilityDialog.vue` (summary + hold rooms grid) |
+| A map with pins / search radius | `User Journey / 02 · Browse Hotels / Parts / Left Rail / Hotel Map` | `HotelMap.vue` (+ `lib/googleMaps.js`) — native +/- zoom, `clusterMaxZoom`, `searchRadius` (two-way) |
+| A full hotel detail screen | `User Journey / 03 · Hotel Details / *` | `details/HotelDetailPage.vue` (`roomsFlow`) |
+| A room card / rooms grid | `User Journey / 03 · Hotel Details / Parts / {Book Reservation,Group Block}` | `details/RoomCardReserve.vue`, `details/RoomCardGroup.vue`, `details/RoomsCarousel.vue` (`flow`) |
+| A hero photo gallery (mosaic + modal) | `User Journey / 03 · Hotel Details / Parts / Photo Gallery` | `details/GalleryHero.vue` (+ `DsImageList`) |
+| An amenity (icon + label) / list | `Design System / Components / Typography & Content / Amenity` | `Amenity.vue` + `lib/amenities.js` (catalog) |
+| A stepped checkout | `User Journey / 04 · Checkout / *` | `checkout/CheckoutPage.vue` (`mode`) + `checkout/steps/*` |
+| A cart / order summary | `User Journey / 04 · Checkout` & nav | `CartReview` (body — `reserve`/`hold`/`reservations`) + `CartFlyout` (chrome) |
+| An inline card payment form | `User Journey / 04 · Checkout / Parts / Book Reservation / Payment` | `checkout/PaymentForm.vue` (+ `lib/paymentLogos.js`) — **not** the old dialogs |
+| Per-room reservation guest info | `User Journey / 04 · Checkout / Parts / Book Reservation / Reservation Guests` | `checkout/ReservationGuests.vue` |
+| The group teams block | `User Journey / 04 · Checkout / Parts / Group Block / Contact Info / Teams Block` | `checkout/GroupTeamsBlock.vue` |
+| The policies acknowledgement | `User Journey / 04 · Checkout / Parts / … / Review Reservation / Policies` | `checkout/PoliciesAgreement.vue` (`flow`) |
+| The success page | `User Journey / 05 · Confirmation / *` | `confirmation/ConfirmationPage.vue` (`mode`) |
+| The account page | `User Journey / 06 · Manage Booking / Account` | `managebooking/ManageBooking.vue` + `ProfileEditModal.vue` |
 
 ---
 

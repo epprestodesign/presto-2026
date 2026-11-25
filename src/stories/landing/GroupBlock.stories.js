@@ -5,7 +5,8 @@
 import LandingPage from '../../components/LandingPage.vue'
 
 export default {
-  title: 'Landing Page/Group Block',
+  title: 'User Journey/01 · Landing/Group Block',
+  id: 'landing-page-group-block',
   component: LandingPage,
   tags: ['autodocs'],
   parameters: {

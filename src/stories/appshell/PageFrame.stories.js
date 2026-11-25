@@ -6,7 +6,8 @@ import defaultBg from '../../../background-img/defaultBackgroundImage.png'
 import epLogoWhite from '../../assets/eventpipe logos/eventpipe-logo-fff.svg'
 
 export default {
-  title: 'App Shell/Page Frame',
+  title: 'Design System/App Chrome/Page Frame',
+  id: 'app-shell-page-frame',
   component: PageFrame,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },

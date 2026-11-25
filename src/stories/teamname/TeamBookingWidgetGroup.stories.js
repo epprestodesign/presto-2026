@@ -3,7 +3,8 @@
 import TeamBookingWidget from '../../components/teamname/TeamBookingWidget.vue'
 
 export default {
-  title: 'Team Name Qualifiers/Group Block/Booking Widget',
+  title: 'Design Requests/Team Name Qualifiers/Group Block/Booking Widget',
+  id: 'team-name-qualifiers-group-block-booking-widget',
   component: TeamBookingWidget,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

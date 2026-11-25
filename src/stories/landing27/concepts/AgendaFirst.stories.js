@@ -3,7 +3,8 @@
 import L27AgendaFirst from '../../../components/landing27/concepts/L27AgendaFirst.vue'
 
 export default {
-  title: "Landing Page Concepts '27/Concepts/Agenda First",
+  title: "Other Requests/Landing Concepts '27/Concepts/Agenda First",
+  id: 'landing-page-concepts-27-concepts-agenda-first',
   component: L27AgendaFirst,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

@@ -1,0 +1,172 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Browser, Live } from '../start-here/_blocks.js'
+import tilePipes from '../start-here/patterns/tile-pipes.svg'
+import noResults from '../start-here/screens/edge-no-results.jpg'
+
+<Meta title="Edge Cases/Overview" />
+
+export const SOURCE_FILE = `// src/stories/details/RoomCardReserve.stories.js (the component's own file)
+export default {
+  title: 'User Journey/03 · Hotel Details/Parts/Book Reservation/Room Card',
+  id: 'hotel-details-components-book-reservation-room-card',
+  // Shown under Edge Cases (src/stories/edge-cases/) so each edge case has one home.
+  excludeStories: ['SoldOut'],
+  // ...
+}
+
+export const SoldOut = { /* the story itself stays here */ }`
+
+export const EDGE_FILE = `// src/stories/edge-cases/SoldOutRoomCardReserve.stories.js
+import * as Src from '../details/RoomCardReserve.stories.js'
+
+export default {
+  ...Src.default,
+  title: 'Edge Cases/03 · Hotel Details/Sold Out Room Card/Book Reservation',
+  id: 'edge-cases-hotel-details-sold-out-room-card-book-reservation',
+  excludeStories: [],
+  tags: ['edge-sold-out', 'step-03', 'book-reservation'],
+}
+
+export const SoldOut = { ...Src.SoldOut, name: 'Sold Out' }`
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tilePipes}")` }}>
+  <div className="sh-eyebrow">Edge Cases</div>
+  <h1 className="sh-h1">Every edge case, in one place</h1>
+  <p className="sh-lede">What a page does when something is empty, slow, wrong, full or out of time.</p>
+  <div className="sh-chips">
+    <Live count="edge-cases" label="edge-case stories" />
+    <span className="sh-chip sh-chip--quiet">Steps 02, 03 and 04, plus Cart</span>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Coverage: Browse Hotels and Checkout have the most</h2>
+  <p className="sh-sub">Each story is counted once, by its name. Steps 01, 05 and 06 have no edge cases yet. This table is written by hand, so update it when you add one.</p>
+  <div className="sh-tablewrap">
+    <table className="sh-table">
+      <thead>
+        <tr><th>Step</th><th className="num">Empty</th><th className="num">Loading</th><th className="num">Error</th><th className="num">Sold out</th><th className="num">Limits</th><th className="num">Time-out</th><th className="num">Total</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">01 · Landing</th><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num"><span className="sh-gap">None</span></td></tr>
+        <tr><th scope="row">02 · Browse Hotels</th><td className="num">4</td><td className="num">4</td><td className="num">2</td><td className="num">1</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num">15*</td></tr>
+        <tr><th scope="row">03 · Hotel Details</th><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num">2</td><td className="num">1</td><td className="num sh-no">–</td><td className="num">3</td></tr>
+        <tr><th scope="row">04 · Checkout</th><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num">2</td><td className="num sh-no">–</td><td className="num">2</td><td className="num">1</td><td className="num">5</td></tr>
+        <tr><th scope="row">05 · Confirmation</th><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num"><span className="sh-gap">None</span></td></tr>
+        <tr><th scope="row">06 · Manage Booking</th><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num"><span className="sh-gap">None</span></td></tr>
+        <tr><th scope="row">Cart</th><td className="num">2</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num sh-no">–</td><td className="num">2</td></tr>
+        <tr><th scope="row">All steps</th><td className="num"><strong>6</strong></td><td className="num"><strong>4</strong></td><td className="num"><strong>4</strong></td><td className="num"><strong>3</strong></td><td className="num"><strong>3</strong></td><td className="num"><strong>1</strong></td><td className="num"><strong>25</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p className="sh-sub" style={{ marginTop: 12 }}>* The 15 include four stories that fit no single column: Full Results and Partial Results, in Book Reservation and in Group Block. They show the whole hotel list, with hotels that match, hotels that don't match the filters, and hotels with no rooms.</p>
+
+  <div className="sh-card sh-card--flat" style={{ marginTop: 20 }}>
+    <h3 className="sh-card__title sh-noc">Three stories stay in their own area</h3>
+    <ul className="sh-list">
+      <li><Go to="components-feedback-status-skeleton--docs">Skeleton</Go> and <Go to="components-actions-backdrop--global-loading" story>Backdrop · Global Loading</Go>, in Design System. They are parts, not pages. The page loading states built from them are here, under 02 · Browse Hotels.</li>
+      <li><Go to="team-name-qualifiers-book-reservation-add-a-team--duplicate-error" story>Add a Team · Duplicate Name Error</Go>, Book Reservation, in Team Name Qualifiers.</li>
+      <li><Go to="team-name-qualifiers-group-block-add-a-team--duplicate-error" story>Add a Team · Duplicate Name Error</Go>, Group Block, in Team Name Qualifiers. Both duplicate-name errors belong to that design request. They stay with it so the request reads as one piece of work.</li>
+    </ul>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">By step: open any edge case</h2>
+  <p className="sh-sub">Folders follow the journey step numbers. Each link opens the story, or a page with every story in that folder.</p>
+  <div className="sh-grid sh-grid--3">
+    <div className="sh-card" style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24, alignItems: 'center' }}>
+      <Browser src={noResults} alt="The hotel list with no results: No properties match your search" />
+      <div>
+        <div className="sh-eyebrow">15 stories</div>
+        <h3 className="sh-card__title sh-noc">02 · Browse Hotels</h3>
+        <p className="sh-card__text">What the hotel list shows with no results, when it fails to load, and while it loads.</p>
+        <div className="sh-pills">
+          <Go to="browse-hotels-components-results-result-states-book-reservation--docs" className="sh-pill">Result States · Book Reservation</Go>
+          <Go to="browse-hotels-components-results-result-states-group-block--docs" className="sh-pill">Result States · Group Block</Go>
+          <Go to="browse-hotels-components-results-empty-states--docs" className="sh-pill">Empty States</Go>
+          <Go to="browse-hotels-components-results-loading-states--docs" className="sh-pill">Loading States</Go>
+        </div>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">3 stories</div>
+      <h3 className="sh-card__title sh-noc">03 · Hotel Details</h3>
+      <p className="sh-card__text">A room card with every night sold out, and price details with the most fees an event can add.</p>
+      <div className="sh-pills">
+        <Go to="edge-cases-hotel-details-sold-out-room-card-book-reservation--sold-out" story className="sh-pill">Sold Out Room Card · Book Reservation</Go>
+        <Go to="edge-cases-hotel-details-sold-out-room-card-group-block--sold-out" story className="sh-pill">Sold Out Room Card · Group Block</Go>
+        <Go to="edge-cases-hotel-details-fee-limit-price-details--three-fees" story className="sh-pill">Fee Limit · Price Details</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">5 stories</div>
+      <h3 className="sh-card__title sh-noc">04 · Checkout</h3>
+      <p className="sh-card__text">Form errors, the teams block at its limit, three fees in the summary, and the hold timer in its last minute.</p>
+      <div className="sh-pills">
+        <Go to="edge-cases-checkout-form-errors-payment--validation-errors" story className="sh-pill">Form Errors · Payment</Go>
+        <Go to="edge-cases-checkout-teams-block--team-limit" story className="sh-pill">Teams Block · Team Limit</Go>
+        <Go to="edge-cases-checkout-teams-block--validation-errors" story className="sh-pill">Teams Block · Validation Errors</Go>
+        <Go to="edge-cases-checkout-fee-limit-reservation-summary--three-fees" story className="sh-pill">Fee Limit · Reservation Summary</Go>
+        <Go to="edge-cases-checkout-hold-timer--under-a-minute" story className="sh-pill">Hold Timer · Under a Minute</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">2 stories</div>
+      <h3 className="sh-card__title sh-noc">Cart</h3>
+      <p className="sh-card__text">The cart with nothing in it, and the added-to-cart message for a hotel with no photo.</p>
+      <div className="sh-pills">
+        <Go to="edge-cases-cart-cart-flyout--empty" story className="sh-pill">Cart Flyout · Empty Cart</Go>
+        <Go to="edge-cases-cart-added-to-cart--no-photo" story className="sh-pill">Added to Cart · No Photo</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Gaps worth a look</h2>
+  <p className="sh-sub">These are questions for product, not decisions. Each one could become a new edge case.</p>
+  <div className="sh-note">
+    <h3 className="sh-noc">Questions for product</h3>
+    <ul>
+      <li><strong>Landing.</strong> What does the event page show before booking opens, after it closes, or when every block is full?</li>
+      <li><strong>Checkout.</strong> What does a guest see when their card is declined? Today we only show field errors. And what happens when the hold timer reaches zero? Today we only show the "under a minute" state.</li>
+      <li><strong>Confirmation.</strong> What if the confirmation email doesn't arrive? What if only part of a Multiple Reservations booking goes through?</li>
+      <li><strong>Manage Booking.</strong> What do cancel and change dates look like? What does the page show when nothing is booked yet? A "No Trips Yet" empty state exists in 02 · Browse Hotels, but not on this page.</li>
+      <li><strong>Cart.</strong> What happens when a cart mixes Book Reservation and Group Block items?</li>
+    </ul>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">How to add one</h2>
+  <p className="sh-sub">The story stays in its component's file. A small file here shows it, so it has one home and is never listed twice.</p>
+  <div className="sh-steps">
+    <div className="sh-step">
+      <span className="sh-step__n">1</span>
+      <div className="sh-step__title">Hide it in its own file</div>
+      <div className="sh-step__text">Keep the story where it is. Add its export name to <code>excludeStories</code>, so the component's folder stops listing it.</div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">2</span>
+      <div className="sh-step__title">Show it here</div>
+      <div className="sh-step__text">Add a file to <code>src/stories/edge-cases/</code> that imports the source file and re-exports the story. Title it <code>Edge Cases/</code> plus the step folder. Give it a fixed <code>id</code>, so links keep working if it moves.</div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">3</span>
+      <div className="sh-step__title">Tag it</div>
+      <div className="sh-step__text">One edge tag: <code>edge-empty</code>, <code>edge-error</code>, <code>edge-sold-out</code>, <code>edge-limits</code> or <code>edge-time-out</code>. One step tag, such as <code>step-03</code> or <code>step-04</code>. One mode tag: <code>book-reservation</code>, <code>group-block</code> or <code>cart</code>.</div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">4</span>
+      <div className="sh-step__title">Update the table</div>
+      <div className="sh-step__text">Add it to the coverage table above. The live count at the top updates by itself.</div>
+    </div>
+  </div>
+  <pre className="sh-code">{SOURCE_FILE}</pre>
+  <pre className="sh-code">{EDGE_FILE}</pre>
+</div>
+
+</div>

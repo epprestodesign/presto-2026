@@ -164,7 +164,8 @@ const reservationsData = {
 }
 
 export default {
-  title: 'Confirmation/Book Reservation',
+  title: 'User Journey/05 · Confirmation/Book Reservation',
+  id: 'confirmation-book-reservation',
   component: ConfirmationPage,
   // holdData is shared with the Group Block story file — not a story itself.
   excludeStories: ['holdData'],

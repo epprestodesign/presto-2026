@@ -5,7 +5,8 @@ import L27BookingModal from '../../components/landing27/L27BookingModal.vue'
 import { frame } from './_helpers.js'
 
 export default {
-  title: "Landing Page Concepts '27/Components/Booking Modal",
+  title: "Other Requests/Landing Concepts '27/Components/Booking Modal",
+  id: 'landing-page-concepts-27-components-booking-modal',
   component: L27BookingModal,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

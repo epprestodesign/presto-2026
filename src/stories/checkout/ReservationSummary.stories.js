@@ -53,7 +53,10 @@ const cartWith = (fees) => {
 }
 
 export default {
-  title: 'Checkout Experience/Components/Reservation Summary',
+  title: 'User Journey/04 · Checkout/Parts/Reservation Summary',
+  id: 'checkout-experience-components-reservation-summary',
+  // Shown under Edge Cases (src/stories/edge-cases/) so each edge case has one home.
+  excludeStories: ['ThreeFees'],
   component: CartReview,
   tags: ['autodocs', 'new'],
   parameters: { docs: { description: { component: `

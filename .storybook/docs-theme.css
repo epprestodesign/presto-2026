@@ -1,0 +1,17 @@
+/* The "On this page" panel on every docs page (Storybook's built-in table of
+ * contents, turned on in preview.js). Styled like the reference Storybook:
+ * a small bold title, a thin rail, and the current section in Navy. */
+.sbdocs-toc--custom nav > h2,
+.sbdocs-toc--custom nav h2#table-of-contents {
+  font-size: 12px !important; font-weight: 800 !important; letter-spacing: 0.06em; text-transform: uppercase;
+  color: #01113E !important; margin: 0 0 12px !important; border: 0 !important; padding: 0 !important;
+}
+.sbdocs-toc--custom .toc-list { border-left: 2px solid #E1E7F2; padding-left: 0 !important; }
+.sbdocs-toc--custom .toc-list .toc-list { border-left: 0; padding-left: 12px !important; }
+.sbdocs-toc--custom .toc-list-item { margin: 0 !important; }
+.sbdocs-toc--custom .toc-link {
+  display: block; padding: 5px 0 5px 14px; margin-left: -2px; border-left: 2px solid transparent;
+  color: #566074 !important; font-size: 13.5px; line-height: 1.35; text-decoration: none !important;
+}
+.sbdocs-toc--custom .toc-link::before { display: none !important; }
+.sbdocs-toc--custom .toc-link.is-active-link { color: #01113E !important; font-weight: 700; border-left-color: #01113E; }

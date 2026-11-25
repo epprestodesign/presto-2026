@@ -1,0 +1,125 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Browser } from '../start-here/_blocks'
+import tilePipes from '../start-here/patterns/tile-pipes.svg'
+import shot from '../start-here/screens/step-03-details.jpg'
+
+<Meta title="User Journey/03 · Hotel Details/Overview" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tilePipes}")` }}>
+  <div className="sh-eyebrow">User journey · Step 03</div>
+  <h1 className="sh-h1">Hotel Details</h1>
+  <p className="sh-lede">The hotel details page shows one hotel: photos, a summary, rooms, amenities and policies. The guest picks a room here, or holds rooms night by night for a group, before going to checkout.</p>
+</div>
+
+<div style={{ marginTop: 28 }}>
+  <Browser src={shot} alt="The hotel details page, with the photo gallery, tabs and hotel summary" />
+  <p className="sh-sub" style={{ marginTop: 12 }}>The hotel details page in Book Reservation. The event, hotels, names and prices on these pages are sample data.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">The page in each mode</h2>
+  <p className="sh-sub">Both modes keep the same sections in the same order. The room cards change. Multiple Reservations uses the Book Reservation room cards.</p>
+  <div className="sh-grid">
+    <div className="sh-card">
+      <div className="sh-eyebrow">One stay</div>
+      <h3 className="sh-card__title sh-noc">Book Reservation</h3>
+      <p className="sh-card__text">Room cards show the rooms left each night, the price per night and for the stay, and a Reserve Room button.</p>
+      <div className="sh-links">
+        <Go to="hotel-details-book-reservation--page" story>Page</Go>
+        <Go to="hotel-details-book-reservation--teams-booking-widget" story>Teams Booking Widget</Go>
+        <Go to="hotel-details-book-reservation--core-booking-widget" story>Core Booking Widget</Go>
+        <Go to="hotel-details-book-reservation--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Rooms for a group</div>
+      <h3 className="sh-card__title sh-noc">Group Block</h3>
+      <p className="sh-card__text">Room cards have a stepper for each night, a starting price, and an Add to Cart button. The guest can add rooms at more than one hotel.</p>
+      <div className="sh-links">
+        <Go to="hotel-details-group-block--page" story>Page</Go>
+        <Go to="hotel-details-group-block--teams-booking-widget" story>Teams Booking Widget</Go>
+        <Go to="hotel-details-group-block--core-booking-widget" story>Core Booking Widget</Go>
+        <Go to="hotel-details-group-block--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Phone, 390px</div>
+      <h3 className="sh-card__title sh-noc">Mobile</h3>
+      <p className="sh-card__text">The page at phone width. The photos become a swipeable carousel with a back button on top, and room cards fill the width.</p>
+      <div className="sh-links">
+        <Go to="hotel-details-mobile--hotel-detail-page" story>Hotel Detail Page</Go>
+        <Go to="hotel-details-mobile--photo-gallery" story>Photo Gallery</Go>
+        <Go to="hotel-details-mobile--room-card" story>Room Card</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Parts</h2>
+  <p className="sh-sub">The room parts come in one set per mode. The rest of the page is shared.</p>
+  <div className="sh-grid sh-grid--3" style={{ alignItems: 'start' }}>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Book Reservation</div>
+      <div className="sh-pills">
+        <Go to="hotel-details-components-book-reservation-rooms--docs" className="sh-pill">Rooms</Go>
+        <Go to="hotel-details-components-book-reservation-room-card--docs" className="sh-pill">Room Card</Go>
+        <Go to="hotel-details-components-book-reservation-room-booking-dialog--docs" className="sh-pill">Room Booking Dialog</Go>
+        <Go to="hotel-details-components-book-reservation-price-details--docs" className="sh-pill">Price Details</Go>
+      </div>
+    </div>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Group Block</div>
+      <div className="sh-pills">
+        <Go to="hotel-details-components-group-block-rooms--docs" className="sh-pill">Rooms</Go>
+        <Go to="hotel-details-components-group-block-room-card--docs" className="sh-pill">Room Card</Go>
+        <Go to="hotel-details-components-group-block-room-booking-dialog--docs" className="sh-pill">Room Booking Dialog</Go>
+      </div>
+    </div>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Shared</div>
+      <div className="sh-pills">
+        <Go to="hotel-details-components-photo-gallery--docs" className="sh-pill">Photo Gallery</Go>
+        <Go to="hotel-details-components-detail-tabs--docs" className="sh-pill">Detail Tabs</Go>
+        <Go to="hotel-details-components-hotel-summary-header--docs" className="sh-pill">Hotel Summary Header</Go>
+        <Go to="hotel-details-components-amenities--docs" className="sh-pill">Amenities</Go>
+        <Go to="hotel-details-components-policies-property--docs" className="sh-pill">Policies & Property</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Edge cases</h2>
+  <p className="sh-sub">How a room card looks when it is sold out, and price details with the most fees an event can add.</p>
+  <div className="sh-grid">
+    <div className="sh-card">
+      <h3 className="sh-card__title sh-noc">Sold Out Room Card</h3>
+      <p className="sh-card__text">Every night is sold out: the card is dimmed and its button is turned off. Group Block steppers sit at zero.</p>
+      <div className="sh-links">
+        <Go to="edge-cases-hotel-details-sold-out-room-card-book-reservation--sold-out" story>Book Reservation</Go>
+        <Go to="edge-cases-hotel-details-sold-out-room-card-group-block--sold-out" story>Group Block</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <h3 className="sh-card__title sh-noc">Fee Limit</h3>
+      <p className="sh-card__text">Price Details with three fees, the most an event can add.</p>
+      <div className="sh-links">
+        <Go to="edge-cases-hotel-details-fee-limit-price-details--three-fees" story>Three Fees (Max)</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Next step</h2>
+  <p className="sh-sub">With rooms chosen, the guest goes to checkout.</p>
+  <div className="sh-actions">
+    <Go page="User Journey/04 · Checkout/Overview" className="sh-btn sh-btn--primary">04 · Checkout</Go>
+    <Go page="User Journey/Journey map" className="sh-btn sh-btn--ghost">Journey map</Go>
+  </div>
+</div>
+
+</div>

@@ -12,6 +12,8 @@ import 'quasar/src/css/index.sass'
 
 // Our global styles + component-level overrides.
 import '../src/css/app.scss'
+// The "On this page" panel's look.
+import './docs-theme.css'
 
 // Register Quasar as a Vue plugin for every story, then globally
 // register every Q* component so any story template can use <q-*>
@@ -76,130 +78,112 @@ const preview = {
         date: /Date$/i,
       },
     },
-    // Design-system information architecture: order the sidebar the way
-    // designers/product think, not alphabetically. Raw Quasar lives under
-    // "Catalog" at the bottom for reference during migration.
+    // "On this page" on every docs page (Storybook's built-in table of contents).
+    docs: {
+      toc: { title: 'On this page', headingSelector: 'h2, h3', ignoreSelector: '.sh-noc' },
+    },
+    // The sidebar reads in the order people work (reorganised 2026-11-25):
+    // orientation, the design system, the booking journey step by step, the
+    // edge cases of that journey, then request work, then early ideas, then
+    // replaced work. Every CSF file pins its old id, so links don't change when
+    // a title does; moved docs pages redirect (see .storybook/manager.js).
     options: {
       storySort: {
         order: [
-          'Getting Started', ['Introduction', 'Architecture & Conventions', 'User Journey & Build Spec', 'Story Template'],
-          'Widgets & Embeds', ['R&D Overview'],
-          'Foundations', [
-            'Colors', 'Palette', 'Color Contrast', 'Typography', 'Icons', 'Imagery',
-            'Spacing', 'Border Radius', 'Elevation', 'Breakpoints', 'Motion',
-          ],
-          'Components', [
-            'Actions', [
-              'Button', 'Dialog', 'Modal', 'Side Panel', 'Backdrop',
+          'Start Here', ['Overview', 'How to browse', 'Run and check', 'Booking modes', 'Architecture & Conventions', "What's new"],
+          'Design System', [
+            'Foundations', [
+              'Colors', 'Palette', 'Color Contrast', 'Typography', 'Icons', 'Imagery',
+              'Spacing', 'Border Radius', 'Elevation', 'Breakpoints', 'Motion',
             ],
-            'Forms', [
-              'Text Field', 'Text Area', 'Select', 'Autocomplete', 'Checkbox', 'Checkbox Tree',
-              'Radio Group', 'Choice Chips', 'Switch', 'Date Picker', 'Time Picker',
-              'Slider', 'Range', 'Rating', 'Quantity Stepper', 'Phone Field', 'Transfer List',
-            ],
-            'Feedback & Status', [
-              'Alert', 'Banner', 'Badge', 'Snackbar', 'Toast', 'Progress', 'Skeleton',
-            ],
-            'Layout & Structure', [
-              'Box', 'Card', 'Container', 'Grid', 'Stack', 'Divider', 'Section Header',
-              'List', 'List Item', 'Accordion', 'Tabs', 'Table',
-            ],
-            'Media & Visuals', [
-              'Avatar', 'Icon', 'Image List', 'Display Ad', 'Hero Banner', 'Rating',
-            ],
-            'Typography & Content', [
-              'Typography', 'Chip', 'Amenity', 'Tooltip',
-            ],
-          ],
-          'App Shell', [
-            'Global Nav & Cart', 'Cart Flyout', 'Cart Behavior', 'Added To Cart', 'Page Frame',
-            'Mobile',
-          ],
-          'Landing Page', [
-            'Book Reservation', 'Group Block',
-            'Components', ['Teams Booking Widget', 'Core Booking Widget'],
-            'Mobile',
-          ],
-          'Browse Hotels', [
-            'Book Reservation', 'Group Block',
             'Components', [
-              // Grouped by page region — top bar, left rail, results, right rail, footer.
-              'Top Bar', ['Breadcrumbs', 'Results Toolbar'],
-              'Left Rail', ['Filter Rail', 'Search & Filters', 'Hotel Map'],
-              'Results', [
-                'Hotel Listing Card',
-                'Result States', ['Book Reservation', 'Group Block', ['Full Results', 'Partial Results', 'No Results', 'Error', 'Loading']],
-                'Availability Dialog', 'Empty States', 'Loading States', 'Forms',
+              'Actions', ['Button', 'Dialog', 'Modal', 'Side Panel', 'Backdrop'],
+              'Forms', [
+                'Text Field', 'Text Area', 'Select', 'Autocomplete', 'Checkbox', 'Checkbox Tree',
+                'Radio Group', 'Choice Chips', 'Switch', 'Date Picker', 'Time Picker',
+                'Slider', 'Range', 'Rating', 'Quantity Stepper', 'Phone Field', 'Transfer List',
               ],
-              'Right Rail', ['Display Ads', ['160×600', '160×320', '120×600']],
-              'Footer', ['Pagination'],
+              'Feedback & Status', ['Alert', 'Banner', 'Badge', 'Snackbar', 'Toast', 'Progress', 'Skeleton'],
+              'Layout & Structure', [
+                'Box', 'Card', 'Container', 'Grid', 'Stack', 'Divider', 'Section Header',
+                'List', 'List Item', 'Accordion', 'Tabs', 'Table',
+              ],
+              'Media & Visuals', ['Avatar', 'Icon', 'Image List', 'Display Ad', 'Hero Banner', 'Rating'],
+              'Typography & Content', ['Typography', 'Chip', 'Amenity', 'Tooltip'],
             ],
-            'Mobile',
+            'App Chrome', ['Global Nav & Cart', 'Cart Flyout', 'Cart Behavior', 'Added To Cart', 'Page Frame', 'Mobile'],
           ],
-          'Hotel Details', [
-            'Book Reservation', 'Group Block',
-            'Components', [
-              // Both flow folders list their components in the SAME order.
-              'Book Reservation', ['Rooms', 'Room Card', 'Room Booking Dialog'],
-              'Group Block', ['Rooms', 'Room Card', 'Room Booking Dialog'],
-              'Photo Gallery', 'Detail Tabs', 'Hotel Summary Header', 'Amenities', 'Policies & Property',
+          // Each step: Overview, the page in each booking mode, Mobile, then the Parts it's built from.
+          'User Journey', [
+            'Journey map', 'Build Spec',
+            '01 · Landing', ['Overview', 'Book Reservation', 'Group Block', 'Mobile', 'Parts', ['Teams Booking Widget', 'Core Booking Widget']],
+            '02 · Browse Hotels', [
+              'Overview', 'Book Reservation', 'Group Block', 'Mobile',
+              'Parts', [
+                // Grouped by page region: top bar, left rail, results, right rail, footer.
+                'Top Bar', ['Breadcrumbs', 'Results Toolbar'],
+                'Left Rail', ['Filter Rail', 'Search & Filters', 'Hotel Map'],
+                'Results', ['Hotel Listing Card', 'Availability Dialog', 'Forms'],
+                'Right Rail', ['Display Ads', ['160×600', '160×320', '120×600']],
+                'Footer', ['Pagination'],
+              ],
             ],
-            'Mobile',
-          ],
-          'Checkout Experience Expanded', [
-            'Overview', ['Book Reservation', 'Group Block'],
-          ],
-          'Checkout Experience', [
-            'Book Reservation', 'Group Block',
-            'Components', [
-              'Book Reservation', ['Review Order', 'Contact Info', 'Reservation Guests', 'Payment', 'Review Reservation'],
-              'Group Block', ['Review Order', 'Contact Info', 'Review Reservation'],
+            '03 · Hotel Details', [
+              'Overview', 'Book Reservation', 'Group Block', 'Mobile',
+              'Parts', [
+                // Both mode folders list their parts in the SAME order.
+                'Book Reservation', ['Rooms', 'Room Card', 'Room Booking Dialog', 'Price Details'],
+                'Group Block', ['Rooms', 'Room Card', 'Room Booking Dialog'],
+                'Photo Gallery', 'Detail Tabs', 'Hotel Summary Header', 'Amenities', 'Policies & Property',
+              ],
             ],
-            'Old Designs',
-            'Mobile',
+            '04 · Checkout', [
+              'Overview', 'Book Reservation', 'Group Block', 'Mobile',
+              'Parts', [
+                'Book Reservation', ['Review Order', 'Contact Info', 'Reservation Guests', 'Payment', 'Review Reservation'],
+                'Group Block', ['Review Order', 'Contact Info', 'Review Reservation'],
+                'Reservation Summary',
+              ],
+            ],
+            '05 · Confirmation', ['Overview', 'Book Reservation', 'Group Block', 'Mobile'],
+            '06 · Manage Booking', ['Overview', 'Account'],
           ],
-          'Confirmation', [
-            'Book Reservation', 'Group Block',
-            'Mobile',
-          ],
-          '*',
-          'Manage Booking', [
-            'Account',
-          ],
-          // Corporate-events exploration (Christine, 11/2): 3–5 brand templates
-          // using IMEX America as the starting brand. Concept only.
-          "Landing Page Concepts '27", [
+          // What a page does when something is empty, slow, wrong, full or out of time.
+          'Edge Cases', [
             'Overview',
-            'Concepts', ['Heartbeat', 'After Dark', "Planner's Desk", 'Design Matters', 'Agenda First'],
-            'Components', [
-              'Booking Widget', 'Booking Modal', 'Stay Planner', 'Hotels & Map', 'Countdown',
-              'Stats Band', 'Block Meter', 'Sticky Bar & Floating Button', 'Logo Strip', 'FAQ', 'Add to Calendar',
-            ],
+            '02 · Browse Hotels', ['Result States', ['Book Reservation', 'Group Block', ['Full Results', 'Partial Results', 'No Results', 'Error', 'Loading']], 'Empty States', 'Loading States'],
+            '03 · Hotel Details', ['Sold Out Room Card', 'Fee Limit'],
+            '04 · Checkout', ['Form Errors', 'Teams Block', 'Fee Limit', 'Hold Timer'],
+            'Cart',
           ],
-          // Feature workstream — forked team-name touchpoints. Pinned to the very
-          // bottom so it reads as a separate R&D area, not part of the rigid flow.
-          'Team Name Qualifiers', [
+          // Work tied to a Linear design ticket, newest first.
+          'Design Requests', [
             'Overview',
-            'Book Reservation', [
-              'Booking Widget',
-              'Add a Team',
-              'Team Name Select',
-              'Checkout Contact & Qualifiers',
-              'Order Rail Summary',
-              'Confirmation',
+            'DES-478 · Experience Now', ['Overview', 'XNow Youth Sports Families', 'XNow Explorations', 'Confirmation Page', 'Confirmation Email', 'Experience Now Offer', 'Earlier Rounds'],
+            'Team Name Qualifiers', [
+              'Overview',
+              'Book Reservation', ['Booking Widget', 'Add a Team', 'Team Name Select', 'Checkout Contact & Qualifiers', 'Order Rail Summary', 'Confirmation'],
+              'Group Block', ['Booking Widget', 'Add a Team', 'Contact & Teams', 'Group Block Details', 'Confirmation'],
             ],
-            'Group Block', [
-              'Booking Widget',
-              'Add a Team',
-              'Contact & Teams',
-              'Group Block Details',
-              'Confirmation',
+            'Custom Fees',
+          ],
+          // Asks from sales, marketing or partners that have no design ticket.
+          'Other Requests', [
+            'Overview',
+            "Landing Concepts '27", [
+              'Overview',
+              'Concepts', ['Heartbeat', 'After Dark', "Planner's Desk", 'Design Matters', 'Agenda First'],
+              'Components', [
+                'Booking Widget', 'Booking Modal', 'Stay Planner', 'Hotels & Map', 'Countdown',
+                'Stats Band', 'Block Meter', 'Sticky Bar & Floating Button', 'Logo Strip', 'FAQ', 'Add to Calendar',
+              ],
             ],
+            'Partner Widgets',
           ],
-          // One folder per Linear ticket that needs a mockup — pinned last.
-          'Linear Tickets', [
-            'DES-478', ['Overview', 'XNow Youth Sports Families', 'XNow Explorations', 'XNow Verified Groups', 'Confirmation Page', 'Confirmation Email', 'Experience Now Offer'],
-          ],
+          // Ideas we are trying out. A concept until it becomes a request.
+          'Eventpipe Labs', ['Overview', 'Checkout All at Once', 'Booking Widget Ideas', 'Room Card Cart Ideas'],
+          // Replaced work, kept so old links still open.
+          'Archive',
         ],
       },
     },

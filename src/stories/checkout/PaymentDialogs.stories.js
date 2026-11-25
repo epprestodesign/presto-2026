@@ -4,7 +4,8 @@ import PaymentMethodDialog from '../../components/checkout/PaymentMethodDialog.v
 import AddPaymentDialog from '../../components/checkout/AddPaymentDialog.vue'
 
 export default {
-  title: 'Checkout Experience/Old Designs/Payment Dialogs',
+  title: 'Archive/Old Payment Dialogs',
+  id: 'checkout-experience-old-designs-payment-dialogs',
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `
 > **Old design.** The checkout Payment step now uses the inline

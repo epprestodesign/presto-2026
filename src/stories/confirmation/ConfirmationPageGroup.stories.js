@@ -5,7 +5,8 @@ import PageFrame from '../../components/PageFrame.vue'
 import { holdData } from './ConfirmationPage.stories.js'
 
 export default {
-  title: 'Confirmation/Group Block',
+  title: 'User Journey/05 · Confirmation/Group Block',
+  id: 'confirmation-group-block',
   component: ConfirmationPage,
   // 'Mobile' is relocated to Confirmation/Mobile (ConfirmationMobile.stories.js).
   excludeStories: ['Mobile'],

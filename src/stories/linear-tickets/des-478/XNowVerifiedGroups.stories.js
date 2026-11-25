@@ -23,7 +23,8 @@ const gallery = (width) => () => ({
 })
 
 export default {
-  title: 'Linear Tickets/DES-478/XNow Verified Groups',
+  title: 'Design Requests/DES-478 · Experience Now/Earlier Rounds/XNow Verified Groups',
+  id: 'linear-tickets-des-478-xnow-verified-groups',
   component: ExperienceNowOffer,
   argTypes: {
     look: { control: 'inline-radio', options: Object.keys(ALT_LOOKS) },

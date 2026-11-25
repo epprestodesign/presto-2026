@@ -5,7 +5,8 @@ import L27BookingWidget from '../../components/landing27/L27BookingWidget.vue'
 import { frame } from './_helpers.js'
 
 export default {
-  title: "Landing Page Concepts '27/Components/Booking Widget",
+  title: "Other Requests/Landing Concepts '27/Components/Booking Widget",
+  id: 'landing-page-concepts-27-components-booking-widget',
   component: L27BookingWidget,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

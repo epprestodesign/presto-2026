@@ -1,0 +1,101 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go } from './_blocks'
+import tileArcs from './patterns/tile-arcs.svg'
+
+<Meta title="Start Here/Booking modes" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tileArcs}")` }}>
+  <div className="sh-eyebrow">Start Here</div>
+  <h1 className="sh-h1">Booking modes</h1>
+  <p className="sh-lede">Presto books rooms in three modes: Book Reservation, Group Block and Multiple Reservations. Learn them first. Nearly every page and part in this library changes with the mode.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">The three modes</h2>
+  <p className="sh-sub">What each mode means, and whether the guest pays at checkout.</p>
+  <div className="sh-grid sh-grid--3">
+    <div className="sh-card">
+      <div className="sh-eyebrow">One stay</div>
+      <h3 className="sh-card__title sh-noc">Book Reservation</h3>
+      <p className="sh-card__text">A single stay: one hotel, one check-in and check-out, one guest party.</p>
+      <ul className="sh-list">
+        <li><strong>Charged:</strong> yes, by credit card at checkout.</li>
+        <li><strong>Checkout:</strong> Contact info, Payment, then Review reservation.</li>
+        <li><strong>Hotel card button:</strong> "Choose Your Room".</li>
+        <li><strong>In code:</strong> <code>reserve</code>, <code>reservation</code></li>
+      </ul>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">A team's rooms</div>
+      <h3 className="sh-card__title sh-noc">Group Block</h3>
+      <p className="sh-card__text">An organizer holds a block of rooms for a group or team. The rooms can be in more than one hotel and are held per night with steppers. A teams block is optional.</p>
+      <ul className="sh-list">
+        <li><strong>Charged:</strong> no. The organizer holds the rooms and attendees pay later. No payment step, no trip protection, no totals or taxes: only the nightly cost.</li>
+        <li><strong>Checkout:</strong> Review order, Contact and group info, then Review reservation. A Group Block Name and an Organization are required.</li>
+        <li><strong>Hotel card button:</strong> "Select Rooms".</li>
+        <li><strong>In code:</strong> <code>hold</code>, <code>group</code></li>
+      </ul>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Several stays</div>
+      <h3 className="sh-card__title sh-noc">Multiple Reservations</h3>
+      <p className="sh-card__text">Several rooms or hotels booked together, with guest info for each hotel and one checkout.</p>
+      <ul className="sh-list">
+        <li><strong>Charged:</strong> yes, by credit card at checkout.</li>
+        <li><strong>Checkout:</strong> the same steps as Book Reservation.</li>
+        <li><strong>In the sidebar:</strong> inside the Book Reservation folders of Checkout and Confirmation.</li>
+        <li><strong>In code:</strong> <code>reservations</code></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Names in code</h2>
+  <p className="sh-sub">The three modes are stable. The prop that sets them, and the value it takes, differ from component to component.</p>
+  <div className="sh-note">
+    <h3 className="sh-noc">Watch for name drift</h3>
+    <p>The same mode has different names in different components: <code>reserve</code> or <code>reservation</code>, <code>hold</code> or <code>group</code>. A wrong value fails silently: the component just shows the wrong flow. This drift is the biggest source of bugs, so check the table below, or the component's <code>defineProps</code>, before you set a mode.</p>
+  </div>
+  <div className="sh-tablewrap" style={{ marginTop: 16 }}><table className="sh-table">
+    <thead><tr><th>Component</th><th>Prop</th><th>Book Reservation</th><th>Group Block</th><th>Multiple Reservations</th></tr></thead>
+    <tbody>
+      <tr><td><code>LandingPage</code>, <code>BookingWidget</code></td><td><code>mode</code></td><td><code>reservations</code>{'*'}</td><td><code>group</code></td><td><code>reservations</code>{'*'}</td></tr>
+      <tr><td><code>CheckoutPage</code></td><td><code>mode</code></td><td><code>reservation</code></td><td><code>group</code></td><td><code>reservations</code></td></tr>
+      <tr><td><code>CartReview</code>, <code>ConfirmationPage</code></td><td><code>mode</code></td><td><code>reserve</code></td><td><code>hold</code></td><td><code>reservations</code></td></tr>
+      <tr><td><code>HotelDetailPage</code></td><td><code>roomsFlow</code></td><td><code>reserve</code></td><td><code>group</code></td><td><code>reserve</code></td></tr>
+      <tr><td><code>RoomsCarousel</code></td><td><code>flow</code></td><td><code>reserve</code></td><td><code>group</code></td><td><code>reserve</code></td></tr>
+      <tr><td><code>HotelCardGroup</code></td><td><code>flow</code></td><td><code>reserve</code></td><td><code>group</code></td><td><span className="sh-no">–</span></td></tr>
+      <tr><td><code>StepReviewOrder</code></td><td><code>mode</code></td><td><code>reserve</code></td><td><code>hold</code></td><td><code>reserve</code></td></tr>
+      <tr><td><code>StepReviewReservation</code></td><td><code>flow</code></td><td><code>reserve</code></td><td><code>group</code></td><td><code>reserve</code></td></tr>
+      <tr><td><code>StepContactInfo</code></td><td><code>mode</code></td><td><code>reservation</code></td><td><code>group</code></td><td><code>reservations</code></td></tr>
+      <tr><td><code>GlobalNav</code>, <code>PageFrame</code></td><td><code>cartMode</code></td><td><code>reserve</code></td><td><code>hold</code></td><td><code>reservations</code></td></tr>
+      <tr><td><code>PoliciesAgreement</code></td><td><code>flow</code></td><td><code>reserve</code></td><td><code>group</code></td><td><code>reserve</code></td></tr>
+    </tbody>
+  </table></div>
+  <ul className="sh-list">
+    <li>{'*'} The booking widget has two options only: <code>reservations</code> ("Book Reservations") and <code>group</code> ("Hold Rooms for Group or Team"). One stay or several is decided at checkout, not in the widget.</li>
+    <li>Rule of thumb: cart, confirmation and room parts use <code>reserve</code>, <code>hold</code>, <code>reservations</code>. The checkout page uses <code>reservation</code>, <code>group</code>, <code>reservations</code>. The widget and landing page use <code>reservations</code>, <code>group</code>.</li>
+  </ul>
+  <div className="sh-links"><Go page="Start Here/Architecture & Conventions" className="sh-link">The full cheat-sheet in Architecture and Conventions</Go></div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">See each mode</h2>
+  <p className="sh-sub">Each journey step in each mode. Up to Hotel Details, Multiple Reservations uses the Book Reservation pages.</p>
+  <div className="sh-tablewrap"><table className="sh-table">
+    <thead><tr><th>Step</th><th>Book Reservation</th><th>Group Block</th><th>Multiple Reservations</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">01 · Landing</th><td><Go to="landing-page-book-reservation--docs" className="sh-yes">Open</Go></td><td><Go to="landing-page-group-block--docs" className="sh-yes">Open</Go></td><td><span className="sh-no">Uses Book Reservation</span></td></tr>
+      <tr><th scope="row">02 · Browse Hotels</th><td><Go to="browse-hotels-book-reservation--docs" className="sh-yes">Open</Go></td><td><Go to="browse-hotels-group-block--docs" className="sh-yes">Open</Go></td><td><span className="sh-no">Uses Book Reservation</span></td></tr>
+      <tr><th scope="row">03 · Hotel Details</th><td><Go to="hotel-details-book-reservation--docs" className="sh-yes">Open</Go></td><td><Go to="hotel-details-group-block--docs" className="sh-yes">Open</Go></td><td><span className="sh-no">Uses Book Reservation</span></td></tr>
+      <tr><th scope="row">04 · Checkout</th><td><Go to="checkout-experience-book-reservation--docs" className="sh-yes">Open</Go></td><td><Go to="checkout-experience-group-block--docs" className="sh-yes">Open</Go></td><td><Go to="checkout-experience-book-reservation--multiple-room-reservations" story className="sh-yes">Open</Go></td></tr>
+      <tr><th scope="row">05 · Confirmation</th><td><Go to="confirmation-book-reservation--docs" className="sh-yes">Open</Go></td><td><Go to="confirmation-group-block--docs" className="sh-yes">Open</Go></td><td><Go to="confirmation-book-reservation--multiple-reservations" story className="sh-yes">Open</Go></td></tr>
+      <tr><th scope="row">06 · Manage Booking</th><td colSpan={3}><Go to="manage-booking-account--docs" className="sh-yes">Account</Go> <span className="sh-no">is one page for every mode.</span></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+</div>

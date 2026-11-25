@@ -5,7 +5,8 @@
 import BookingWidget from '../../components/BookingWidget.vue'
 
 export default {
-  title: 'Landing Page/Components/Teams Booking Widget/Explorations',
+  title: 'Eventpipe Labs/Booking Widget Ideas/Teams Booking Widget',
+  id: 'landing-page-components-teams-booking-widget-explorations',
   component: BookingWidget,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

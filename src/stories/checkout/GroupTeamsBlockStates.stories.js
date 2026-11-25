@@ -4,7 +4,10 @@ import { ref } from 'vue'
 import GroupTeamsBlock from '../../components/checkout/GroupTeamsBlock.vue'
 
 export default {
-  title: 'Checkout Experience/Components/Group Block/Contact Info/Teams Block',
+  title: 'User Journey/04 · Checkout/Parts/Group Block/Contact Info/Teams Block',
+  id: 'checkout-experience-components-group-block-contact-info-teams-block',
+  // Shown under Edge Cases (src/stories/edge-cases/) so each edge case has one home.
+  excludeStories: ['MultipleTeams', 'ValidationErrors'],
   component: GroupTeamsBlock,
   tags: ['autodocs'],
   parameters: {

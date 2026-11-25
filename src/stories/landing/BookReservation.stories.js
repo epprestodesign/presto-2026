@@ -5,7 +5,8 @@
 import LandingPage from '../../components/LandingPage.vue'
 
 export default {
-  title: 'Landing Page/Book Reservation',
+  title: 'User Journey/01 · Landing/Book Reservation',
+  id: 'landing-page-book-reservation',
   component: LandingPage,
   tags: ['autodocs'],
   parameters: {

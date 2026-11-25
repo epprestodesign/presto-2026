@@ -4,7 +4,8 @@
 import { Mobile as ConfGroupMobile } from './ConfirmationPageGroup.stories.js'
 
 export default {
-  title: 'Confirmation/Mobile',
+  title: 'User Journey/05 · Confirmation/Mobile',
+  id: 'confirmation-mobile',
   tags: ['mobile'],
   parameters: { layout: 'fullscreen' },
 }

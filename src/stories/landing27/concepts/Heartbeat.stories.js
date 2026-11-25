@@ -4,7 +4,8 @@
 import L27Heartbeat from '../../../components/landing27/concepts/L27Heartbeat.vue'
 
 export default {
-  title: "Landing Page Concepts '27/Concepts/Heartbeat",
+  title: "Other Requests/Landing Concepts '27/Concepts/Heartbeat",
+  id: 'landing-page-concepts-27-concepts-heartbeat',
   component: L27Heartbeat,
   tags: ['autodocs'],
   parameters: {

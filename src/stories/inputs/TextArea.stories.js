@@ -1,7 +1,8 @@
 /** INPUTS / Text Area → Quasar: QInput type="textarea" (native) */
 import { ref } from 'vue'
 export default {
-  title: 'Components/Forms/Text Area',
+  title: 'Design System/Components/Forms/Text Area',
+  id: 'components-forms-text-area',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

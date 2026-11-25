@@ -4,7 +4,8 @@ import Amenity from '../../components/Amenity.vue'
 import { AMENITIES, AMENITY_CATEGORIES, popularAmenities } from '../../lib/amenities.js'
 
 export default {
-  title: 'Components/Typography & Content/Amenity',
+  title: 'Design System/Components/Typography & Content/Amenity',
+  id: 'components-typography-content-amenity',
   component: Amenity,
   tags: ['autodocs'],
   argTypes: {

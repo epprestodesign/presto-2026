@@ -4,7 +4,8 @@ import { ref } from 'vue'
 import ReservationGuests from '../../components/checkout/ReservationGuests.vue'
 
 export default {
-  title: 'Checkout Experience/Components/Book Reservation/Reservation Guests',
+  title: 'User Journey/04 · Checkout/Parts/Book Reservation/Reservation Guests',
+  id: 'checkout-experience-components-book-reservation-reservation-guests',
   component: ReservationGuests,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

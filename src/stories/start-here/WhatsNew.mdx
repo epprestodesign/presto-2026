@@ -1,0 +1,115 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go } from './_blocks'
+import tileDots from './patterns/tile-dots.svg'
+
+<Meta title="Start Here/What's new" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tileDots}")` }}>
+  <div className="sh-eyebrow">Start Here</div>
+  <h1 className="sh-h1">What's new</h1>
+  <p className="sh-lede">Changes to this Storybook, newest first. Each entry says what changed and links to where that work lives now.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">November 2026</h2>
+  <div className="sh-steps">
+    <div className="sh-step">
+      <span className="sh-step__n">25</span>
+      <div className="sh-step__title">Nov 25, 2026 · The sidebar has seven areas plus Archive</div>
+      <div className="sh-step__text">
+        <p>The sidebar now reads in the order people work: Start Here, Design System, User Journey, Edge Cases, Design Requests, Other Requests and Eventpipe Labs, then Archive. Edge Cases is a new area for what a page does when something is empty, slow, wrong, full or out of time. Links shared before the move still open.</p>
+        <div className="sh-links"><Go page="Start Here/How to browse" className="sh-link">How to browse</Go><Go page="Edge Cases/Overview" className="sh-link">Edge Cases</Go></div>
+      </div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">12</span>
+      <div className="sh-step__title">Nov 12, 2026 · DES-478: clearer step circles</div>
+      <div className="sh-step__text">
+        <p>In the split looks of the Experience Now offer, steps still to do now show a gray outlined circle with a dark number. Only the done step, a green check, is solid. PR #48.</p>
+        <div className="sh-links"><Go page="Design Requests/DES-478 · Experience Now/Overview" className="sh-link">DES-478 · Experience Now</Go></div>
+      </div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">9</span>
+      <div className="sh-step__title">Nov 9, 2026 · DES-478: offers for youth sports families</div>
+      <div className="sh-step__text">
+        <p>New XNow Youth Sports Families page from Christine's feedback. The booking itself shows a guest is a youth sports family, so there is no verify step, and the button says "See my offers". The Verified Groups round was marked replaced. PR #47.</p>
+        <div className="sh-links"><Go to="linear-tickets-des-478-xnow-youth-sports-families--all-family-alts" story className="sh-link">XNow Youth Sports Families</Go></div>
+      </div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">8</span>
+      <div className="sh-step__title">Nov 8, 2026 · DES-478: verified groups versions</div>
+      <div className="sh-step__text">
+        <p>Three new versions of the offer for groups that XNow verifies, such as military and students: a banner, a card with perk chips, and a split with how it works. New copy options came with "Verify" buttons. This round now sits in Earlier Rounds. PR #46.</p>
+        <div className="sh-links"><Go to="linear-tickets-des-478-xnow-verified-groups--all-alts" story className="sh-link">XNow Verified Groups</Go></div>
+      </div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">7</span>
+      <div className="sh-step__title">Nov 7, 2026 · DES-478: the Experience Now partner offer</div>
+      <div className="sh-step__text">
+        <p>The partner offer on the confirmation page and the confirmation email, in all three booking modes. The offer then got XNow branding and six looks: presto, banner, ribbon, dark, sunset and split. A new prototype, <code>prototype-des478</code>, shows it for a Baltimore event on port 6478. PR #45.</p>
+        <div className="sh-links"><Go page="Design Requests/DES-478 · Experience Now/Overview" className="sh-link">DES-478 · Experience Now</Go><Go to="linear-tickets-des-478-xnow-explorations--all-looks" story className="sh-link">XNow Explorations</Go></div>
+      </div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">3</span>
+      <div className="sh-step__title">Nov 3, 2026 · Landing Concepts '27</div>
+      <div className="sh-step__text">
+        <p>Five landing page concepts for the corporate events vertical, from the Nov 2 weekly check-in with Christine: Heartbeat, After Dark, Planner's Desk, Design Matters and Agenda First. Each reaches booking a different way, and all share one set of new components. They use the IMEX America 2027 brand as a concept only and are not affiliated with IMEX. PR #44.</p>
+        <div className="sh-links"><Go page="Other Requests/Landing Concepts '27/Overview" className="sh-link">Landing Concepts '27</Go></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">October 2026</h2>
+  <div className="sh-steps">
+    <div className="sh-step">
+      <span className="sh-step__n">13</span>
+      <div className="sh-step__title">Oct 13, 2026 · Team Name Qualifiers: one shared team dropdown</div>
+      <div className="sh-step__text">
+        <p>From Josh's Oct 13 feedback (DES-468 to DES-477). Guests type in the Team name field to search, and a check marks the chosen team. Book Reservation and Group Block share this dropdown. Book Reservation has no Add Team button: a typed-in team saves with the reservation. "I'm not with a team" still asks for age division and gender. PR #43.</p>
+        <div className="sh-links"><Go to="team-name-qualifiers-book-reservation-team-name-select--docs" className="sh-link">Team Name Select</Go></div>
+      </div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">8</span>
+      <div className="sh-step__title">Oct 8, 2026 · Team Name Qualifiers: the Group Block team flow</div>
+      <div className="sh-step__text">
+        <p>The Group Block team step (DES-464 to DES-467), then matched to the Group Block design doc: the organizer adds one team at a time, picked from a searchable dropdown or typed in. In the prototype, the event setup toggles moved to an "Admin settings" panel. PR #42.</p>
+        <div className="sh-links"><Go to="team-name-qualifiers-group-block-contact-teams--docs" className="sh-link">Contact and Teams</Go></div>
+      </div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">7</span>
+      <div className="sh-step__title">Oct 7, 2026 · Team Name Qualifiers: both team list setups</div>
+      <div className="sh-step__text">
+        <p>The Book Reservation Team name field now works whether the event shows its team list or hides it (DES-461 to DES-463). A listed team asks for age division and gender. "I'm not with a team" adds one step to confirm. PR #41.</p>
+        <div className="sh-links"><Go to="team-name-qualifiers-book-reservation-checkout-contact-qualifiers--docs" className="sh-link">Checkout Contact and Qualifiers</Go></div>
+      </div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">7</span>
+      <div className="sh-step__title">Oct 7, 2026 · Team Name Qualifiers begins</div>
+      <div className="sh-step__text">
+        <p>A new workstream on where a team name and its qualifiers (age division, gender, guest type) are captured, carried and confirmed. Its components are copies in <code>src/components/teamname/</code>, so the shipped flow is untouched. It has its own prototype, <code>prototype-team-qualifiers</code>. PR #40.</p>
+        <div className="sh-links"><Go page="Design Requests/Team Name Qualifiers/Overview" className="sh-link">Team Name Qualifiers</Go></div>
+      </div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">6</span>
+      <div className="sh-step__title">Oct 6, 2026 · Partner Widgets: concepts E and F</div>
+      <div className="sh-step__text">
+        <p>Two more Spartan × Eventpipe concepts. Checkout sells tickets only, and the receipt offers a hotel that the guest books on a separate page. E uses Presto colors and F uses Spartan colors. PR #39.</p>
+        <div className="sh-links"><Go page="Other Requests/Partner Widgets/Overview" className="sh-link">Partner Widgets</Go></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

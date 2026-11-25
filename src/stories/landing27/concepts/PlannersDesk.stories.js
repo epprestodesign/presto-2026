@@ -3,7 +3,8 @@
 import L27PlannersDesk from '../../../components/landing27/concepts/L27PlannersDesk.vue'
 
 export default {
-  title: "Landing Page Concepts '27/Concepts/Planner's Desk",
+  title: "Other Requests/Landing Concepts '27/Concepts/Planner's Desk",
+  id: 'landing-page-concepts-27-concepts-planner-s-desk',
   component: L27PlannersDesk,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

@@ -5,7 +5,8 @@ import PageFrame from '../../components/PageFrame.vue'
 import { hotelBase, reserveRooms } from './_detail-data.js'
 
 export default {
-  title: 'Hotel Details/Book Reservation',
+  title: 'User Journey/03 · Hotel Details/Book Reservation',
+  id: 'hotel-details-book-reservation',
   component: HotelDetailPage,
   tags: ['autodocs'],
   parameters: {

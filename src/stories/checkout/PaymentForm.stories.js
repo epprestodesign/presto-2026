@@ -4,7 +4,10 @@ import { ref } from 'vue'
 import PaymentForm from '../../components/checkout/PaymentForm.vue'
 
 export default {
-  title: 'Checkout Experience/Components/Book Reservation/Payment',
+  title: 'User Journey/04 · Checkout/Parts/Book Reservation/Payment',
+  id: 'checkout-experience-components-book-reservation-payment',
+  // Shown under Edge Cases (src/stories/edge-cases/) so each edge case has one home.
+  excludeStories: ['ValidationErrors'],
   component: PaymentForm,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

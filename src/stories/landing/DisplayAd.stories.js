@@ -5,7 +5,8 @@
 import DisplayAd from '../../components/DisplayAd.vue'
 
 export default {
-  title: 'Components/Media & Visuals/Display Ad',
+  title: 'Design System/Components/Media & Visuals/Display Ad',
+  id: 'components-media-visuals-display-ad',
   component: DisplayAd,
   tags: ['autodocs'],
   argTypes: {

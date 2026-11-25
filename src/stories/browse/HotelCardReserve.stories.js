@@ -4,7 +4,8 @@ import HotelCardReserve from '../../components/browse/HotelCardReserve.vue'
 import { sampleRooms } from './_rooms-sample.js'
 
 export default {
-  title: 'Browse Hotels/Components/Results/Hotel Listing Card/Horizontal/Book Reservations',
+  title: 'User Journey/02 · Browse Hotels/Parts/Results/Hotel Listing Card/Horizontal/Book Reservation',
+  id: 'browse-hotels-components-results-hotel-listing-card-horizontal-book-reservations',
   component: HotelCardReserve,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

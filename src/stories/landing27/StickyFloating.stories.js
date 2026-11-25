@@ -5,7 +5,8 @@ import L27FloatingBook from '../../components/landing27/L27FloatingBook.vue'
 import { frame } from './_helpers.js'
 
 export default {
-  title: "Landing Page Concepts '27/Components/Sticky Bar & Floating Button",
+  title: "Other Requests/Landing Concepts '27/Components/Sticky Bar & Floating Button",
+  id: 'landing-page-concepts-27-components-sticky-bar-floating-button',
   component: L27StickyBar,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

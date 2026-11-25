@@ -2,7 +2,8 @@
 import { ramps } from '../_tokens-data.js'
 
 export default {
-  title: 'Foundations/Palette',
+  title: 'Design System/Foundations/Palette',
+  id: 'foundations-palette',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

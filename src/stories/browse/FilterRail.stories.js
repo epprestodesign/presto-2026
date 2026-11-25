@@ -2,7 +2,8 @@
 import FilterRail from '../../components/browse/FilterRail.vue'
 
 export default {
-  title: 'Browse Hotels/Components/Left Rail/Filter Rail',
+  title: 'User Journey/02 · Browse Hotels/Parts/Left Rail/Filter Rail',
+  id: 'browse-hotels-components-left-rail-filter-rail',
   component: FilterRail,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

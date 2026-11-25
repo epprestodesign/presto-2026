@@ -4,7 +4,8 @@
  * $button-border-radius (quasar.variables.scss) drive Quasar components.
  */
 const meta = {
-  title: 'Foundations/Border Radius',
+  title: 'Design System/Foundations/Border Radius',
+  id: 'foundations-border-radius',
   tags: ['autodocs'],
   parameters: {
     docs: {

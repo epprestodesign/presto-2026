@@ -1,7 +1,8 @@
 /** LAYOUT / Container → custom DsContainer (no Quasar equivalent) */
 import DsContainer from '../../components/DsContainer.vue'
 export default {
-  title: 'Components/Layout & Structure/Container',
+  title: 'Design System/Components/Layout & Structure/Container',
+  id: 'components-layout-structure-container',
   component: DsContainer,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

@@ -1,6 +1,7 @@
 /** LAYOUT / Grid → Quasar grid CSS classes (.row / .col-* / q-col-gutter-*) */
 export default {
-  title: 'Components/Layout & Structure/Grid',
+  title: 'Design System/Components/Layout & Structure/Grid',
+  id: 'components-layout-structure-grid',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

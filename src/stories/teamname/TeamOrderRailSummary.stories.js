@@ -4,7 +4,8 @@
 import TeamQualifierSummary from '../../components/teamname/TeamQualifierSummary.vue'
 
 export default {
-  title: 'Team Name Qualifiers/Book Reservation/Order Rail Summary',
+  title: 'Design Requests/Team Name Qualifiers/Book Reservation/Order Rail Summary',
+  id: 'team-name-qualifiers-book-reservation-order-rail-summary',
   component: TeamQualifierSummary,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

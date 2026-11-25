@@ -6,7 +6,8 @@ import { ref } from 'vue'
  * transition props (transition-show / transition-hide) on overlays.
  */
 const meta = {
-  title: 'Foundations/Motion',
+  title: 'Design System/Foundations/Motion',
+  id: 'foundations-motion',
   tags: ['autodocs'],
   parameters: {
     docs: {

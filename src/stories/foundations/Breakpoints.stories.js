@@ -7,7 +7,8 @@ import { computed } from 'vue'
  * Critical for spanning mobile booking app, desktop web, and lobby kiosks.
  */
 const meta = {
-  title: 'Foundations/Breakpoints',
+  title: 'Design System/Foundations/Breakpoints',
+  id: 'foundations-breakpoints',
   tags: ['autodocs'],
   parameters: {
     docs: {

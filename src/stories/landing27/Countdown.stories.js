@@ -3,7 +3,8 @@ import L27Countdown from '../../components/landing27/L27Countdown.vue'
 import { frame } from './_helpers.js'
 
 export default {
-  title: "Landing Page Concepts '27/Components/Countdown",
+  title: "Other Requests/Landing Concepts '27/Components/Countdown",
+  id: 'landing-page-concepts-27-components-countdown',
   component: L27Countdown,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `## Countdown

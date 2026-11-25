@@ -121,11 +121,12 @@ export const reservationsCart = {
 }
 
 export default {
-  title: 'App Shell/Global Nav & Cart/Book Reservation',
+  title: 'Design System/App Chrome/Global Nav & Cart/Book Reservation',
+  id: 'app-shell-global-nav-cart-book-reservation',
   component: GlobalNav,
   // holdCart / reserveCart / reservationsCart are shared cart DATA (also imported
   // by the Group Block story), not stories.
-  // 'Mobile' is relocated to the App Shell/Mobile folder (AppShellMobile.stories.js).
+  // 'Mobile' is relocated to the Design System/App Chrome/Mobile folder (AppShellMobile.stories.js).
   excludeStories: ['holdCart', 'reserveCart', 'reservationsCart', 'Mobile'],
   tags: ['autodocs'],
   parameters: {

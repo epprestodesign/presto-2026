@@ -1,0 +1,168 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go } from './_blocks'
+import tilePipes from './patterns/tile-pipes.svg'
+
+<Meta title="Start Here/Run and check" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tilePipes}")` }}>
+  <div className="sh-eyebrow">Start Here</div>
+  <h1 className="sh-h1">Run and check</h1>
+  <p className="sh-lede">The commands, ports, prototypes and checks for this Storybook. Use it when you run the library on your machine, add a part or ship a change.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Files</h2>
+  <p className="sh-sub">The files you will touch most, all from the repo root.</p>
+  <div className="sh-tablewrap"><table className="sh-table">
+    <thead><tr><th>File</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>package.json</code></td><td>The commands below.</td></tr>
+      <tr><td><code>.storybook/preview.js</code></td><td>The sidebar order (<code>storySort</code>) and the "On this page" panel.</td></tr>
+      <tr><td><code>.storybook/manager.js</code></td><td>The status dots in the sidebar and the <code>MOVED</code> redirects for pages that moved.</td></tr>
+      <tr><td><code>src/stories/start-here/status.js</code></td><td>The status of each request, idea or folder.</td></tr>
+      <tr><td><code>src/stories/start-here/_blocks.js</code></td><td>The building blocks of these docs pages: links, browser frames, status chips and live counts.</td></tr>
+      <tr><td><code>scripts/check-story-links.mjs</code></td><td>The link check.</td></tr>
+      <tr><td><code>scripts/story-ids-baseline.json</code></td><td>Every story and docs id on <code>main</code> before the Nov 25, 2026 reorganisation.</td></tr>
+      <tr><td><code>scripts/capture-docs-screens.mjs</code></td><td>Refreshes the screenshots on these docs pages.</td></tr>
+      <tr><td><code>.github/workflows/deploy.yml</code></td><td>Builds and deploys to GitHub Pages on every push to <code>main</code>.</td></tr>
+      <tr><td><code>.github/workflows/a11y.yml</code></td><td>The accessibility check on every pull request.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Run</h2>
+  <p className="sh-sub">Run <code>pnpm install</code> once at the repo root. The prototypes have no packages of their own, so this one install covers them too.</p>
+  <div className="sh-tablewrap"><table className="sh-table">
+    <thead><tr><th>Command</th><th>What it does</th><th className="num">Port</th></tr></thead>
+    <tbody>
+      <tr><td><code>pnpm storybook</code></td><td>Starts this Storybook. It reloads as you edit.</td><td className="num">6006</td></tr>
+      <tr><td><code>pnpm build-storybook</code></td><td>Builds the static site into <code>storybook-static/</code>. This is what deploys.</td><td className="num">–</td></tr>
+      <tr><td><code>pnpm test-storybook</code></td><td>Runs the accessibility audit against a Storybook already running on 6006.</td><td className="num">6006</td></tr>
+      <tr><td><code>pnpm a11y:ci</code></td><td>Serves <code>storybook-static/</code> on 6006 and runs the same audit. Build first.</td><td className="num">6006</td></tr>
+      <tr><td><code>pnpm a11y:report</code></td><td>Groups a saved audit log by rule and component. See Check, below.</td><td className="num">–</td></tr>
+      <tr><td><code>pnpm dev</code></td><td>The optional playground app, from <code>vite.config.js</code>.</td><td className="num">–</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Prototypes</h2>
+  <p className="sh-sub">Six clickable apps, each in its own folder at the repo root. Run one with <code>pnpm --dir</code> and the folder name. The deploy builds all six, so each is live under <a href="https://epprestodesign.github.io/presto-2026/" target="_blank" rel="noopener">epprestodesign.github.io/presto-2026</a>.</p>
+  <div className="sh-tablewrap"><table className="sh-table">
+    <thead><tr><th>Prototype</th><th>Run it</th><th className="num">Port</th><th>Live</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Booking journey</th><td><code>pnpm --dir prototype dev</code></td><td className="num">6100</td><td><a className="sh-yes" href="https://epprestodesign.github.io/presto-2026/prototype/" target="_blank" rel="noopener">/prototype/</a></td></tr>
+      <tr><th scope="row">Mobile</th><td><code>pnpm --dir prototype-mobile dev</code></td><td className="num">5174</td><td><a className="sh-yes" href="https://epprestodesign.github.io/presto-2026/prototype-mobile/" target="_blank" rel="noopener">/prototype-mobile/</a></td></tr>
+      <tr><th scope="row">Custom Fees</th><td><code>pnpm --dir prototype-custom-fees dev</code></td><td className="num">6200</td><td><a className="sh-yes" href="https://epprestodesign.github.io/presto-2026/prototype-custom-fees/" target="_blank" rel="noopener">/prototype-custom-fees/</a></td></tr>
+      <tr><th scope="row">Team Name Qualifiers</th><td><code>pnpm --dir prototype-team-qualifiers dev</code></td><td className="num">6200</td><td><a className="sh-yes" href="https://epprestodesign.github.io/presto-2026/prototype-team-qualifiers/" target="_blank" rel="noopener">/prototype-team-qualifiers/</a></td></tr>
+      <tr><th scope="row">DES-478 · Experience Now</th><td><code>pnpm --dir prototype-des478 dev</code></td><td className="num">6478</td><td><a className="sh-yes" href="https://epprestodesign.github.io/presto-2026/prototype-des478/" target="_blank" rel="noopener">/prototype-des478/</a></td></tr>
+      <tr><th scope="row">Partner Widgets</th><td><code>pnpm --dir spartanRace-ticketsocket-ep-demo-v1 dev</code></td><td className="num">6201</td><td><a className="sh-yes" href="https://epprestodesign.github.io/presto-2026/spartanRace-ticketsocket-ep-demo-v1/" target="_blank" rel="noopener">/spartanRace-ticketsocket-ep-demo-v1/</a></td></tr>
+    </tbody>
+  </table></div>
+  <ul className="sh-list">
+    <li>Mobile shows the booking journey inside a phone frame, so start the booking journey on 6100 first.</li>
+    <li>Custom Fees and Team Name Qualifiers are both set to 6200. Run one at a time.</li>
+    <li>The Storybook itself is live at the base URL, <a href="https://epprestodesign.github.io/presto-2026/" target="_blank" rel="noopener">epprestodesign.github.io/presto-2026/</a>.</li>
+  </ul>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Where things are</h2>
+  <p className="sh-sub">Components live in <code>src/components/</code>. Story files live in <code>src/stories/</code>, in folders that predate the sidebar areas, so a folder name does not always match its area.</p>
+  <pre className="sh-code">{`src/components/
+  *.vue            shared parts: Ds* primitives, GlobalNav, PageFrame,
+                   BookingWidget, CartReview, CartFlyout, HotelMap …
+  browse/          02 · Browse Hotels
+  details/         03 · Hotel Details
+  checkout/        04 · Checkout
+  confirmation/    05 · Confirmation
+  managebooking/   06 · Manage Booking
+  des478/          DES-478 · Experience Now
+  teamname/        Team Name Qualifiers (forks, prefixed Team…)
+  landing27/       Landing Concepts '27`}</pre>
+  <div className="sh-tablewrap" style={{ marginTop: 16 }}><table className="sh-table">
+    <thead><tr><th>Folder in src/stories/</th><th>Sidebar area</th></tr></thead>
+    <tbody>
+      <tr><td><code>start-here/</code>, <code>Introduction.mdx</code>, <code>Architecture.mdx</code></td><td>Start Here</td></tr>
+      <tr><td><code>foundations/</code>, <code>inputs/</code>, <code>feedback/</code>, <code>layout/</code>, <code>data-display/</code>, <code>navigation/</code>, <code>appshell/</code>, <code>Colors.stories.js</code></td><td>Design System</td></tr>
+      <tr><td><code>journey/</code> (the journey map and step overviews), <code>landing/</code>, <code>browse/</code>, <code>details/</code>, <code>checkout/</code>, <code>confirmation/</code>, <code>managebooking/</code>, <code>patterns/</code>, <code>UserJourney.mdx</code></td><td>User Journey</td></tr>
+      <tr><td><code>edge-cases/</code>, plus a few files in <code>browse/</code> and <code>patterns/</code></td><td>Edge Cases</td></tr>
+      <tr><td><code>requests/Overview.mdx</code>, <code>requests/CustomFees.mdx</code>, <code>linear-tickets/des-478/</code>, <code>teamname/</code></td><td>Design Requests</td></tr>
+      <tr><td><code>requests/OtherOverview.mdx</code>, <code>landing27/</code>, <code>widgets/</code></td><td>Other Requests</td></tr>
+      <tr><td><code>labs/</code>, plus files beside their step, such as <code>checkout/CheckoutPageExpanded.stories.js</code></td><td>Eventpipe Labs</td></tr>
+      <tr><td><code>archive/</code>, <code>checkout/PaymentDialogs.stories.js</code></td><td>Archive</td></tr>
+    </tbody>
+  </table></div>
+  <p className="sh-sub" style={{ marginTop: 14 }}>A story's place in the sidebar comes from its <code>title</code>, not its folder. To find the file for a page, search the repo for its title.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Check</h2>
+  <p className="sh-sub">Three checks. Run them before you open a pull request.</p>
+  <div className="sh-steps">
+    <div className="sh-step">
+      <span className="sh-step__n">1</span>
+      <div className="sh-step__title">Accessibility</div>
+      <div className="sh-step__text">Run <code>pnpm build-storybook</code>, then <code>pnpm a11y:ci</code>. It checks every story against WCAG 2.2 A and AA with axe. To read the result by rule, save the log with <code>pnpm a11y:ci &gt; a11y.log 2&gt;&amp;1</code>, then run <code>node scripts/a11y-report.mjs a11y.log</code>. In CI, <code>a11y.yml</code> runs the same check on every pull request to <code>main</code>. It reports problems but does not fail the run, unless you start it by hand with strict turned on.</div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">2</span>
+      <div className="sh-step__title">Links</div>
+      <div className="sh-step__text">Run <code>node scripts/check-story-links.mjs</code> after a build, or add <code>http://127.0.0.1:6006</code> to check a running Storybook. It compares every story id from before the reorganisation with today's index. It fails if an old id is neither kept nor redirected, if a redirect points nowhere, or if a link on a docs page is broken.</div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">3</span>
+      <div className="sh-step__title">Docs screenshots</div>
+      <div className="sh-step__text">With the Storybook running, run <code>node scripts/capture-docs-screens.mjs</code>. It captures live stories at 1440 by 900 and saves them to <code>src/stories/start-here/screens/</code>. Run it when a page shown on these docs changes.</div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Add a part</h2>
+  <p className="sh-sub">Five steps, so a new part lands in the right place and its link never breaks.</p>
+  <div className="sh-steps">
+    <div className="sh-step">
+      <span className="sh-step__n">1</span>
+      <div className="sh-step__title">Choose the area by its rule</div>
+      <div className="sh-step__text">Each area has a one-line rule. Pick the one that fits. <Go page="Start Here/How to browse" className="sh-link">The rules</Go></div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">2</span>
+      <div className="sh-step__title">Give it a title</div>
+      <div className="sh-step__text">The title is its place in the sidebar, for example <code>title: 'Edge Cases/Cart/Cart Flyout'</code>.</div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">3</span>
+      <div className="sh-step__title">Pin its id</div>
+      <div className="sh-step__text">In a new file, set <code>id:</code> to the title in lower case with dashes: <code>id: 'edge-cases-cart-cart-flyout'</code>. The link then stays the same if the title moves later. Never change the <code>id:</code> of a file that already has one.</div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">4</span>
+      <div className="sh-step__title">Add it to the sidebar order</div>
+      <div className="sh-step__text">Add the title to <code>storySort</code> in <code>.storybook/preview.js</code>, in the spot where it belongs.</div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">5</span>
+      <div className="sh-step__title">Redirect a renamed docs page</div>
+      <div className="sh-step__text">A docs page's id comes from its title. If you rename one that has been shared, add a <code>MOVED</code> entry in <code>.storybook/manager.js</code> from the old id to the new page, then run the link check.</div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Deploy</h2>
+  <p className="sh-sub">Merge to <code>main</code> and it deploys. Work on a branch, never on <code>main</code>.</p>
+  <ul className="sh-list">
+    <li><code>deploy.yml</code> runs on every push to <code>main</code>. You can also start it by hand.</li>
+    <li>It installs with pnpm 9 on Node 24, then runs <code>pnpm build-storybook</code>.</li>
+    <li>It builds each prototype with Vite and copies it into the Storybook build, so each one is served from its own folder under <code>/presto-2026/</code>.</li>
+    <li>The builds use the shared imagery library and a Google Maps key kept as a repo secret.</li>
+    <li>It uploads the result and deploys it to GitHub Pages. Only one deploy runs at a time, and a newer push cancels one in progress.</li>
+  </ul>
+</div>
+
+</div>

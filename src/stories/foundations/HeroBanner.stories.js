@@ -10,7 +10,8 @@ const EVENT_NAME = 'Summer Soccer Classic 2027'
 const EVENT_DATES = 'Wed, 6/16/2027 - Sat, 6/19/2027'
 
 export default {
-  title: 'Components/Media & Visuals/Hero Banner',
+  title: 'Design System/Components/Media & Visuals/Hero Banner',
+  id: 'components-media-visuals-hero-banner',
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',

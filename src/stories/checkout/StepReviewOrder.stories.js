@@ -3,7 +3,8 @@ import StepReviewOrder from '../../components/checkout/steps/StepReviewOrder.vue
 import { reserveCart } from './_fixtures'
 
 export default {
-  title: 'Checkout Experience/Components/Book Reservation/Review Order',
+  title: 'User Journey/04 · Checkout/Parts/Book Reservation/Review Order',
+  id: 'checkout-experience-components-book-reservation-review-order',
   component: StepReviewOrder,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: 'Step 1 — recycles the cart body: the single-stay reservation summary.' } } },

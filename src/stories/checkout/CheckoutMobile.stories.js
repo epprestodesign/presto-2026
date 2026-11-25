@@ -15,7 +15,8 @@ import { Reservation } from './StepReviewReservation.stories.js'
 import { Mobile as GroupCheckoutMobile } from './CheckoutPageGroup.stories.js'
 
 export default {
-  title: 'Checkout Experience/Mobile',
+  title: 'User Journey/04 · Checkout/Mobile',
+  id: 'checkout-experience-mobile',
   tags: ['mobile'],
   parameters: { layout: 'fullscreen' },
 }

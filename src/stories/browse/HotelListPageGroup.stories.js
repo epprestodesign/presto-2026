@@ -6,7 +6,8 @@ import PageFrame from '../../components/PageFrame.vue'
 import HoldTimerBanner from '../../components/HoldTimerBanner.vue'
 
 export default {
-  title: 'Browse Hotels/Group Block',
+  title: 'User Journey/02 · Browse Hotels/Group Block',
+  id: 'browse-hotels-group-block',
   component: HotelListPage,
   tags: ['autodocs'],
   parameters: {

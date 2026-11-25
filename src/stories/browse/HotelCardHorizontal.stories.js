@@ -22,7 +22,8 @@ const useImages = (specs) => {
 }
 
 export default {
-  title: 'Browse Hotels/Mobile/Hotel Listing Card',
+  title: 'User Journey/02 · Browse Hotels/Mobile/Hotel Listing Card',
+  id: 'browse-hotels-mobile-hotel-listing-card',
   component: HotelCardHorizontal,
   tags: ['autodocs', 'mobile'],
   parameters: {

@@ -26,7 +26,8 @@ const gallery = (width) => () => ({
 const FAMILY_COPY = ['family', 'familyFriendly', 'familyShort']
 
 export default {
-  title: 'Linear Tickets/DES-478/XNow Youth Sports Families',
+  title: 'Design Requests/DES-478 · Experience Now/XNow Youth Sports Families',
+  id: 'linear-tickets-des-478-xnow-youth-sports-families',
   component: ExperienceNowOffer,
   argTypes: {
     look: { control: 'inline-radio', options: Object.keys(FAMILY_LOOKS) },

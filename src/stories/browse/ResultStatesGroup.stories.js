@@ -6,7 +6,8 @@ import HotelListPage from '../../components/browse/HotelListPage.vue'
 import PageFrame from '../../components/PageFrame.vue'
 
 export default {
-  title: 'Browse Hotels/Components/Results/Result States/Group Block',
+  title: 'Edge Cases/02 · Browse Hotels/Result States/Group Block',
+  id: 'browse-hotels-components-results-result-states-group-block',
   component: HotelListPage,
   tags: ['autodocs'],
   parameters: {

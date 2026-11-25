@@ -1,0 +1,152 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Browser } from '../start-here/_blocks'
+import tilePipes from '../start-here/patterns/tile-pipes.svg'
+import shot from '../start-here/screens/step-02-browse.jpg'
+import noResults from '../start-here/screens/edge-no-results.jpg'
+
+<Meta title="User Journey/02 · Browse Hotels/Overview" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tilePipes}")` }}>
+  <div className="sh-eyebrow">User journey · Step 02</div>
+  <h1 className="sh-h1">Browse Hotels</h1>
+  <p className="sh-lede">The hotel list shows the hotels for the guest's search. The guest filters, sorts and compares them on a list and a map, then picks one hotel to see its rooms.</p>
+</div>
+
+<div style={{ marginTop: 28 }}>
+  <Browser src={shot} alt="The hotel list in Book Reservation, with the map, filters and a hotel card" />
+  <p className="sh-sub" style={{ marginTop: 12 }}>The hotel list in Book Reservation, with the Teams Booking Widget. The event, hotels, names and prices on these pages are sample data.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">The page in each mode</h2>
+  <p className="sh-sub">The page has the same parts in each mode. The hotel cards change: their price, their availability wording and their button. Multiple Reservations uses the Book Reservation cards.</p>
+  <div className="sh-grid">
+    <div className="sh-card">
+      <div className="sh-eyebrow">One stay</div>
+      <h3 className="sh-card__title sh-noc">Book Reservation</h3>
+      <p className="sh-card__text">The full results page. Each hotel card shows the nightly and total price and a Choose Your Room button.</p>
+      <div className="sh-links">
+        <Go to="browse-hotels-book-reservation--teams-booking-widget" story>Teams Booking Widget</Go>
+        <Go to="browse-hotels-book-reservation--core-booking-widget" story>Core Booking Widget</Go>
+        <Go to="browse-hotels-book-reservation--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Rooms for a group</div>
+      <h3 className="sh-card__title sh-noc">Group Block</h3>
+      <p className="sh-card__text">The same page for a group. Each hotel card shows a starting price, how many rooms are free, and a Select Rooms button. One story shows the hold timer.</p>
+      <div className="sh-links">
+        <Go to="browse-hotels-group-block--teams-booking-widget" story>Teams Booking Widget</Go>
+        <Go to="browse-hotels-group-block--core-booking-widget" story>Core Booking Widget</Go>
+        <Go to="browse-hotels-group-block--hold-active" story>Hold Active</Go>
+        <Go to="browse-hotels-group-block--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Phone, 390px</div>
+      <h3 className="sh-card__title sh-noc">Mobile</h3>
+      <p className="sh-card__text">The results page at phone width, in both modes. The search folds into a one-line summary, and Filters and Map sit side by side.</p>
+      <div className="sh-links">
+        <Go to="browse-hotels-mobile--hotel-list-page" story>Hotel List Page</Go>
+        <Go to="browse-hotels-mobile--hotel-list-page-group" story>Group Block</Go>
+        <Go to="browse-hotels-mobile-hotel-listing-card--docs">Hotel Listing Card</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Parts</h2>
+  <p className="sh-sub">Grouped by where they sit on the page, the same way the sidebar groups them.</p>
+  <div className="sh-grid sh-grid--3" style={{ alignItems: 'start' }}>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Top Bar</div>
+      <div className="sh-pills">
+        <Go to="browse-hotels-components-top-bar-breadcrumbs--docs" className="sh-pill">Breadcrumbs</Go>
+        <Go to="browse-hotels-components-top-bar-results-toolbar--docs" className="sh-pill">Results Toolbar</Go>
+      </div>
+    </div>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Left Rail</div>
+      <div className="sh-pills">
+        <Go to="browse-hotels-components-left-rail-filter-rail--docs" className="sh-pill">Filter Rail</Go>
+        <Go to="browse-hotels-components-left-rail-search-filters--docs" className="sh-pill">Search & Filters</Go>
+        <Go to="browse-hotels-components-left-rail-hotel-map--docs" className="sh-pill">Hotel Map</Go>
+      </div>
+    </div>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Results</div>
+      <p className="sh-card__text" style={{ marginTop: 12 }}>Hotel Listing Card</p>
+      <div className="sh-pills" style={{ marginTop: 8 }}>
+        <Go to="browse-hotels-components-results-hotel-listing-card-horizontal-book-reservations--docs" className="sh-pill">Horizontal · Book Reservation</Go>
+        <Go to="browse-hotels-components-results-hotel-listing-card-horizontal-group-block--docs" className="sh-pill">Horizontal · Group Block</Go>
+        <Go to="browse-hotels-components-results-hotel-listing-card-vertical-book-reservations--docs" className="sh-pill">Vertical · Book Reservation</Go>
+        <Go to="browse-hotels-components-results-hotel-listing-card-vertical-group-block--docs" className="sh-pill">Vertical · Group Block</Go>
+      </div>
+      <div className="sh-pills">
+        <Go to="browse-hotels-components-results-availability-dialog--docs" className="sh-pill">Availability Dialog</Go>
+        <Go to="browse-hotels-components-results-forms--docs" className="sh-pill">Forms</Go>
+      </div>
+    </div>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Right Rail</div>
+      <p className="sh-card__text" style={{ marginTop: 12 }}>Display Ads</p>
+      <div className="sh-pills" style={{ marginTop: 8 }}>
+        <Go to="browse-hotels-components-right-rail-display-ads-160×600--docs" className="sh-pill">160×600</Go>
+        <Go to="browse-hotels-components-right-rail-display-ads-160×320--docs" className="sh-pill">160×320</Go>
+        <Go to="browse-hotels-components-right-rail-display-ads-120×600--docs" className="sh-pill">120×600</Go>
+      </div>
+    </div>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Footer</div>
+      <div className="sh-pills">
+        <Go to="browse-hotels-components-footer-pagination--docs" className="sh-pill">Pagination</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Edge cases</h2>
+  <p className="sh-sub">How the hotel list looks when results are partial, empty, in error or still loading.</p>
+  <div className="sh-grid sh-grid--2">
+    <div className="sh-card">
+      <Browser src={noResults} alt="The hotel list with no properties found and a Clear all filters button" />
+      <h3 className="sh-card__title sh-noc">Result States</h3>
+      <p className="sh-card__text">The results list when it is full, partial, empty, in error or loading, in each mode.</p>
+      <div className="sh-links">
+        <Go to="browse-hotels-components-results-result-states-book-reservation--docs">Book Reservation</Go>
+        <Go to="browse-hotels-components-results-result-states-group-block--docs">Group Block</Go>
+      </div>
+    </div>
+    <div style={{ display: 'grid', gap: 16, alignContent: 'start' }}>
+    <div className="sh-card">
+      <h3 className="sh-card__title sh-noc">Empty States</h3>
+      <p className="sh-card__text">Three empty messages: no trips yet, no results, and sold out.</p>
+      <div className="sh-links">
+        <Go to="browse-hotels-components-results-empty-states--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <h3 className="sh-card__title sh-noc">Loading States</h3>
+      <p className="sh-card__text">Skeleton cards shaped like the hotel card, so the loading view matches the loaded list. One for each mode.</p>
+      <div className="sh-links">
+        <Go to="browse-hotels-components-results-loading-states--docs">Docs</Go>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Next step</h2>
+  <p className="sh-sub">When the guest picks a hotel, its details page opens.</p>
+  <div className="sh-actions">
+    <Go page="User Journey/03 · Hotel Details/Overview" className="sh-btn sh-btn--primary">03 · Hotel Details</Go>
+    <Go page="User Journey/Journey map" className="sh-btn sh-btn--ghost">Journey map</Go>
+  </div>
+</div>
+
+</div>

@@ -6,7 +6,8 @@ import HotelListPage from '../../components/browse/HotelListPage.vue'
 import PageFrame from '../../components/PageFrame.vue'
 
 export default {
-  title: 'Browse Hotels/Book Reservation',
+  title: 'User Journey/02 · Browse Hotels/Book Reservation',
+  id: 'browse-hotels-book-reservation',
   component: HotelListPage,
   // 'Mobile' is relocated to Browse Hotels/Mobile (BrowseMobile.stories.js).
   excludeStories: ['Mobile'],

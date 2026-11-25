@@ -3,7 +3,8 @@
 import TeamAddTeamModal from '../../components/teamname/TeamAddTeamModal.vue'
 
 export default {
-  title: 'Team Name Qualifiers/Group Block/Add a Team',
+  title: 'Design Requests/Team Name Qualifiers/Group Block/Add a Team',
+  id: 'team-name-qualifiers-group-block-add-a-team',
   component: TeamAddTeamModal,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

@@ -7,7 +7,8 @@
  * and .text-lead. Use classes — not a component — for text.
  */
 const meta = {
-  title: 'Components/Typography & Content/Typography',
+  title: 'Design System/Components/Typography & Content/Typography',
+  id: 'components-typography-content-typography',
   tags: ['autodocs'],
   parameters: {
     docs: {

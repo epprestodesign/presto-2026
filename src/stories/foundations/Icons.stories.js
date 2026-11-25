@@ -3,7 +3,8 @@
  * Curated for a consumer HOTEL BOOKING & RESERVATION experience.
  */
 export default {
-  title: 'Foundations/Icons',
+  title: 'Design System/Foundations/Icons',
+  id: 'foundations-icons',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

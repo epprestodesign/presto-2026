@@ -3,7 +3,8 @@ import L27HotelMap from '../../components/landing27/L27HotelMap.vue'
 import { frame } from './_helpers.js'
 
 export default {
-  title: "Landing Page Concepts '27/Components/Hotels & Map",
+  title: "Other Requests/Landing Concepts '27/Components/Hotels & Map",
+  id: 'landing-page-concepts-27-components-hotels-map',
   component: L27HotelMap,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `## Hotels & Map

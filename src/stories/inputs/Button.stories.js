@@ -4,7 +4,8 @@ import { QBtn } from 'quasar'
  * INPUTS / Button  →  Quasar: QBtn  (direct usage, no wrapper)
  */
 const meta = {
-  title: 'Components/Actions/Button',
+  title: 'Design System/Components/Actions/Button',
+  id: 'components-actions-button',
   component: QBtn,
   tags: ['autodocs'],
   parameters: {

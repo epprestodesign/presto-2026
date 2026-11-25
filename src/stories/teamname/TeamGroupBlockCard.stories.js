@@ -4,7 +4,8 @@
 import TeamGroupBlockCard from '../../components/teamname/TeamGroupBlockCard.vue'
 
 export default {
-  title: 'Team Name Qualifiers/Group Block/Group Block Details',
+  title: 'Design Requests/Team Name Qualifiers/Group Block/Group Block Details',
+  id: 'team-name-qualifiers-group-block-group-block-details',
   component: TeamGroupBlockCard,
   tags: ['autodocs'],
   argTypes: {

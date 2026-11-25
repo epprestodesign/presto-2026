@@ -22,7 +22,8 @@ const holdCart = {
 }
 
 export default {
-  title: 'App Shell/Cart Behavior',
+  title: 'Design System/App Chrome/Cart Behavior',
+  id: 'app-shell-cart-behavior',
   component: CartBehavior,
   tags: ['autodocs'],
   parameters: {

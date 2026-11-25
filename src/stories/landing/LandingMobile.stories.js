@@ -6,7 +6,8 @@
 import { CoreBookingWidget } from './BookReservation.stories.js'
 
 export default {
-  title: 'Landing Page/Mobile',
+  title: 'User Journey/01 · Landing/Mobile',
+  id: 'landing-page-mobile',
   tags: ['mobile'],
   parameters: { layout: 'fullscreen' },
 }

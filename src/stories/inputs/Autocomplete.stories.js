@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 const destinations = ['New York, USA', 'Paris, France', 'Tokyo, Japan', 'London, UK', 'Rome, Italy', 'Barcelona, Spain', 'Dubai, UAE', 'Sydney, Australia', 'Cancún, Mexico']
 export default {
-  title: 'Components/Forms/Autocomplete',
+  title: 'Design System/Components/Forms/Autocomplete',
+  id: 'components-forms-autocomplete',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

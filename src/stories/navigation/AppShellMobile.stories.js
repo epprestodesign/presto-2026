@@ -4,7 +4,8 @@
 import { Mobile as NavMobile } from './GlobalNav.stories.js'
 
 export default {
-  title: 'App Shell/Mobile',
+  title: 'Design System/App Chrome/Mobile',
+  id: 'app-shell-mobile',
   tags: ['mobile'],
   parameters: { layout: 'fullscreen' },
 }

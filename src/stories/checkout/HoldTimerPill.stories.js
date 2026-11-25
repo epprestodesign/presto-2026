@@ -3,7 +3,10 @@
 import HoldTimerPill from '../../components/HoldTimerPill.vue'
 
 export default {
-  title: 'Checkout Experience/Group Block/Hold Timer Pill',
+  title: 'User Journey/04 · Checkout/Group Block/Hold Timer Pill',
+  id: 'checkout-experience-group-block-hold-timer-pill',
+  // Shown under Edge Cases (src/stories/edge-cases/) so each edge case has one home.
+  excludeStories: ['Urgent'],
   component: HoldTimerPill,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

@@ -10,10 +10,11 @@ const features = [
 ]
 
 export default {
-  title: 'Hotel Details/Components/Group Block/Room Card',
+  title: 'User Journey/03 · Hotel Details/Parts/Group Block/Room Card',
+  id: 'hotel-details-components-group-block-room-card',
   component: RoomCardGroup,
   // 'Mobile' is relocated to Hotel Details/Mobile (DetailsMobile.stories.js).
-  excludeStories: ['Mobile'],
+  excludeStories: ['Mobile', 'SoldOut'],
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Group Block room card

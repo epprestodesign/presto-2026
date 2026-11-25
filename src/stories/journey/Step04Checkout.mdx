@@ -1,0 +1,145 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Browser } from '../start-here/_blocks'
+import tilePipes from '../start-here/patterns/tile-pipes.svg'
+import shot from '../start-here/screens/step-04-checkout.jpg'
+
+<Meta title="User Journey/04 · Checkout/Overview" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tilePipes}")` }}>
+  <div className="sh-eyebrow">User journey · Step 04</div>
+  <h1 className="sh-h1">Checkout</h1>
+  <p className="sh-lede">Checkout is the "Confirm and pay" page, where the guest finishes the booking. They work through a few steps on the left while an order summary stays on the right. The steps change with the booking mode.</p>
+</div>
+
+<div style={{ marginTop: 28 }}>
+  <Browser src={shot} alt="Checkout in Book Reservation, with the time-left-to-book bar, the contact step and the order summary" />
+  <p className="sh-sub" style={{ marginTop: 12 }}>Checkout in Book Reservation. The event, hotels, names and prices on these pages are sample data.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">The page in each mode</h2>
+  <p className="sh-sub">Book Reservation and Multiple Reservations charge a card. Group Block only holds rooms, so it has no payment step and shows nightly rates only.</p>
+  <div className="sh-grid">
+    <div className="sh-card">
+      <div className="sh-eyebrow">One stay</div>
+      <h3 className="sh-card__title sh-noc">Book Reservation</h3>
+      <p className="sh-card__text">Steps for contact details and payment, then a review step that ends with Book Now.</p>
+      <div className="sh-links">
+        <Go to="checkout-experience-book-reservation--page" story>Book Reservation</Go>
+        <Go to="checkout-experience-book-reservation--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Several stays</div>
+      <h3 className="sh-card__title sh-noc">Multiple Reservations</h3>
+      <p className="sh-card__text">Several hotels booked together. Guest forms are grouped by hotel. It lives in the Book Reservation folder.</p>
+      <div className="sh-links">
+        <Go to="checkout-experience-book-reservation--multiple-room-reservations" story>Multiple Room Reservations</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Rooms for a group</div>
+      <h3 className="sh-card__title sh-noc">Group Block</h3>
+      <p className="sh-card__text">Review the order, add contact and group details, then review and Hold Group Block Now. Shown with and without the teams block.</p>
+      <div className="sh-links">
+        <Go to="checkout-experience-group-block--page" story>Group Block w/ Team Block</Go>
+        <Go to="checkout-experience-group-block--no-team-block" story>Group Block</Go>
+        <Go to="checkout-experience-group-block-hold-timer-pill--docs">Hold Timer Pill</Go>
+        <Go to="checkout-experience-group-block--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Phone, 390px</div>
+      <h3 className="sh-card__title sh-noc">Mobile</h3>
+      <p className="sh-card__text">Checkout at phone width, in one column. In Book Reservation the order summary comes first, so the guest can check it before booking.</p>
+      <div className="sh-links">
+        <Go to="checkout-experience-mobile--checkout" story>Checkout</Go>
+        <Go to="checkout-experience-mobile--group-block" story>Group Block</Go>
+        <Go to="checkout-experience-mobile--protect-your-stay" story>Protect Your Stay</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Parts</h2>
+  <p className="sh-sub">Each mode has its own checkout steps. The Reservation Summary is shared: it is the body of the order summary on the right.</p>
+  <div className="sh-grid sh-grid--3" style={{ alignItems: 'start' }}>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Book Reservation</div>
+      <div className="sh-pills">
+        <Go to="checkout-experience-components-book-reservation-review-order--docs" className="sh-pill">Review Order</Go>
+        <Go to="checkout-experience-components-book-reservation-contact-info--docs" className="sh-pill">Contact Info</Go>
+        <Go to="checkout-experience-components-book-reservation-reservation-guests--docs" className="sh-pill">Reservation Guests</Go>
+        <Go to="checkout-experience-components-book-reservation-payment--docs" className="sh-pill">Payment</Go>
+        <Go to="checkout-experience-components-book-reservation-review-reservation--docs" className="sh-pill">Review Reservation</Go>
+        <Go to="checkout-experience-components-book-reservation-review-reservation-policies--docs" className="sh-pill">Review Reservation · Policies</Go>
+      </div>
+    </div>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Group Block</div>
+      <div className="sh-pills">
+        <Go to="checkout-experience-components-group-block-review-order--docs" className="sh-pill">Review Order</Go>
+        <Go to="checkout-experience-components-group-block-contact-info--docs" className="sh-pill">Contact Info</Go>
+        <Go to="checkout-experience-components-group-block-contact-info-teams-block--docs" className="sh-pill">Contact Info · Teams Block</Go>
+        <Go to="checkout-experience-components-group-block-review-reservation--docs" className="sh-pill">Review Reservation</Go>
+        <Go to="checkout-experience-components-group-block-review-reservation-policies--docs" className="sh-pill">Review Reservation · Policies</Go>
+      </div>
+    </div>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Shared</div>
+      <div className="sh-pills">
+        <Go to="checkout-experience-components-reservation-summary--docs" className="sh-pill">Reservation Summary</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Edge cases</h2>
+  <p className="sh-sub">Forms with errors, a full teams block, the most fees, and a hold that is about to run out.</p>
+  <div className="sh-grid">
+    <div className="sh-card">
+      <h3 className="sh-card__title sh-noc">Form Errors</h3>
+      <p className="sh-card__text">The payment form after Submit with empty or wrong fields.</p>
+      <div className="sh-links">
+        <Go to="edge-cases-checkout-form-errors-payment--validation-errors" story>Payment</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <h3 className="sh-card__title sh-noc">Teams Block</h3>
+      <p className="sh-card__text">The Group Block teams block at its team limit, and with team details missing.</p>
+      <div className="sh-links">
+        <Go to="edge-cases-checkout-teams-block--team-limit" story>Team Limit</Go>
+        <Go to="edge-cases-checkout-teams-block--validation-errors" story>Validation Errors</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <h3 className="sh-card__title sh-noc">Fee Limit</h3>
+      <p className="sh-card__text">The Reservation Summary with three fees, the most an event can add.</p>
+      <div className="sh-links">
+        <Go to="edge-cases-checkout-fee-limit-reservation-summary--three-fees" story>Three Fees (Max)</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <h3 className="sh-card__title sh-noc">Hold Timer</h3>
+      <p className="sh-card__text">The group hold timer in its last minute, when it turns amber.</p>
+      <div className="sh-links">
+        <Go to="edge-cases-checkout-hold-timer--under-a-minute" story>Under a Minute</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Next step</h2>
+  <p className="sh-sub">When the guest confirms, the confirmation page opens.</p>
+  <div className="sh-actions">
+    <Go page="User Journey/05 · Confirmation/Overview" className="sh-btn sh-btn--primary">05 · Confirmation</Go>
+    <Go page="User Journey/Journey map" className="sh-btn sh-btn--ghost">Journey map</Go>
+  </div>
+</div>
+
+</div>

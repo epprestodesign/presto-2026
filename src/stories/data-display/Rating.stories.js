@@ -2,7 +2,8 @@
 import DsRating from '../../components/DsRating.vue'
 
 export default {
-  title: 'Components/Media & Visuals/Rating',
+  title: 'Design System/Components/Media & Visuals/Rating',
+  id: 'components-media-visuals-rating',
   component: DsRating,
   tags: ['autodocs'],
   argTypes: {

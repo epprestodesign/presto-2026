@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import DateRangeCalendar from '../../components/DateRangeCalendar.vue'
 export default {
-  title: 'Components/Forms/Date Picker',
+  title: 'Design System/Components/Forms/Date Picker',
+  id: 'components-forms-date-picker',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

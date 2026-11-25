@@ -3,7 +3,8 @@ import { ref } from 'vue'
 import DsRange from '../../components/DsRange.vue'
 
 export default {
-  title: 'Components/Forms/Range',
+  title: 'Design System/Components/Forms/Range',
+  id: 'components-forms-range',
   component: DsRange,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

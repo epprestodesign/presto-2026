@@ -13,7 +13,8 @@ const useHero = (category, seed) => {
 }
 
 export default {
-  title: 'Checkout Experience/Book Reservation',
+  title: 'User Journey/04 · Checkout/Book Reservation',
+  id: 'checkout-experience-book-reservation',
   component: CheckoutPage,
   tags: ['autodocs', 'updated'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

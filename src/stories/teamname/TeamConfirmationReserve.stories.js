@@ -25,7 +25,8 @@ const reserveData = {
 }
 
 export default {
-  title: 'Team Name Qualifiers/Book Reservation/Confirmation',
+  title: 'Design Requests/Team Name Qualifiers/Book Reservation/Confirmation',
+  id: 'team-name-qualifiers-book-reservation-confirmation',
   component: TeamConfirmationPage,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `
