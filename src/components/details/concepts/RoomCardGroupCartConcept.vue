@@ -180,7 +180,9 @@ const removeBlock = () => { cart.value = props.nights.map(() => 0) }
 .cc__removeall:hover { text-decoration: underline; }
 
 /* A — banner */
-.cc__banner { margin: 0 22px; padding: 12px 14px; background: var(--ds-color-background-success); border: 1px solid var(--ds-palette-green-200, #BBF7D0); border-radius: var(--ds-radius-md); }
+/* 16px below matches the head's bottom padding, so the box sits evenly
+   between the title block and the divider of the section under it. */
+.cc__banner { margin: 0 22px 16px; padding: 12px 14px; background: var(--ds-color-background-success); border: 1px solid var(--ds-palette-green-200, #BBF7D0); border-radius: var(--ds-radius-md); }
 .cc__banner-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .cc__banner-title { display: inline-flex; align-items: center; gap: 7px; color: var(--ds-palette-green-700); font-weight: 700; font-size: 0.9375rem; }
 .cc__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
@@ -197,7 +199,7 @@ const removeBlock = () => { cart.value = props.nights.map(() => 0) }
 .cc__savedrow .cc__linkdel { margin-left: auto; }
 
 /* D — panels */
-.cc__panel { margin: 0 22px; padding: 12px 14px; background: var(--ds-palette-slate-50, #F8FAFC); border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); }
+.cc__panel { margin: 0 22px 16px; padding: 12px 14px; background: var(--ds-palette-slate-50, #F8FAFC); border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-md); }
 .cc__panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
 .cc__panel-title { font-weight: 700; font-size: 0.9375rem; color: var(--ds-color-text-brand); }
 .cc__cartline { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0; font-size: 0.9375rem; color: var(--ds-color-text); }
