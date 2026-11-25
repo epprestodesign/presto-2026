@@ -9,7 +9,8 @@ import { ref } from 'vue'
 import TeamSelectField from '../../components/teamname/TeamSelectField.vue'
 
 export default {
-  title: 'Team Name Qualifiers/Book Reservation/Team Name Select',
+  title: 'Design Requests/Team Name Qualifiers/Book Reservation/Team Name Select',
+  id: 'team-name-qualifiers-book-reservation-team-name-select',
   component: TeamSelectField,
   tags: ['autodocs'],
   argTypes: {

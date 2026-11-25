@@ -15,7 +15,8 @@ const useHotels = (defs) => {
 }
 
 export default {
-  title: 'Checkout Experience/Components/Group Block/Review Reservation/Policies',
+  title: 'User Journey/04 · Checkout/Parts/Group Block/Review Reservation/Policies',
+  id: 'checkout-experience-components-group-block-review-reservation-policies',
   component: PoliciesAgreement,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

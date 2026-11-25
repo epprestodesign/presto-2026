@@ -7,7 +7,8 @@ import HotelCardGroup from '../../components/browse/HotelCardGroup.vue'
 import { sampleRooms } from '../browse/_rooms-sample.js'
 
 export default {
-  title: 'Browse Hotels/Components/Results/Loading States',
+  title: 'Edge Cases/02 · Browse Hotels/Loading States',
+  id: 'browse-hotels-components-results-loading-states',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

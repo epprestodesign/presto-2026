@@ -4,7 +4,10 @@ import { ref } from 'vue'
 import CartFlyout from '../../components/CartFlyout.vue'
 
 export default {
-  title: 'App Shell/Cart Flyout',
+  title: 'Design System/App Chrome/Cart Flyout',
+  id: 'app-shell-cart-flyout',
+  // Shown under Edge Cases (src/stories/edge-cases/) so each edge case has one home.
+  excludeStories: ['Empty'],
   component: CartFlyout,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

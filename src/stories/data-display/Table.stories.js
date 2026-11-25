@@ -15,7 +15,8 @@ const rows = [
   { guest: 'Katherine Johnson', room: 'Family Room', checkin: 'Jun 6', nights: 5, status: 'Cancelled', total: '$1,120' },
 ]
 export default {
-  title: 'Components/Layout & Structure/Table',
+  title: 'Design System/Components/Layout & Structure/Table',
+  id: 'components-layout-structure-table',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

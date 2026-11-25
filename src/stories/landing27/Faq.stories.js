@@ -3,7 +3,8 @@ import L27Faq from '../../components/landing27/L27Faq.vue'
 import { frame } from './_helpers.js'
 
 export default {
-  title: "Landing Page Concepts '27/Components/FAQ",
+  title: "Other Requests/Landing Concepts '27/Components/FAQ",
+  id: 'landing-page-concepts-27-components-faq',
   component: L27Faq,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `## FAQ

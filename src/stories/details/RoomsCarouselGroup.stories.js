@@ -31,7 +31,8 @@ const wrap = (rooms, extra = {}) => ({
 })
 
 export default {
-  title: 'Hotel Details/Components/Group Block/Rooms',
+  title: 'User Journey/03 · Hotel Details/Parts/Group Block/Rooms',
+  id: 'hotel-details-components-group-block-rooms',
   component: RoomsCarousel,
   tags: ['autodocs'],
   parameters: {

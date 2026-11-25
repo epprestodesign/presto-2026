@@ -1,7 +1,8 @@
 /** LAYOUT / Section Header → custom DsSectionHeader (no Quasar equivalent) */
 import DsSectionHeader from '../../components/DsSectionHeader.vue'
 export default {
-  title: 'Components/Layout & Structure/Section Header',
+  title: 'Design System/Components/Layout & Structure/Section Header',
+  id: 'components-layout-structure-section-header',
   component: DsSectionHeader,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

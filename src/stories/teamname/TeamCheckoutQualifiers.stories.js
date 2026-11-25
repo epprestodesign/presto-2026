@@ -6,7 +6,8 @@ import { ref } from 'vue'
 import TeamReservationGuests from '../../components/teamname/TeamReservationGuests.vue'
 
 export default {
-  title: 'Team Name Qualifiers/Book Reservation/Checkout Contact & Qualifiers',
+  title: 'Design Requests/Team Name Qualifiers/Book Reservation/Checkout Contact & Qualifiers',
+  id: 'team-name-qualifiers-book-reservation-checkout-contact-qualifiers',
   component: TeamReservationGuests,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

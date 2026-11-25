@@ -20,7 +20,10 @@ const room = {
 }
 
 export default {
-  title: 'Hotel Details/Components/Book Reservation/Price Details',
+  title: 'User Journey/03 · Hotel Details/Parts/Book Reservation/Price Details',
+  id: 'hotel-details-components-book-reservation-price-details',
+  // Shown under Edge Cases (src/stories/edge-cases/) so each edge case has one home.
+  excludeStories: ['ThreeFees'],
   component: PriceDetailsDialog,
   tags: ['autodocs', 'new'],
   parameters: {

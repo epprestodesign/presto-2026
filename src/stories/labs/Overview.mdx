@@ -1,0 +1,86 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Status, Live } from '../start-here/_blocks.js'
+import tileCubes from '../start-here/patterns/tile-cubes.svg'
+import coverCheckout from '../start-here/covers/lab-checkout-all-at-once.jpg'
+import coverWidget from '../start-here/covers/lab-booking-widget-ideas.jpg'
+import coverRoomCard from '../start-here/covers/lab-room-card-cart-ideas.jpg'
+
+<Meta title="Eventpipe Labs/Overview" />
+
+export const cover = (src) => ({ backgroundImage: `url("${src}")`, backgroundPosition: 'right center', height: 'auto', aspectRatio: '21 / 9' })
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tileCubes}")` }}>
+  <div className="sh-eyebrow">Eventpipe Labs</div>
+  <h1 className="sh-h1">Ideas we are trying out</h1>
+  <p className="sh-lede">A concept until it becomes a request. Nobody has asked for these yet, so treat every screen as an idea, not a plan.</p>
+  <div className="sh-chips">
+    <Live count="ideas" label="ideas" />
+    <span className="sh-chip sh-chip--quiet">Sample data on every screen</span>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Three ideas, all concepts</h2>
+  <p className="sh-sub">Each one opens on its first story. Use the sidebar to see the rest.</p>
+  <div className="sh-grid sh-grid--3">
+    <div className="sh-card sh-area">
+      <div className="sh-area__art" style={cover(coverCheckout)} />
+      <div className="sh-area__body">
+        <div><Status folder="Checkout All at Once" /></div>
+        <h3 className="sh-card__title sh-noc">Checkout All at Once</h3>
+        <p className="sh-card__text">Every checkout step open on one page, with all fields showing and one submit at the end, instead of a Next button for each step.</p>
+        <div className="sh-links"><Go to="checkout-experience-expanded-overview--book-reservation" story>Open Book Reservation</Go></div>
+      </div>
+    </div>
+    <div className="sh-card sh-area">
+      <div className="sh-area__art" style={cover(coverWidget)} />
+      <div className="sh-area__body">
+        <div><Status folder="Booking Widget Ideas" /></div>
+        <h3 className="sh-card__title sh-noc">Booking Widget Ideas</h3>
+        <p className="sh-card__text">Two other ways to switch between Book Reservation and Group Block: tabs, or radio buttons. Tried on the Teams and Core booking widgets.</p>
+        <div className="sh-links"><Go to="landing-page-components-teams-booking-widget-explorations--tabs" story>Open Tabs</Go></div>
+      </div>
+    </div>
+    <div className="sh-card sh-area">
+      <div className="sh-area__art" style={cover(coverRoomCard)} />
+      <div className="sh-area__body">
+        <div><Status folder="Room Card Cart Ideas" /></div>
+        <h3 className="sh-card__title sh-noc">Room Card Cart Ideas</h3>
+        <p className="sh-card__text">Four ways, A to D, for a Group Block room card to show rooms already in the cart while the organizer adds more.</p>
+        <div className="sh-links"><Go to="hotel-details-components-group-block-room-card-cart-concepts--a-summary-banner" story>Open concept A</Go></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">How an idea becomes a request</h2>
+  <p className="sh-sub">Three steps. The idea keeps its story ids the whole way, so links to it never break.</p>
+  <div className="sh-steps">
+    <div className="sh-step">
+      <span className="sh-step__n">1</span>
+      <div className="sh-step__title">Try it here</div>
+      <div className="sh-step__text">Build the idea as stories under Eventpipe Labs. Its status is Concept.</div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">2</span>
+      <div className="sh-step__title">Someone asks for it</div>
+      <div className="sh-step__text">With a Linear design ticket, it is a design request. Asked by sales, marketing or a partner with no ticket, it is an other request.</div>
+    </div>
+    <div className="sh-step">
+      <span className="sh-step__n">3</span>
+      <div className="sh-step__title">Move it</div>
+      <div className="sh-step__text">Change the story titles to the new area and keep each <code>id</code>. Update its status in <code>src/stories/start-here/status.js</code>.</div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Archive</h2>
+  <p className="sh-sub">Replaced work, kept so old links still open.</p>
+  <div className="sh-links"><Go page="Archive/Overview">Open the Archive</Go></div>
+</div>
+
+</div>

@@ -1,6 +1,7 @@
 /** FEEDBACK / Alert → Quasar: QBanner (inline; wrap as PrestoAlert severity API) */
 export default {
-  title: 'Components/Feedback & Status/Alert',
+  title: 'Design System/Components/Feedback & Status/Alert',
+  id: 'components-feedback-status-alert',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

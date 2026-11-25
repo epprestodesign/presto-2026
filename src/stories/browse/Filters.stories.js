@@ -18,7 +18,8 @@ const sidebarHotels = [
 const sidebarEvent = { lat: 36.1592, lng: -86.7785, label: 'Tournament venue' }
 
 export default {
-  title: 'Browse Hotels/Components/Left Rail/Search & Filters',
+  title: 'User Journey/02 · Browse Hotels/Parts/Left Rail/Search & Filters',
+  id: 'browse-hotels-components-left-rail-search-filters',
   component: Filter,
   tags: ['autodocs'],
   argTypes: {

@@ -25,7 +25,8 @@ const holdData = {
 }
 
 export default {
-  title: 'Team Name Qualifiers/Group Block/Confirmation',
+  title: 'Design Requests/Team Name Qualifiers/Group Block/Confirmation',
+  id: 'team-name-qualifiers-group-block-confirmation',
   component: TeamConfirmationPage,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

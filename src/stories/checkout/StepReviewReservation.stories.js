@@ -2,7 +2,8 @@
 import StepReviewReservation from '../../components/checkout/steps/StepReviewReservation.vue'
 
 export default {
-  title: 'Checkout Experience/Components/Book Reservation/Review Reservation',
+  title: 'User Journey/04 · Checkout/Parts/Book Reservation/Review Reservation',
+  id: 'checkout-experience-components-book-reservation-review-reservation',
   component: StepReviewReservation,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: 'Step 4 — recap + Confirm and pay for the single reservation: booking protection, cancellation policy, and the policies agreement.' } } },

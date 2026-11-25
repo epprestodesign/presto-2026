@@ -15,7 +15,8 @@ import PageFrame from '../../components/PageFrame.vue'
 import HotelListPageComponent from '../../components/browse/HotelListPage.vue'
 
 export default {
-  title: 'Browse Hotels/Mobile',
+  title: 'User Journey/02 · Browse Hotels/Mobile',
+  id: 'browse-hotels-mobile',
   tags: ['mobile'],
   parameters: { layout: 'fullscreen' },
 }

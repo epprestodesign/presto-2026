@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks'
 
-<Meta title="Getting Started/User Journey & Build Spec" />
+<Meta title="User Journey/Build Spec" />
 
 # User Journey & Build Spec
 
@@ -52,7 +52,7 @@ payment step, no protection, no totals/taxes anywhere).
 
 ## Stage 0 · Landing Page
 
-**Component:** `LandingPage.vue` · **Story:** `Landing Page / Book Reservation` · `Group Block`
+**Component:** `LandingPage.vue` · **Story:** `User Journey / 01 · Landing / Book Reservation` · `Group Block`
 
 - **Purpose:** introduce the event and launch a search.
 - **Reads:** `event` (name, dates, venue), `mode`.
@@ -79,7 +79,7 @@ payment step, no protection, no totals/taxes anywhere).
 
 ## Stage 1 · Browse Hotels
 
-**Component:** `HotelListPage.vue` + cards · **Stories:** `Browse Hotels / Book Reservation` · `Group Block`, `… / Result States`
+**Component:** `HotelListPage.vue` + cards · **Stories:** `User Journey / 02 · Browse Hotels / Book Reservation` · `Group Block`, `… / Result States`
 
 - **Purpose:** filter/sort results and start a booking.
 - **Reads:** search from Stage 0 (dates, guests/rooms, mode, event location).
@@ -125,7 +125,7 @@ payment step, no protection, no totals/taxes anywhere).
 
 ## Stage 2 · Hotel Details & Room Selection
 
-**Component:** `HotelDetailPage.vue` (`roomsFlow`) · **Stories:** `Hotel Details / Book Reservation` · `Group Block`
+**Component:** `HotelDetailPage.vue` (`roomsFlow`) · **Stories:** `User Journey / 03 · Hotel Details / Book Reservation` · `Group Block`
 
 - **Purpose:** show the hotel and pick room(s).
 - **Reads:** chosen hotel, dates, mode.
@@ -159,7 +159,7 @@ payment step, no protection, no totals/taxes anywhere).
 ## Stage 3 · Checkout ("Confirm and pay")
 
 **Component:** `CheckoutPage.vue` (`mode`) + `steps/*` + sticky `CartReview` rail
-· **Stories:** `Checkout Experience / Book Reservation` · `Group Block`
+· **Stories:** `User Journey / 04 · Checkout / Book Reservation` · `Group Block`
 
 The left column is a **stepped accordion**; the right is a **sticky order rail**
 (`CartReview`) with the **timer** and, for charged flows, **Edit reservation** /
@@ -228,7 +228,7 @@ this mode at all.
 
 ## Stage 4 · Confirmation
 
-**Component:** `ConfirmationPage.vue` (`mode`) · **Stories:** `Confirmation / Book Reservation` · `Group Block`
+**Component:** `ConfirmationPage.vue` (`mode`) · **Stories:** `User Journey / 05 · Confirmation / Book Reservation` · `Group Block`
 
 - **Structure (all modes):** success **banner** (check icon + title + *"A
   confirmation email is on its way."* + CTA) → **Summary** (contact + ID + action

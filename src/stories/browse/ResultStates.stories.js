@@ -6,7 +6,8 @@ import HotelListPage from '../../components/browse/HotelListPage.vue'
 import PageFrame from '../../components/PageFrame.vue'
 
 export default {
-  title: 'Browse Hotels/Components/Results/Result States/Book Reservation',
+  title: 'Edge Cases/02 · Browse Hotels/Result States/Book Reservation',
+  id: 'browse-hotels-components-results-result-states-book-reservation',
   component: HotelListPage,
   tags: ['autodocs'],
   parameters: {

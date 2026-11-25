@@ -10,7 +10,8 @@ import { ref } from 'vue'
 import TeamGroupContactBlock from '../../components/teamname/TeamGroupContactBlock.vue'
 
 export default {
-  title: 'Team Name Qualifiers/Group Block/Contact & Teams',
+  title: 'Design Requests/Team Name Qualifiers/Group Block/Contact & Teams',
+  id: 'team-name-qualifiers-group-block-contact-teams',
   component: TeamGroupContactBlock,
   tags: ['autodocs'],
   argTypes: {

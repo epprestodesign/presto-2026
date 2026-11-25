@@ -12,7 +12,8 @@ const nights = [
 const base = { roomType: 'Urban King', bedConfig: '1 King Bed', maxOccupancy: 2, nights, initialInCart: [1, 1, 1] }
 
 export default {
-  title: 'Hotel Details/Components/Group Block/Room Card Cart Concepts',
+  title: 'Eventpipe Labs/Room Card Cart Ideas',
+  id: 'hotel-details-components-group-block-room-card-cart-concepts',
   component: RoomCardGroupCartConcept,
   tags: ['autodocs'],
   parameters: { layout: 'centered', docs: { description: { component: `

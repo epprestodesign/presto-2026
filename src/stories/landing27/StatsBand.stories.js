@@ -3,7 +3,8 @@ import L27StatsBand from '../../components/landing27/L27StatsBand.vue'
 import { frame } from './_helpers.js'
 
 export default {
-  title: "Landing Page Concepts '27/Components/Stats Band",
+  title: "Other Requests/Landing Concepts '27/Components/Stats Band",
+  id: 'landing-page-concepts-27-components-stats-band',
   component: L27StatsBand,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `## Stats Band

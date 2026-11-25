@@ -5,7 +5,8 @@
  * available for edge cases.
  */
 const meta = {
-  title: 'Foundations/Elevation',
+  title: 'Design System/Foundations/Elevation',
+  id: 'foundations-elevation',
   tags: ['autodocs'],
   parameters: {
     docs: {

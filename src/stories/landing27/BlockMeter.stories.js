@@ -3,7 +3,8 @@ import L27BlockMeter from '../../components/landing27/L27BlockMeter.vue'
 import { frame } from './_helpers.js'
 
 export default {
-  title: "Landing Page Concepts '27/Components/Block Meter",
+  title: "Other Requests/Landing Concepts '27/Components/Block Meter",
+  id: 'landing-page-concepts-27-components-block-meter',
   component: L27BlockMeter,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `## Block Meter

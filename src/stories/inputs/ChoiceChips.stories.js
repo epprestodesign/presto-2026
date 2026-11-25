@@ -3,7 +3,8 @@ import { ref } from 'vue'
 import DsChoiceChips from '../../components/DsChoiceChips.vue'
 
 export default {
-  title: 'Components/Forms/Choice Chips',
+  title: 'Design System/Components/Forms/Choice Chips',
+  id: 'components-forms-choice-chips',
   component: DsChoiceChips,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

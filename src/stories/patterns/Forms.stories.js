@@ -1,7 +1,8 @@
 /** PATTERNS / Forms → QForm + inputs + validation (composition) */
 import { ref } from 'vue'
 export default {
-  title: 'Browse Hotels/Components/Results/Forms',
+  title: 'User Journey/02 · Browse Hotels/Parts/Results/Forms',
+  id: 'browse-hotels-components-results-forms',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

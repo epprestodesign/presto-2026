@@ -13,7 +13,8 @@ const useHero = (category, seed) => {
 }
 
 export default {
-  title: 'Checkout Experience Expanded/Overview',
+  title: 'Eventpipe Labs/Checkout All at Once',
+  id: 'checkout-experience-expanded-overview',
   component: CheckoutPageExpanded,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

@@ -2,7 +2,8 @@
 import { semanticGroups } from './_tokens-data.js'
 
 export default {
-  title: 'Foundations/Colors',
+  title: 'Design System/Foundations/Colors',
+  id: 'foundations-colors',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

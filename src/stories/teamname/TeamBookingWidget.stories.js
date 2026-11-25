@@ -3,7 +3,8 @@
 import TeamBookingWidget from '../../components/teamname/TeamBookingWidget.vue'
 
 export default {
-  title: 'Team Name Qualifiers/Book Reservation/Booking Widget',
+  title: 'Design Requests/Team Name Qualifiers/Book Reservation/Booking Widget',
+  id: 'team-name-qualifiers-book-reservation-booking-widget',
   component: TeamBookingWidget,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

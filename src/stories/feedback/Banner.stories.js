@@ -1,6 +1,7 @@
 /** FEEDBACK / Banner → Quasar: QBanner, styled after the Atlassian Flag pattern */
 export default {
-  title: 'Components/Feedback & Status/Banner',
+  title: 'Design System/Components/Feedback & Status/Banner',
+  id: 'components-feedback-status-banner',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

@@ -3,7 +3,8 @@
 import L27AfterDark from '../../../components/landing27/concepts/L27AfterDark.vue'
 
 export default {
-  title: "Landing Page Concepts '27/Concepts/After Dark",
+  title: "Other Requests/Landing Concepts '27/Concepts/After Dark",
+  id: 'landing-page-concepts-27-concepts-after-dark',
   component: L27AfterDark,
   tags: ['autodocs'],
   parameters: {

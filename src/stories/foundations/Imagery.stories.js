@@ -4,7 +4,8 @@ import DsUnsplashImage from '../../components/DsUnsplashImage.vue'
 import { loadImagery } from '../../lib/imagery.js'
 
 export default {
-  title: 'Foundations/Imagery',
+  title: 'Design System/Foundations/Imagery',
+  id: 'foundations-imagery',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

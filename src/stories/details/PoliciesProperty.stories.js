@@ -22,7 +22,8 @@ const policies = [
 const about = `Located in the heart of Lake Buena Vista, this resort is an ideal base for tournament weekends — minutes from the pitch, with top attractions, dining, and shopping just steps away. Relax in a newly renovated room after match day, unwind at the heated pool and spa, or refuel at one of three on-site restaurants. Complimentary premium Wi-Fi and a 24-hour fitness centre round out a stay built for teams and families alike.`
 
 export default {
-  title: 'Hotel Details/Components/Policies & Property',
+  title: 'User Journey/03 · Hotel Details/Parts/Policies & Property',
+  id: 'hotel-details-components-policies-property',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

@@ -14,7 +14,8 @@ const email = (mode, device = 'desktop') => () => ({
 })
 
 export default {
-  title: 'Linear Tickets/DES-478/Confirmation Email',
+  title: 'Design Requests/DES-478 · Experience Now/Confirmation Email',
+  id: 'linear-tickets-des-478-confirmation-email',
   component: ConfirmationEmail,
   parameters: {
     layout: 'fullscreen',

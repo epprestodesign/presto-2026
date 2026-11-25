@@ -4,7 +4,8 @@
  * Quasar has no Typography component — classes + tokens (typography.scss).
  */
 const meta = {
-  title: 'Foundations/Typography',
+  title: 'Design System/Foundations/Typography',
+  id: 'foundations-typography',
   tags: ['autodocs'],
   parameters: {
     docs: {

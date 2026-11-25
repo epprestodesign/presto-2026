@@ -2,7 +2,8 @@
 import StepReviewReservation from '../../components/checkout/steps/StepReviewReservation.vue'
 
 export default {
-  title: 'Checkout Experience/Components/Group Block/Review Reservation',
+  title: 'User Journey/04 · Checkout/Parts/Group Block/Review Reservation',
+  id: 'checkout-experience-components-group-block-review-reservation',
   component: StepReviewReservation,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: 'Step 4 — recap for a group block: no booking protection (held, not charged), cancellation policy, and a single policies agreement checkbox.' } } },

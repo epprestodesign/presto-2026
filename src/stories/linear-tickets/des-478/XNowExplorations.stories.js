@@ -24,7 +24,8 @@ const gallery = (width) => () => ({
 })
 
 export default {
-  title: 'Linear Tickets/DES-478/XNow Explorations',
+  title: 'Design Requests/DES-478 · Experience Now/XNow Explorations',
+  id: 'linear-tickets-des-478-xnow-explorations',
   component: ExperienceNowOffer,
   argTypes: {
     look: { control: 'inline-radio', options: ['presto', 'banner', 'ribbon', 'dark', 'sunset', 'split'] },

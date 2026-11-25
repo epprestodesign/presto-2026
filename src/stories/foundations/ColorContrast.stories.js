@@ -77,7 +77,8 @@ const failCount = SECTIONS.reduce((n, s) => n + s.rows.filter((r) => !r.aaNormal
 const rowCount = SECTIONS.reduce((n, s) => n + s.rows.length, 0)
 
 export default {
-  title: 'Foundations/Color Contrast',
+  title: 'Design System/Foundations/Color Contrast',
+  id: 'foundations-color-contrast',
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',

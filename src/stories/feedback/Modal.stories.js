@@ -3,7 +3,8 @@ import { ref } from 'vue'
 import DsModal from '../../components/DsModal.vue'
 
 export default {
-  title: 'Components/Actions/Modal',
+  title: 'Design System/Components/Actions/Modal',
+  id: 'components-actions-modal',
   component: DsModal,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

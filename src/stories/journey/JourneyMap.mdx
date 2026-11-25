@@ -1,0 +1,101 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Browser, Live, ModeGrid } from '../start-here/_blocks'
+import tilePipes from '../start-here/patterns/tile-pipes.svg'
+import s1 from '../start-here/screens/step-01-landing.jpg'
+import s2 from '../start-here/screens/step-02-browse.jpg'
+import s3 from '../start-here/screens/step-03-details.jpg'
+import s4 from '../start-here/screens/step-04-checkout.jpg'
+import s5 from '../start-here/screens/step-05-confirmation.jpg'
+import s6 from '../start-here/screens/step-06-manage.jpg'
+
+<Meta title="User Journey/Journey map" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tilePipes}")` }}>
+  <div className="sh-eyebrow">User journey</div>
+  <h1 className="sh-h1">Journey map</h1>
+  <p className="sh-lede">The journey map shows the six steps a guest takes on the Presto booking site, from the event page to managing a booking. Use it to find any page in any booking mode.</p>
+  <div className="sh-chips">
+    <Live count="steps" label="steps" />
+    <span className="sh-chip">3 booking modes</span>
+    <Live count="edge-cases" label="edge-case stories" />
+  </div>
+  <div className="sh-actions">
+    <Go page="User Journey/01 · Landing/Overview" className="sh-btn sh-btn--primary">Start at 01 · Landing</Go>
+    <Go page="User Journey/Build Spec" className="sh-btn sh-btn--ghost">Read the Build Spec</Go>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">The six steps</h2>
+  <p className="sh-sub">In the order a guest meets them. Each step has an overview with its pages, parts and edge cases. The event, hotels, names and prices on these pages are sample data.</p>
+  <div className="sh-rail">
+    <div className="sh-card">
+      <Browser src={s1} alt="The landing page with the event hero and booking widget" />
+      <h3 className="sh-card__title sh-noc">01 · Landing</h3>
+      <p className="sh-card__text">The guest reads about the event and searches for hotels.</p>
+      <div className="sh-links"><Go page="User Journey/01 · Landing/Overview">Overview</Go></div>
+    </div>
+    <div className="sh-card">
+      <Browser src={s2} alt="The hotel list with the map, filters and a hotel card" />
+      <h3 className="sh-card__title sh-noc">02 · Browse Hotels</h3>
+      <p className="sh-card__text">The guest filters and sorts the hotels, then picks one.</p>
+      <div className="sh-links"><Go page="User Journey/02 · Browse Hotels/Overview">Overview</Go></div>
+    </div>
+    <div className="sh-card">
+      <Browser src={s3} alt="The hotel details page with the photo gallery and hotel summary" />
+      <h3 className="sh-card__title sh-noc">03 · Hotel Details</h3>
+      <p className="sh-card__text">The guest looks at the hotel and picks rooms.</p>
+      <div className="sh-links"><Go page="User Journey/03 · Hotel Details/Overview">Overview</Go></div>
+    </div>
+    <div className="sh-card">
+      <Browser src={s4} alt="Checkout with the contact step and the order summary" />
+      <h3 className="sh-card__title sh-noc">04 · Checkout</h3>
+      <p className="sh-card__text">The guest adds their details, pays if the mode charges, and confirms.</p>
+      <div className="sh-links"><Go page="User Journey/04 · Checkout/Overview">Overview</Go></div>
+    </div>
+    <div className="sh-card">
+      <Browser src={s5} alt="The confirmation page with the success banner" />
+      <h3 className="sh-card__title sh-noc">05 · Confirmation</h3>
+      <p className="sh-card__text">The guest sees that the booking is confirmed or the block is held.</p>
+      <div className="sh-links"><Go page="User Journey/05 · Confirmation/Overview">Overview</Go></div>
+    </div>
+    <div className="sh-card">
+      <Browser src={s6} alt="The account page with its menu" />
+      <h3 className="sh-card__title sh-noc">06 · Manage Booking</h3>
+      <p className="sh-card__text">The guest opens their account from the nav.</p>
+      <div className="sh-links"><Go page="User Journey/06 · Manage Booking/Overview">Overview</Go></div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Each step, in each mode</h2>
+  <p className="sh-sub">Each row is a step: Open goes to its first story in that mode, Not yet means there isn't one, and the last column counts its edge-case stories. Manage Booking has one account page, not one per mode. Cart edge cases aren't tied to one step, so they aren't counted here.</p>
+  <ModeGrid />
+  <div className="sh-links"><Go page="Edge Cases/Overview">All edge cases</Go></div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">The booking modes</h2>
+  <p className="sh-sub">A guest books in one of three modes: Book Reservation for one stay, Group Block to hold rooms for a team or group, and Multiple Reservations for several stays at once. Group Block only holds rooms, so it never charges a card and has no payment step.</p>
+  <div className="sh-links"><Go page="Start Here/Booking modes">How the modes differ</Go></div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Try it end to end</h2>
+  <p className="sh-sub">The clickable prototype runs all three booking modes end to end, built from the real components. The mobile prototype shows the same prototype inside a phone frame.</p>
+  <div className="sh-actions">
+    <a className="sh-btn sh-btn--primary" href="https://epprestodesign.github.io/presto-2026/prototype/" target="_blank" rel="noopener">Desktop prototype</a>
+    <a className="sh-btn sh-btn--ghost" href="https://epprestodesign.github.io/presto-2026/prototype-mobile/" target="_blank" rel="noopener">Mobile prototype</a>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">The full spec</h2>
+  <p className="sh-sub">The Build Spec lists each step's fields, rules, events and exact copy, for all three modes.</p>
+  <div className="sh-links"><Go page="User Journey/Build Spec">Read the Build Spec</Go></div>
+</div>
+
+</div>

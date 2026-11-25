@@ -4,7 +4,8 @@ import ExperienceNowOffer from '../../../components/des478/ExperienceNowOffer.vu
 import { COPY } from '../../../components/des478/des478.js'
 
 export default {
-  title: 'Linear Tickets/DES-478/Experience Now Offer',
+  title: 'Design Requests/DES-478 · Experience Now/Experience Now Offer',
+  id: 'linear-tickets-des-478-experience-now-offer',
   component: ExperienceNowOffer,
   tags: ['autodocs'],
   argTypes: {

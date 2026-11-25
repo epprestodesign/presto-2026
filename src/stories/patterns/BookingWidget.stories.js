@@ -4,7 +4,8 @@
 import BookingWidget from '../../components/BookingWidget.vue'
 
 export default {
-  title: 'Landing Page/Components/Teams Booking Widget',
+  title: 'User Journey/01 · Landing/Parts/Teams Booking Widget',
+  id: 'landing-page-components-teams-booking-widget',
   component: BookingWidget,
   tags: ['autodocs'],
   argTypes: {

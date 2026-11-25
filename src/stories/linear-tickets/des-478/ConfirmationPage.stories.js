@@ -19,7 +19,8 @@ const page = (mode, cartMode) => () => ({
 })
 
 export default {
-  title: 'Linear Tickets/DES-478/Confirmation Page',
+  title: 'Design Requests/DES-478 · Experience Now/Confirmation Page',
+  id: 'linear-tickets-des-478-confirmation-page',
   parameters: {
     layout: 'fullscreen',
     docs: {

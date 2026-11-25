@@ -4,7 +4,8 @@
 import L27DesignMatters from '../../../components/landing27/concepts/L27DesignMatters.vue'
 
 export default {
-  title: "Landing Page Concepts '27/Concepts/Design Matters",
+  title: "Other Requests/Landing Concepts '27/Concepts/Design Matters",
+  id: 'landing-page-concepts-27-concepts-design-matters',
   component: L27DesignMatters,
   tags: ['autodocs'],
   parameters: {

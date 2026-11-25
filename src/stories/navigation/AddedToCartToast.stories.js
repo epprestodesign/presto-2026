@@ -11,7 +11,10 @@ const useImg = (cat, seed) => {
 }
 
 export default {
-  title: 'App Shell/Added To Cart',
+  title: 'Design System/App Chrome/Added To Cart',
+  id: 'app-shell-added-to-cart',
+  // Shown under Edge Cases (src/stories/edge-cases/) so each edge case has one home.
+  excludeStories: ['NoPhoto'],
   component: AddedToCartToast,
   tags: ['autodocs'],
   parameters: { layout: 'centered', docs: { description: { component: `

@@ -1,7 +1,8 @@
 /** FEEDBACK / Dialog → Quasar: QDialog, styled with the DS dialog + button pair */
 import { ref } from 'vue'
 export default {
-  title: 'Components/Actions/Dialog',
+  title: 'Design System/Components/Actions/Dialog',
+  id: 'components-actions-dialog',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

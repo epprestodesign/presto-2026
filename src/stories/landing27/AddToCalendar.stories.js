@@ -4,7 +4,8 @@ import L27ConceptTag from '../../components/landing27/L27ConceptTag.vue'
 import { frame } from './_helpers.js'
 
 export default {
-  title: "Landing Page Concepts '27/Components/Add to Calendar",
+  title: "Other Requests/Landing Concepts '27/Components/Add to Calendar",
+  id: 'landing-page-concepts-27-components-add-to-calendar',
   component: L27AddToCalendar,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

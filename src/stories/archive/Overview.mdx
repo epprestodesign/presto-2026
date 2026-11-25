@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Status } from '../start-here/_blocks.js'
+import tileHex from '../start-here/patterns/tile-hex.svg'
+
+<Meta title="Archive/Overview" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tileHex}")` }}>
+  <div className="sh-eyebrow">Archive</div>
+  <h1 className="sh-h1">Old work that newer work replaced</h1>
+  <p className="sh-lede">Replaced work, kept so old links still open. Don't build from anything here. Each item links to what replaced it.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">What's here, and what replaced it</h2>
+  <p className="sh-sub">Two items. One sits in the Archive folder. The other stays inside its request, so the request keeps its history.</p>
+  <div className="sh-grid sh-grid--2">
+    <div className="sh-card">
+      <div><Status folder="Old Payment Dialogs" /></div>
+      <h3 className="sh-card__title sh-noc">Old Payment Dialogs</h3>
+      <p className="sh-card__text">Two dialogs for the checkout Payment step: Payment Method, to pick a saved payment method, and Add Payment, a card form. On Jul 10, 2026 the inline Payment form replaced them, so checkout has no payment dialogs now.</p>
+      <div className="sh-links">
+        <Go to="checkout-experience-old-designs-payment-dialogs--docs">Open the old dialogs</Go>
+        <Go to="checkout-experience-components-book-reservation-payment--docs">See the Payment form</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div><Status folder="Earlier Rounds" /></div>
+      <h3 className="sh-card__title sh-noc">DES-478 Earlier Rounds: XNow Verified Groups</h3>
+      <p className="sh-card__text">Three versions of the Experience Now offer that named who can verify for deals, such as students, teachers and the military. On Nov 9, 2026, after Christine's feedback, XNow Youth Sports Families replaced them. It is in Design Requests, under DES-478.</p>
+      <div className="sh-links">
+        <Go to="linear-tickets-des-478-xnow-verified-groups--all-alts" story>Open Verified Groups</Go>
+        <Go to="linear-tickets-des-478-xnow-youth-sports-families--all-family-alts" story>See Youth Sports Families</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Retiring something</h2>
+  <p className="sh-sub">Move it here, or into an Earlier Rounds folder inside its request. Keep its story ids so old links still open. Set its status to Replaced in <code>src/stories/start-here/status.js</code>.</p>
+  <div className="sh-links"><Go page="Eventpipe Labs/Overview">Eventpipe Labs</Go><Go page="Design Requests/Overview">Design Requests</Go></div>
+</div>
+
+</div>

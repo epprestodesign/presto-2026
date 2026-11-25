@@ -19,7 +19,8 @@ const allTimes = buildTimes()
 const windowTimes = buildTimes(15, 22).concat('10:00 PM') // 3:00 PM – 10:00 PM
 
 export default {
-  title: 'Components/Forms/Time Picker',
+  title: 'Design System/Components/Forms/Time Picker',
+  id: 'components-forms-time-picker',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

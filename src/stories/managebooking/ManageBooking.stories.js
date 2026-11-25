@@ -7,7 +7,8 @@ import ManageBooking from '../../components/managebooking/ManageBooking.vue'
 import GlobalNav from '../../components/GlobalNav.vue'
 
 export default {
-  title: 'Manage Booking/Account',
+  title: 'User Journey/06 · Manage Booking/Account',
+  id: 'manage-booking-account',
   component: ManageBooking,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

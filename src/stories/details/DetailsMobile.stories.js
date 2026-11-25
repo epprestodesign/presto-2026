@@ -15,7 +15,8 @@ import { Default as GalleryDefault } from './PhotoGallery.stories.js'
 import { Mobile as RoomCardMobile } from './RoomCardGroup.stories.js'
 
 export default {
-  title: 'Hotel Details/Mobile',
+  title: 'User Journey/03 · Hotel Details/Mobile',
+  id: 'hotel-details-mobile',
   tags: ['mobile'],
   parameters: { layout: 'fullscreen' },
 }

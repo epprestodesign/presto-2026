@@ -3,7 +3,8 @@
 import TeamAddTeamModal from '../../components/teamname/TeamAddTeamModal.vue'
 
 export default {
-  title: 'Team Name Qualifiers/Book Reservation/Add a Team',
+  title: 'Design Requests/Team Name Qualifiers/Book Reservation/Add a Team',
+  id: 'team-name-qualifiers-book-reservation-add-a-team',
   component: TeamAddTeamModal,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

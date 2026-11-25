@@ -1,7 +1,8 @@
 /** INPUTS / Checkbox → Quasar: QCheckbox (native) */
 import { ref } from 'vue'
 export default {
-  title: 'Components/Forms/Checkbox',
+  title: 'Design System/Components/Forms/Checkbox',
+  id: 'components-forms-checkbox',
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `
 ## Overview

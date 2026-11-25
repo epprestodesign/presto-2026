@@ -5,7 +5,8 @@ import PageFrame from '../../components/PageFrame.vue'
 import { hotelBase, groupRooms } from './_detail-data.js'
 
 export default {
-  title: 'Hotel Details/Group Block',
+  title: 'User Journey/03 · Hotel Details/Group Block',
+  id: 'hotel-details-group-block',
   component: HotelDetailPage,
   tags: ['autodocs'],
   parameters: {

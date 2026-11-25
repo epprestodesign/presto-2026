@@ -4,7 +4,8 @@ import L27StayPlanner from '../../components/landing27/L27StayPlanner.vue'
 import { frame } from './_helpers.js'
 
 export default {
-  title: "Landing Page Concepts '27/Components/Stay Planner",
+  title: "Other Requests/Landing Concepts '27/Components/Stay Planner",
+  id: 'landing-page-concepts-27-components-stay-planner',
   component: L27StayPlanner,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

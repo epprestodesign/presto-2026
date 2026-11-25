@@ -1,0 +1,79 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Browser, Status, Live } from '../start-here/_blocks.js'
+import tileArcs from '../start-here/patterns/tile-arcs.svg'
+import des478 from '../start-here/screens/dr-des-478.jpg'
+import qualifiers from '../start-here/screens/dr-team-name-qualifiers.jpg'
+import customFees from '../start-here/screens/dr-custom-fees.jpg'
+
+<Meta title="Design Requests/Overview" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tileArcs}")` }}>
+  <div className="sh-eyebrow">Design Requests</div>
+  <h1 className="sh-h1">Design work with a ticket behind it</h1>
+  <p className="sh-lede">Work tied to a Linear design ticket, newest first. Each request opens on an overview, then a clickable prototype.</p>
+  <div className="sh-chips">
+    <Live count="requests" label="requests" />
+    <span className="sh-chip sh-chip--quiet">Sample data on every screen</span>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">All requests, newest first</h2>
+  <p className="sh-sub">Sorted by the date each one started, from its first commit. The sidebar uses the same order.</p>
+  <div className="sh-grid sh-grid--3">
+    <div className="sh-card">
+      <Browser src={des478} alt="The confirmation page in the DES-478 prototype" />
+      <div className="sh-chips"><Status folder="DES-478 · Experience Now" /><span className="sh-chip sh-chip--quiet">Nov 6, 2026</span><span className="sh-chip sh-chip--quiet">DES-478</span></div>
+      <h3 className="sh-card__title sh-noc">DES-478 · Experience Now</h3>
+      <p className="sh-card__text">An offer from our partner Experience Now (XNow), shown on the confirmation page and email after a guest books.</p>
+      <div className="sh-links">
+        <Go page="Design Requests/DES-478 · Experience Now/Overview">Overview</Go>
+        <a className="sh-link" href="https://epprestodesign.github.io/presto-2026/prototype-des478/" target="_blank" rel="noopener">Prototype</a>
+        <a className="sh-link" href="https://linear.app/eventpipe/issue/DES-478" target="_blank" rel="noopener">Linear</a>
+      </div>
+    </div>
+    <div className="sh-card">
+      <Browser src={qualifiers} alt="The Team name field on the checkout guest form" />
+      <div className="sh-chips"><span className="sh-chip sh-chip--quiet">Oct 7, 2026</span><span className="sh-chip sh-chip--quiet">DES-461 to DES-477</span></div>
+      <h3 className="sh-card__title sh-noc">Team Name Qualifiers</h3>
+      <p className="sh-card__text">Where a guest picks their team and its age and gender, and where that team shows up again through checkout and confirmation.</p>
+      <div className="sh-links">
+        <Go page="Design Requests/Team Name Qualifiers/Overview">Overview</Go>
+        <a className="sh-link" href="https://epprestodesign.github.io/presto-2026/prototype-team-qualifiers/" target="_blank" rel="noopener">Prototype</a>
+      </div>
+    </div>
+    <div className="sh-card">
+      <Browser src={customFees} alt="The reservation summary with three custom fees, the most an event can add" />
+      <div className="sh-chips"><span className="sh-chip sh-chip--quiet">Aug 11, 2026</span><span className="sh-chip sh-chip--quiet">DES-453 to DES-456</span></div>
+      <h3 className="sh-card__title sh-noc">Custom Fees</h3>
+      <p className="sh-card__text">Up to three custom fees an organizer can add, shown on every guest page from price details to confirmation.</p>
+      <div className="sh-links">
+        <Go page="Design Requests/Custom Fees/Overview">Overview</Go>
+        <a className="sh-link" href="https://epprestodesign.github.io/presto-2026/prototype-custom-fees/" target="_blank" rel="noopener">Prototype</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Where the rest live</h2>
+  <p className="sh-sub">Work with no design ticket sits in one of these two areas.</p>
+  <div className="sh-grid sh-grid--2">
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">No ticket</div>
+      <h3 className="sh-card__title sh-noc">Other Requests</h3>
+      <p className="sh-card__text">Asks from sales, marketing or partners that have no design ticket.</p>
+      <div className="sh-links"><Go page="Other Requests/Overview">Open Other Requests</Go></div>
+    </div>
+    <div className="sh-card sh-card--flat">
+      <div className="sh-eyebrow">Not asked for yet</div>
+      <h3 className="sh-card__title sh-noc">Eventpipe Labs</h3>
+      <p className="sh-card__text">Ideas we are trying out. A concept until it becomes a request.</p>
+      <div className="sh-links"><Go page="Eventpipe Labs/Overview">Open Labs</Go></div>
+    </div>
+  </div>
+</div>
+
+</div>

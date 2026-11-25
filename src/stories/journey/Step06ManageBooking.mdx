@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Browser } from '../start-here/_blocks'
+import tilePipes from '../start-here/patterns/tile-pipes.svg'
+import shot from '../start-here/screens/step-06-manage.jpg'
+
+<Meta title="User Journey/06 · Manage Booking/Overview" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tilePipes}")` }}>
+  <div className="sh-eyebrow">User journey · Step 06</div>
+  <h1 className="sh-h1">Manage Booking</h1>
+  <p className="sh-lede">Manage Booking is the guest's account page. They open it from the Manage Booking button in the nav to see their profile, settings and help.</p>
+</div>
+
+<div style={{ marginTop: 28 }}>
+  <Browser src={shot} alt="The account page, with the menu on the left and Help and feedback open on the right" />
+  <p className="sh-sub" style={{ marginTop: 12 }}>The account page, open on Help and feedback. The names on these pages are sample data.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">The page in each mode</h2>
+  <p className="sh-sub">Manage Booking has one page so far, the account page. There is no Book Reservation, Group Block or Mobile version yet.</p>
+  <div className="sh-grid sh-grid--2">
+    <div className="sh-card">
+      <div className="sh-eyebrow">Account</div>
+      <h3 className="sh-card__title sh-noc">Each section</h3>
+      <p className="sh-card__text">The left column has a greeting, a rewards card and a menu. The right column shows the section picked in the menu. Each story opens a different section.</p>
+      <div className="sh-pills">
+        <Go to="manage-booking-account--profile" story className="sh-pill">Profile</Go>
+        <Go to="manage-booking-account--communications" story className="sh-pill">Communications</Go>
+        <Go to="manage-booking-account--payment-methods" story className="sh-pill">Payment methods</Go>
+        <Go to="manage-booking-account--security-and-settings" story className="sh-pill">Security and settings</Go>
+        <Go to="manage-booking-account--help-and-feedback" story className="sh-pill">Help and feedback</Go>
+      </div>
+      <div className="sh-links">
+        <Go to="manage-booking-account--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Account</div>
+      <h3 className="sh-card__title sh-noc">From the nav</h3>
+      <p className="sh-card__text">The nav on its own. Click Manage Booking to open the account page, the way a guest reaches it.</p>
+      <div className="sh-links">
+        <Go to="manage-booking-account--from-global-nav" story>From Global Nav</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Parts</h2>
+  <p className="sh-sub">Manage Booking has no Parts folder yet. Each story above is the whole page.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Edge cases</h2>
+  <p className="sh-sub">The Edge Cases area has nothing for Manage Booking yet.</p>
+  <div className="sh-links"><Go page="Edge Cases/Overview">See what is covered</Go></div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Next step</h2>
+  <p className="sh-sub">This is the last step. Go back to the map to see the whole journey.</p>
+  <div className="sh-actions">
+    <Go page="User Journey/Journey map" className="sh-btn sh-btn--primary">Journey map</Go>
+    <Go page="User Journey/01 · Landing/Overview" className="sh-btn sh-btn--ghost">01 · Landing</Go>
+  </div>
+</div>
+
+</div>

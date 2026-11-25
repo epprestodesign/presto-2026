@@ -13,9 +13,10 @@ const useHero = (category, seed) => {
 }
 
 export default {
-  title: 'Checkout Experience/Group Block',
+  title: 'User Journey/04 · Checkout/Group Block',
+  id: 'checkout-experience-group-block',
   component: CheckoutPage,
-  // 'Mobile' is relocated to Checkout Experience/Mobile (CheckoutMobile.stories.js).
+  // 'Mobile' is relocated to User Journey/04 · Checkout/Mobile (CheckoutMobile.stories.js).
   excludeStories: ['Mobile'],
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen', docs: { description: { component: `

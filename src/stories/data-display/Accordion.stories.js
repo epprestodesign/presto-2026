@@ -10,7 +10,8 @@ const faqs = [
 ]
 
 export default {
-  title: 'Components/Layout & Structure/Accordion',
+  title: 'Design System/Components/Layout & Structure/Accordion',
+  id: 'components-layout-structure-accordion',
   component: DsAccordion,
   tags: ['autodocs'],
   parameters: { docs: { description: { component: `

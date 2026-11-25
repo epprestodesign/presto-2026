@@ -1,0 +1,82 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Browser } from '../start-here/_blocks'
+import tilePipes from '../start-here/patterns/tile-pipes.svg'
+import shot from '../start-here/screens/step-05-confirmation.jpg'
+
+<Meta title="User Journey/05 · Confirmation/Overview" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tilePipes}")` }}>
+  <div className="sh-eyebrow">User journey · Step 05</div>
+  <h1 className="sh-h1">Confirmation</h1>
+  <p className="sh-lede">The confirmation page tells the guest the booking worked. It shows a success banner, a summary of what they booked or held, and each hotel's policies.</p>
+</div>
+
+<div style={{ marginTop: 28 }}>
+  <Browser src={shot} alt="The Book Reservation confirmation, with the success banner and the reservation summary" />
+  <p className="sh-sub" style={{ marginTop: 12 }}>The confirmation page for a single reservation. The event, hotels, names and prices on these pages are sample data.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">The page in each mode</h2>
+  <p className="sh-sub">Every mode has the same three parts: banner, summary and policies. The wording, the summary details and the buttons change with the mode.</p>
+  <div className="sh-grid">
+    <div className="sh-card">
+      <div className="sh-eyebrow">One stay</div>
+      <h3 className="sh-card__title sh-noc">Book Reservation</h3>
+      <p className="sh-card__text">The banner says the reservation is confirmed. The summary has the confirmation number, Copy Booking Link and Print.</p>
+      <div className="sh-links">
+        <Go to="confirmation-book-reservation--single-reservation" story>Single Reservation</Go>
+        <Go to="confirmation-book-reservation--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Several stays</div>
+      <h3 className="sh-card__title sh-noc">Multiple Reservations</h3>
+      <p className="sh-card__text">One block per reservation, each with its own hotel, dates and rooms. It lives in the Book Reservation folder.</p>
+      <div className="sh-links">
+        <Go to="confirmation-book-reservation--multiple-reservations" story>Multiple Reservations</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Rooms for a group</div>
+      <h3 className="sh-card__title sh-noc">Group Block</h3>
+      <p className="sh-card__text">The banner says the Group Block is being held. The summary shows the group ID and release date, and adds a Book in Block button.</p>
+      <div className="sh-links">
+        <Go to="confirmation-group-block--page" story>Group Block</Go>
+        <Go to="confirmation-group-block--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Phone, 390px</div>
+      <h3 className="sh-card__title sh-noc">Mobile</h3>
+      <p className="sh-card__text">The Group Block confirmation at phone width. The summary header stacks and the buttons line up on the left.</p>
+      <div className="sh-links">
+        <Go to="confirmation-mobile--confirmation" story>Confirmation</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Parts</h2>
+  <p className="sh-sub">Confirmation has no Parts folder yet. Each story above is the whole page.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Edge cases</h2>
+  <p className="sh-sub">The Edge Cases area has nothing for the confirmation page yet.</p>
+  <div className="sh-links"><Go page="Edge Cases/Overview">See what is covered</Go></div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Next step</h2>
+  <p className="sh-sub">Later, the guest can open their account from the Manage Booking button in the nav.</p>
+  <div className="sh-actions">
+    <Go page="User Journey/06 · Manage Booking/Overview" className="sh-btn sh-btn--primary">06 · Manage Booking</Go>
+    <Go page="User Journey/Journey map" className="sh-btn sh-btn--ghost">Journey map</Go>
+  </div>
+</div>
+
+</div>

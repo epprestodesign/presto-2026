@@ -1,0 +1,80 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { Go, Browser } from '../start-here/_blocks'
+import tilePipes from '../start-here/patterns/tile-pipes.svg'
+import shot from '../start-here/screens/step-01-landing.jpg'
+
+<Meta title="User Journey/01 · Landing/Overview" />
+
+<div className="sh">
+
+<div className="sh-band" style={{ '--sh-art': `url("${tilePipes}")` }}>
+  <div className="sh-eyebrow">User journey · Step 01</div>
+  <h1 className="sh-h1">Landing</h1>
+  <p className="sh-lede">The landing page is the guest's first stop. It introduces the event and holds the booking widget. The search the guest runs here sets the dates, travelers and booking mode that the next steps use.</p>
+</div>
+
+<div style={{ marginTop: 28 }}>
+  <Browser src={shot} alt="The landing page in Book Reservation, with the event hero and the booking widget" />
+  <p className="sh-sub" style={{ marginTop: 12 }}>The landing page in Book Reservation. The event, hotels, names and prices on these pages are sample data.</p>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">The page in each mode</h2>
+  <p className="sh-sub">The layout is the same in each mode. The booking widget changes to match the mode. Multiple Reservations starts from the Book Reservation page.</p>
+  <div className="sh-grid">
+    <div className="sh-card">
+      <div className="sh-eyebrow">One stay</div>
+      <h3 className="sh-card__title sh-noc">Book Reservation</h3>
+      <p className="sh-card__text">The event page with the widget set to book a reservation. Shown with and without the Registered Team(s) field.</p>
+      <div className="sh-links">
+        <Go to="landing-page-book-reservation--teams-booking-widget" story>Teams Booking Widget</Go>
+        <Go to="landing-page-book-reservation--core-booking-widget" story>Core Booking Widget</Go>
+        <Go to="landing-page-book-reservation--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Rooms for a group</div>
+      <h3 className="sh-card__title sh-noc">Group Block</h3>
+      <p className="sh-card__text">The same page with the widget in group mode, for holding a block of rooms. Shown with and without the Registered Team(s) field.</p>
+      <div className="sh-links">
+        <Go to="landing-page-group-block--teams-booking-widget" story>Teams Booking Widget</Go>
+        <Go to="landing-page-group-block--core-booking-widget" story>Core Booking Widget</Go>
+        <Go to="landing-page-group-block--docs">Docs</Go>
+      </div>
+    </div>
+    <div className="sh-card">
+      <div className="sh-eyebrow">Phone, 390px</div>
+      <h3 className="sh-card__title sh-noc">Mobile</h3>
+      <p className="sh-card__text">The landing page at phone width. The hero is shorter, and the date and traveler fields open full-screen pickers.</p>
+      <div className="sh-links">
+        <Go to="landing-page-mobile--landing-page" story>Landing Page</Go>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Parts</h2>
+  <p className="sh-sub">The landing page is built around one part: the booking widget, in two versions.</p>
+  <div className="sh-pills">
+    <Go to="landing-page-components-teams-booking-widget--docs" className="sh-pill">Teams Booking Widget</Go>
+    <Go to="landing-page-components-core-booking-widget--docs" className="sh-pill">Core Booking Widget</Go>
+  </div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Edge cases</h2>
+  <p className="sh-sub">The Edge Cases area has nothing for the landing page yet.</p>
+  <div className="sh-links"><Go page="Edge Cases/Overview">See what is covered</Go></div>
+</div>
+
+<div className="sh-section">
+  <h2 className="sh-h2">Next step</h2>
+  <p className="sh-sub">After the search, the guest sees a list of hotels.</p>
+  <div className="sh-actions">
+    <Go page="User Journey/02 · Browse Hotels/Overview" className="sh-btn sh-btn--primary">02 · Browse Hotels</Go>
+    <Go page="User Journey/Journey map" className="sh-btn sh-btn--ghost">Journey map</Go>
+  </div>
+</div>
+
+</div>
